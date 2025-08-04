@@ -8,13 +8,15 @@ function navigateTo(page) {
     window.location.href = page;
 }
 
-// Demo functionality
+// Demo functionality - immediately available
+window.playDemo = function() {
+    alert('Demo video would play here! For now, try the validation tool to see StartupValidator in action.');
+};
+
+// Also define as regular function for compatibility
 function playDemo() {
     alert('Demo video would play here! For now, try the validation tool to see StartupValidator in action.');
 }
-
-// Make playDemo available globally
-window.playDemo = playDemo;
 
 // Smooth scrolling for anchor links
 function smoothScroll(target) {
