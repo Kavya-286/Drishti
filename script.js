@@ -19,15 +19,19 @@
     console.log('navigateTo function defined:', typeof window.navigateTo);
 })();
 
-// Demo functionality - immediately available
-window.playDemo = function() {
-    alert('Demo video would play here! For now, try the validation tool to see StartupValidator in action.');
-};
+// Demo functionality - defined immediately
+(function() {
+    'use strict';
 
-// Also define as regular function for compatibility
-function playDemo() {
-    alert('Demo video would play here! For now, try the validation tool to see StartupValidator in action.');
-}
+    function playDemo() {
+        alert('Demo video would play here! For now, try the validation tool to see StartupValidator in action.');
+    }
+
+    // Make it available globally
+    window.playDemo = playDemo;
+
+    console.log('playDemo function defined:', typeof window.playDemo);
+})();
 
 // Smooth scrolling for anchor links
 function smoothScroll(target) {
