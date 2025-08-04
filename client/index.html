@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StartupValidator - Validate Your Startup Idea</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <div class="logo">
+                    <i data-lucide="lightbulb"></i>
+                </div>
+                <span class="brand-text">StartupValidator</span>
+            </div>
+            <nav class="nav-links">
+                <button class="btn btn-outline" onclick="navigateTo('auth.html')">Sign In</button>
+                <button class="btn btn-primary" onclick="navigateTo('validate.html')">Get Started</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="badge">
+                    ✨ Validate Your Startup Idea in Minutes
+                </div>
+                <h1 class="hero-title">
+                    Turn Your Idea Into a Validated Business Plan
+                </h1>
+                <p class="hero-description">
+                    Get instant, AI-powered feedback on your startup idea's viability, market potential, and success probability. 
+                    Perfect for founders, students, and entrepreneurs.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary btn-large" onclick="navigateTo('validate.html')">
+                        Validate Your Idea
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                    <button class="btn btn-outline btn-large" onclick="playDemo()">
+                        Watch Demo
+                    </button>
+                </div>
+                
+                <!-- Stats -->
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">10,000+</div>
+                        <div class="stat-label">Ideas Validated</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">89%</div>
+                        <div class="stat-label">Accuracy Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">500+</div>
+                        <div class="stat-label">Successful Launches</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Pitch Generator Section -->
+    <section class="pitch-generator">
+        <div class="container">
+            <h2>🚀 AI Pitch Generator</h2>
+            <p>Get a professional, investor-ready pitch for your startup idea in seconds with our advanced AI technology.</p>
+            <button class="pitch-btn" onclick="generateAIPitch()">
+                <i data-lucide="zap"></i>
+                Generate My AI Pitch
+            </button>
+            
+            <div class="pitch-output" id="pitch-output">
+                <div class="pitch-section">
+                    <h3>🎯 Executive Summary</h3>
+                    <p id="executive-summary"></p>
+                </div>
+                
+                <div class="pitch-section">
+                    <h3>🔍 Problem Statement</h3>
+                    <p id="problem-statement"></p>
+                </div>
+                
+                <div class="pitch-section">
+                    <h3>💡 Solution Overview</h3>
+                    <p id="solution-overview"></p>
+                </div>
+                
+                <div class="pitch-section">
+                    <h3>📈 Market Opportunity</h3>
+                    <p id="market-opportunity"></p>
+                </div>
+                
+                <div class="pitch-section">
+                    <h3>💰 Business Model</h3>
+                    <p id="business-model"></p>
+                </div>
+                
+                <div class="pitch-section">
+                    <h3>🏆 Competitive Advantage</h3>
+                    <p id="competitive-advantage"></p>
+                </div>
+                
+                <div class="pitch-section">
+                    <h3>💼 Funding Requirements</h3>
+                    <p id="funding-requirements"></p>
+                </div>
+                
+                <button class="copy-pitch-btn" onclick="copyPitchToClipboard()">
+                    <i data-lucide="copy"></i>
+                    Copy Pitch to Clipboard
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Features -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Everything You Need to Validate Your Startup</h2>
+                <p>Our comprehensive validation platform covers every aspect of startup idea assessment</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="lightbulb"></i>
+                    </div>
+                    <h3>Structured Input Flow</h3>
+                    <p>Step-by-step guided process to capture all aspects of your startup idea</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="trending-up"></i>
+                    </div>
+                    <h3>Real-time Viability Scoring</h3>
+                    <p>Instant assessment of your idea's market potential and feasibility</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="brain"></i>
+                    </div>
+                    <h3>AI-generated Feedback</h3>
+                    <p>Smart insights and recommendations for each input you provide</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="users"></i>
+                    </div>
+                    <h3>Founder Readiness Checker</h3>
+                    <p>Detailed evaluation of your preparedness and skill gaps</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="file-text"></i>
+                    </div>
+                    <h3>Export Pitch Content</h3>
+                    <p>Generate professional pitch decks and validation reports</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="bar-chart-3"></i>
+                    </div>
+                    <h3>Competitive Benchmarking</h3>
+                    <p>Compare with similar startups and success metrics</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add-On Features -->
+    <section class="addons">
+        <div class="container">
+            <div class="section-header">
+                <div class="badge">Add-On Features</div>
+                <h2>Supercharge Your Validation Process</h2>
+                <p>Additional tools to take your startup from idea to launch</p>
+            </div>
+            
+            <div class="addons-grid">
+                <div class="addon-card">
+                    <div class="addon-icon">
+                        <i data-lucide="check-circle"></i>
+                    </div>
+                    <div class="addon-content">
+                        <h3>Founder Readiness Checker</h3>
+                        <p>Comprehensive assessment of your entrepreneurial readiness</p>
+                    </div>
+                </div>
+                
+                <div class="addon-card">
+                    <div class="addon-icon">
+                        <i data-lucide="zap"></i>
+                    </div>
+                    <div class="addon-content">
+                        <h3>AI-Powered SWOT Analysis</h3>
+                        <p>Automated Strengths, Weaknesses, Opportunities, and Threats analysis</p>
+                    </div>
+                </div>
+                
+                <div class="addon-card">
+                    <div class="addon-icon">
+                        <i data-lucide="target"></i>
+                    </div>
+                    <div class="addon-content">
+                        <h3>Pitch Content Generator</h3>
+                        <p>AI-generated pitch decks and investor materials</p>
+                    </div>
+                </div>
+                
+                <div class="addon-card">
+                    <div class="addon-icon">
+                        <i data-lucide="rocket"></i>
+                    </div>
+                    <div class="addon-content">
+                        <h3>Startup Lookalikes</h3>
+                        <p>Find and analyze similar successful startups</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Choose Your Validation Plan</h2>
+                <p>Start free or upgrade for advanced features and unlimited validations</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Basic</h3>
+                        <div class="price">Free</div>
+                        <p>Perfect for getting started</p>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>1 idea validation per month</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Basic scoring algorithm</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Core feature access</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Email support</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline pricing-btn">Get Started Free</button>
+                </div>
+                
+                <div class="pricing-card popular">
+                    <div class="popular-badge">
+                        <i data-lucide="star"></i>
+                        Most Popular
+                    </div>
+                    <div class="pricing-header">
+                        <h3>Pro</h3>
+                        <div class="price">$29/month</div>
+                        <p>For serious entrepreneurs</p>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Unlimited idea validations</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Advanced AI feedback</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>All add-on features</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Priority support</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Export to multiple formats</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Competitive analysis</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary pricing-btn">Start Pro Trial</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Enterprise</h3>
+                        <div class="price">Custom</div>
+                        <p>For accelerators & institutions</p>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Multi-user accounts</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Custom scoring models</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>API access</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Dedicated support</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Custom integrations</span>
+                        </div>
+                        <div class="feature">
+                            <i data-lucide="check-circle"></i>
+                            <span>Analytics dashboard</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline pricing-btn">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Validate Your Next Big Idea?</h2>
+                <p>Join thousands of entrepreneurs who have successfully validated and launched their startups</p>
+                <button class="btn btn-secondary btn-large" onclick="navigateTo('validate.html')">
+                    Start Validating Now
+                    <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo">
+                            <i data-lucide="lightbulb"></i>
+                        </div>
+                        <span class="brand-text">StartupValidator</span>
+                    </div>
+                    <p>Validate your startup ideas with AI-powered insights and expert guidance.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Product</h4>
+                    <a href="features.html">Features</a>
+                    <a href="pricing.html">Pricing</a>
+                    <a href="api.html">API</a>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <a href="blog.html">Blog</a>
+                    <a href="guides.html">Guides</a>
+                    <a href="support.html">Support</a>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="privacy.html">Privacy</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 StartupValidator. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Critical functions defined inline as fallback
+        window.navigateTo = window.navigateTo || function(page) {
+            console.log('Using inline navigateTo for:', page);
+            window.location.href = page;
+        };
+        
+        window.playDemo = window.playDemo || function() {
+            alert('Demo video would play here! For now, try the validation tool to see StartupValidator in action.');
+        };
+        
+        // AI Pitch Generator Function
+        window.generateAIPitch = function() {
+            const btn = document.querySelector('.pitch-btn');
+            const output = document.getElementById('pitch-output');
+            const originalText = btn.innerHTML;
+            
+            // Show loading state
+            btn.disabled = true;
+            btn.innerHTML = '<div class="loading-spinner"></div> Generating AI Pitch...';
+            
+            // Simulate AI generation
+            setTimeout(() => {
+                // Generate pitch content
+                const pitchData = generatePitchContent();
+                populatePitchSections(pitchData);
+                
+                // Show the output
+                output.classList.add('active');
+                output.scrollIntoView({ behavior: 'smooth' });
+                
+                // Reset button
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                
+                // Show success message
+                if (typeof StartupValidator !== 'undefined') {
+                    StartupValidator.showNotification('AI Pitch generated successfully!', 'success');
+                } else {
+                    alert('AI Pitch generated successfully!');
+                }
+            }, 3000);
+        };
+        
+        function generatePitchContent() {
+            return {
+                executiveSummary: "StartupValidator is revolutionizing how entrepreneurs validate their business ideas through AI-powered analysis. Our platform provides instant, comprehensive feedback on startup viability, helping founders make data-driven decisions before investing time and money.",
+                
+                problemStatement: "90% of startups fail due to lack of market need and insufficient validation. Entrepreneurs struggle to objectively assess their ideas' viability, often relying on biased feedback from friends and family rather than systematic analysis.",
+                
+                solutionOverview: "Our AI-powered platform guides entrepreneurs through a structured validation process, analyzing six key areas: problem-solution fit, market opportunity, business model, competition, team strength, and execution readiness. Users receive instant scoring and actionable recommendations.",
+                
+                marketOpportunity: "The global startup ecosystem is valued at $3.8 trillion, with over 305 million startups launched annually. Our addressable market includes early-stage entrepreneurs, accelerator programs, and educational institutions seeking systematic validation tools.",
+                
+                businessModel: "Freemium SaaS model with three tiers: Free (1 validation/month), Pro ($29/month for unlimited validations), and Enterprise (custom pricing for institutions). Revenue streams include subscriptions, premium features, and white-label licensing.",
+                
+                competitiveAdvantage: "First-to-market AI-powered validation platform with proprietary scoring algorithm. Competitive moats include: comprehensive 6-factor analysis, real-time AI feedback, integration with pitch generation tools, and growing database of successful startup patterns.",
+                
+                fundingRequirements: "Seeking $2M Series A to accelerate product development, expand AI capabilities, grow the team, and scale marketing efforts. Funds will be allocated: 40% product development, 30% team expansion, 20% marketing & sales, 10% operations."
+            };
+        }
+        
+        function populatePitchSections(data) {
+            document.getElementById('executive-summary').textContent = data.executiveSummary;
+            document.getElementById('problem-statement').textContent = data.problemStatement;
+            document.getElementById('solution-overview').textContent = data.solutionOverview;
+            document.getElementById('market-opportunity').textContent = data.marketOpportunity;
+            document.getElementById('business-model').textContent = data.businessModel;
+            document.getElementById('competitive-advantage').textContent = data.competitiveAdvantage;
+            document.getElementById('funding-requirements').textContent = data.fundingRequirements;
+        }
+        
+        window.copyPitchToClipboard = function() {
+            const sections = [
+                'Executive Summary: ' + document.getElementById('executive-summary').textContent,
+                'Problem Statement: ' + document.getElementById('problem-statement').textContent,
+                'Solution Overview: ' + document.getElementById('solution-overview').textContent,
+                'Market Opportunity: ' + document.getElementById('market-opportunity').textContent,
+                'Business Model: ' + document.getElementById('business-model').textContent,
+                'Competitive Advantage: ' + document.getElementById('competitive-advantage').textContent,
+                'Funding Requirements: ' + document.getElementById('funding-requirements').textContent
+            ];
+            
+            const fullPitch = sections.join('\n\n');
+            
+            navigator.clipboard.writeText(fullPitch).then(() => {
+                if (typeof StartupValidator !== 'undefined') {
+                    StartupValidator.showNotification('Pitch copied to clipboard!', 'success');
+                } else {
+                    alert('Pitch copied to clipboard!');
+                }
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = fullPitch;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Pitch copied to clipboard!');
+            });
+        };
+        
+        console.log('Inline functions ready. navigateTo type:', typeof window.navigateTo);
+    </script>
+    
+    <script src="script.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+        
+        // Final check that functions are available
+        console.log('Final check - navigateTo available:', typeof window.navigateTo);
+        console.log('Final check - playDemo available:', typeof window.playDemo);
+        console.log('Final check - generateAIPitch available:', typeof window.generateAIPitch);
+    </script>
+</body>
+</html>
