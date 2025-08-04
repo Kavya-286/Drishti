@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validate Your Startup Idea - StartupValidator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="validate.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <div class="logo">
+                    <i data-lucide="lightbulb"></i>
+                </div>
+                <span class="brand-text">StartupValidator</span>
+                <div class="nav-divider">|</div>
+                <span class="nav-subtitle">Validate Your Startup Idea</span>
+            </div>
+            <nav class="nav-links">
+                <div class="step-indicator">
+                    <span id="current-step">1</span>/<span id="total-steps">6</span>
+                </div>
+                <button class="btn btn-outline" onclick="navigateTo('auth.html')">Sign In</button>
+                <button class="btn btn-outline" onclick="navigateTo('index.html')">
+                    <i data-lucide="arrow-left"></i>
+                    Back to Home
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="validation-container">
+        <div class="container">
+            <!-- Progress Header -->
+            <div class="progress-header">
+                <div class="progress-info">
+                    <h1>Startup Idea Validation</h1>
+                    <span class="step-text">Step <span id="step-number">1</span> of 6</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" id="progress-bar" data-value="16.67"></div>
+                </div>
+                
+                <!-- Step Navigation -->
+                <div class="step-navigation">
+                    <div class="step-item active" data-step="1">
+                        <div class="step-icon">
+                            <i data-lucide="lightbulb"></i>
+                        </div>
+                        <span class="step-label">Problem & Solution</span>
+                    </div>
+                    <div class="step-item" data-step="2">
+                        <div class="step-icon">
+                            <i data-lucide="target"></i>
+                        </div>
+                        <span class="step-label">Target Market</span>
+                    </div>
+                    <div class="step-item" data-step="3">
+                        <div class="step-icon">
+                            <i data-lucide="dollar-sign"></i>
+                        </div>
+                        <span class="step-label">Business Model</span>
+                    </div>
+                    <div class="step-item" data-step="4">
+                        <div class="step-icon">
+                            <i data-lucide="trending-up"></i>
+                        </div>
+                        <span class="step-label">Competition</span>
+                    </div>
+                    <div class="step-item" data-step="5">
+                        <div class="step-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <span class="step-label">Team</span>
+                    </div>
+                    <div class="step-item" data-step="6">
+                        <div class="step-icon">
+                            <i data-lucide="zap"></i>
+                        </div>
+                        <span class="step-label">Traction & Funding</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Content -->
+            <div class="form-card">
+                <div class="form-header">
+                    <h2 id="form-title">Problem & Solution</h2>
+                    <p id="form-description">Describe the problem you're solving and your proposed solution</p>
+                </div>
+                
+                <form id="validation-form">
+                    <!-- Step 1: Problem & Solution -->
+                    <div class="form-step active" data-step="1">
+                        <div class="form-group">
+                            <label for="problem-statement">Problem Statement *</label>
+                            <textarea 
+                                id="problem-statement" 
+                                name="problemStatement"
+                                placeholder="What specific problem are you solving? Who faces this problem?"
+                                rows="4"
+                                required
+                            ></textarea>
+                            <div id="problem-suggestions" class="suggestions-box"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="solution-description">Solution Description *</label>
+                            <textarea 
+                                id="solution-description" 
+                                name="solutionDescription"
+                                placeholder="How does your product/service solve this problem?"
+                                rows="4"
+                                required
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="value-proposition">Unique Value Proposition *</label>
+                            <textarea 
+                                id="value-proposition" 
+                                name="uniqueValueProposition"
+                                placeholder="What makes your solution unique? Why would customers choose you?"
+                                rows="3"
+                                required
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Target Market -->
+                    <div class="form-step" data-step="2">
+                        <div class="form-group">
+                            <label for="target-market">Target Market *</label>
+                            <textarea 
+                                id="target-market" 
+                                name="targetMarket"
+                                placeholder="Describe your ideal customers and target market"
+                                rows="4"
+                                required
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="market-size">Market Size</label>
+                            <select id="market-size" name="marketSize">
+                                <option value="">Select market size</option>
+                                <option value="local">Local (City/Region)</option>
+                                <option value="national">National</option>
+                                <option value="international">International</option>
+                                <option value="global">Global</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customer-segments">Customer Segments *</label>
+                            <textarea 
+                                id="customer-segments" 
+                                name="customerSegments"
+                                placeholder="List and describe your key customer segments"
+                                rows="4"
+                                required
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Business Model -->
+                    <div class="form-step" data-step="3">
+                        <div class="form-group">
+                            <label for="revenue-model">Revenue Model *</label>
+                            <select id="revenue-model" name="revenueModel" required>
+                                <option value="">Select revenue model</option>
+                                <option value="subscription">Subscription</option>
+                                <option value="one-time">One-time Purchase</option>
+                                <option value="freemium">Freemium</option>
+                                <option value="marketplace">Marketplace Commission</option>
+                                <option value="advertising">Advertising</option>
+                                <option value="licensing">Licensing</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pricing-strategy">Pricing Strategy *</label>
+                            <textarea 
+                                id="pricing-strategy" 
+                                name="pricingStrategy"
+                                placeholder="How will you price your product? What's your pricing rationale?"
+                                rows="4"
+                                required
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="key-metrics">Key Metrics</label>
+                            <textarea 
+                                id="key-metrics" 
+                                name="keyMetrics"
+                                placeholder="What metrics will you track to measure success?"
+                                rows="3"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Competition -->
+                    <div class="form-step" data-step="4">
+                        <div class="form-group">
+                            <label for="direct-competitors">Direct Competitors</label>
+                            <textarea 
+                                id="direct-competitors" 
+                                name="directCompetitors"
+                                placeholder="List your direct competitors and their key features"
+                                rows="4"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="indirect-competitors">Indirect Competitors</label>
+                            <textarea 
+                                id="indirect-competitors" 
+                                name="indirectCompetitors"
+                                placeholder="List alternatives your customers might use instead"
+                                rows="4"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="competitive-advantage">Competitive Advantage *</label>
+                            <textarea 
+                                id="competitive-advantage" 
+                                name="competitiveAdvantage"
+                                placeholder="What gives you a competitive edge? How will you defend it?"
+                                rows="4"
+                                required
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Team -->
+                    <div class="form-step" data-step="5">
+                        <div class="form-group">
+                            <label for="team-size">Team Size</label>
+                            <select id="team-size" name="teamSize">
+                                <option value="">Select team size</option>
+                                <option value="solo">Solo founder</option>
+                                <option value="2-3">2-3 people</option>
+                                <option value="4-6">4-6 people</option>
+                                <option value="7-10">7-10 people</option>
+                                <option value="10+">10+ people</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="founders-experience">Founders' Experience *</label>
+                            <textarea 
+                                id="founders-experience" 
+                                name="foundersExperience"
+                                placeholder="Describe the founders' relevant experience and background"
+                                rows="4"
+                                required
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="key-skills">Key Skills & Gaps</label>
+                            <textarea 
+                                id="key-skills" 
+                                name="keySkills"
+                                placeholder="What skills does your team have? What skills are missing?"
+                                rows="4"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: Traction & Funding -->
+                    <div class="form-step" data-step="6">
+                        <div class="form-group">
+                            <label for="current-stage">Current Stage *</label>
+                            <select id="current-stage" name="currentStage" required>
+                                <option value="">Select current stage</option>
+                                <option value="idea">Idea stage</option>
+                                <option value="prototype">Prototype/MVP</option>
+                                <option value="beta">Beta testing</option>
+                                <option value="early-revenue">Early revenue</option>
+                                <option value="growth">Growth stage</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="existing-traction">Existing Traction</label>
+                            <textarea 
+                                id="existing-traction" 
+                                name="existingTraction"
+                                placeholder="Describe any traction you've gained (users, revenue, partnerships, etc.)"
+                                rows="4"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="funding-needs">Funding Requirements</label>
+                            <textarea 
+                                id="funding-needs" 
+                                name="fundingNeeds"
+                                placeholder="How much funding do you need and what will you use it for?"
+                                rows="4"
+                            ></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="form-navigation">
+                <button type="button" class="btn btn-outline" id="prev-btn" onclick="previousStep()" disabled>
+                    <i data-lucide="arrow-left"></i>
+                    Previous
+                </button>
+                
+                <button type="button" class="btn btn-primary" id="next-btn" onclick="nextStep()">
+                    Next
+                    <i data-lucide="arrow-right"></i>
+                </button>
+                
+                <button type="button" class="btn btn-primary gradient-btn" id="validate-btn" onclick="validateIdea()" style="display: none;">
+                    Validate My Idea
+                    <i data-lucide="zap"></i>
+                </button>
+            </div>
+
+            <!-- AI Insights -->
+            <div class="ai-insights" id="ai-insights" style="display: none;">
+                <div class="insights-header">
+                    <i data-lucide="alert-circle"></i>
+                    <h3>AI Insights</h3>
+                </div>
+                <div class="insights-content" id="insights-content">
+                    <p><strong>💡 Quick Tip:</strong> <span id="insight-text">Enter your problem statement to get personalized suggestions.</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="validate.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
