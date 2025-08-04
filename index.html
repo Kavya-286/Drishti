@@ -350,10 +350,31 @@
         </div>
     </footer>
 
+    <script>
+        // Critical functions defined inline as fallback
+        window.navigateTo = window.navigateTo || function(page) {
+            console.log('Using inline navigateTo for:', page);
+            window.location.href = page;
+        };
+
+        window.playDemo = window.playDemo || function() {
+            alert('Demo video would play here! For now, try the validation tool to see StartupValidator in action.');
+        };
+
+        console.log('Inline functions ready. navigateTo type:', typeof window.navigateTo);
+    </script>
+
     <script src="script.js"></script>
+
     <script>
         // Initialize Lucide icons
-        lucide.createIcons();
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+
+        // Final check that functions are available
+        console.log('Final check - navigateTo available:', typeof window.navigateTo);
+        console.log('Final check - playDemo available:', typeof window.playDemo);
     </script>
 </body>
 </html>
