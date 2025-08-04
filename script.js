@@ -3,6 +3,9 @@ function navigateTo(page) {
     window.location.href = page;
 }
 
+// Ensure functions are available globally
+window.navigateTo = navigateTo;
+
 // Demo functionality
 function playDemo() {
     alert('Demo video would play here! For now, try the validation tool to see StartupValidator in action.');
