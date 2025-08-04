@@ -445,6 +445,44 @@ Recommendations:
   // Mock validation results
   const overallScore = 78;
   const viabilityLevel = 'High';
+
+  // Calculate Investor Readiness components
+  const founderReadinessScore = 73; // From founder assessment
+  const clarityScore = 82; // Based on how well-defined the idea is
+  const investorReadinessScore = Math.round((overallScore + founderReadinessScore + clarityScore) / 3);
+
+  const getInvestorReadinessLevel = (score: number) => {
+    if (score >= 80) return { level: 'Investor Ready', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200' };
+    if (score >= 65) return { level: 'Angel Ready', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' };
+    if (score >= 50) return { level: 'Accelerator Ready', color: 'text-yellow-600', bg: 'bg-yellow-50', border: 'border-yellow-200' };
+    return { level: 'Bootstrap Stage', color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-200' };
+  };
+
+  const getRecommendation = (score: number) => {
+    if (score >= 80) return {
+      title: "Investor Ready",
+      description: "Your startup is ready for institutional investors. Consider approaching VCs and institutional funding.",
+      actions: ["Prepare detailed financial projections", "Build investor deck", "Network with VCs", "Consider Series A preparation"]
+    };
+    if (score >= 65) return {
+      title: "Angel Investor Ready",
+      description: "You're ready for angel investors and early-stage funding. Focus on building traction.",
+      actions: ["Approach angel investors", "Join angel networks", "Build MVP and get customers", "Refine business model"]
+    };
+    if (score >= 50) return {
+      title: "Accelerator Ready",
+      description: "Consider joining an accelerator program to strengthen your foundation and get mentorship.",
+      actions: ["Apply to accelerator programs", "Build stronger team", "Validate market further", "Develop prototype"]
+    };
+    return {
+      title: "Bootstrap Stage",
+      description: "Focus on self-funding and proving concept before seeking external investment.",
+      actions: ["Bootstrap with personal funds", "Validate problem-solution fit", "Build founding team", "Create detailed business plan"]
+    };
+  };
+
+  const readinessLevel = getInvestorReadinessLevel(investorReadinessScore);
+  const recommendation = getRecommendation(investorReadinessScore);
   
   const scores: ValidationScore[] = [
     {
