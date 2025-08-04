@@ -22,6 +22,41 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/validate" element={<Validate />} />
+          <Route path="/results" element={<Results />} />
+
+          {/* Placeholder pages */}
+          <Route
+            path="/features"
+            element={
+              <Placeholder
+                title="Features Overview"
+                description="Comprehensive list of all validation features and capabilities"
+                suggestedAction="Check out our validation tool to see features in action!"
+              />
+            }
+          />
+          <Route
+            path="/pricing"
+            element={
+              <Placeholder
+                title="Pricing Plans"
+                description="Detailed pricing information for all subscription tiers"
+                suggestedAction="Start with our free validation to experience the value."
+              />
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <Placeholder
+                title="About StartupValidator"
+                description="Learn about our mission to help entrepreneurs validate their ideas"
+                suggestedAction="Get started by validating your first startup idea!"
+              />
+            }
+          />
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
