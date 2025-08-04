@@ -194,6 +194,116 @@ export default function Index() {
         </div>
       </section>
 
+      {/* AI Pitch Generator Section */}
+      <section className="py-20 px-4" style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: 'white'
+      }}>
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            🚀 AI Pitch Generator
+          </h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto" style={{ opacity: 0.9 }}>
+            Get a professional, investor-ready pitch for your startup idea in seconds with our advanced AI technology.
+          </p>
+          <Button
+            size="lg"
+            className="text-lg px-8 py-6"
+            style={{
+              background: 'rgba(255, 255, 255, 0.2)',
+              color: 'white',
+              border: '2px solid white',
+              borderRadius: '50px',
+              backdropFilter: 'blur(10px)'
+            }}
+            onClick={generateAIPitch}
+            disabled={isGeneratingPitch}
+          >
+            {isGeneratingPitch ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Generating AI Pitch...
+              </>
+            ) : (
+              <>
+                <Zap className="mr-2 w-5 h-5" />
+                Generate My AI Pitch
+              </>
+            )}
+          </Button>
+
+          {pitchVisible && generatedPitch && (
+            <div className="mt-12 p-8 rounded-lg text-left" style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)'
+            }}>
+              <div className="grid gap-6">
+                <div>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: '#ffd700' }}>
+                    🎯 Executive Summary
+                  </h3>
+                  <p style={{ opacity: 0.95, lineHeight: 1.6 }}>{generatedPitch.executiveSummary}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: '#ffd700' }}>
+                    🔍 Problem Statement
+                  </h3>
+                  <p style={{ opacity: 0.95, lineHeight: 1.6 }}>{generatedPitch.problemStatement}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: '#ffd700' }}>
+                    💡 Solution Overview
+                  </h3>
+                  <p style={{ opacity: 0.95, lineHeight: 1.6 }}>{generatedPitch.solutionOverview}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: '#ffd700' }}>
+                    📈 Market Opportunity
+                  </h3>
+                  <p style={{ opacity: 0.95, lineHeight: 1.6 }}>{generatedPitch.marketOpportunity}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: '#ffd700' }}>
+                    💰 Business Model
+                  </h3>
+                  <p style={{ opacity: 0.95, lineHeight: 1.6 }}>{generatedPitch.businessModel}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: '#ffd700' }}>
+                    🏆 Competitive Advantage
+                  </h3>
+                  <p style={{ opacity: 0.95, lineHeight: 1.6 }}>{generatedPitch.competitiveAdvantage}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: '#ffd700' }}>
+                    💼 Funding Requirements
+                  </h3>
+                  <p style={{ opacity: 0.95, lineHeight: 1.6 }}>{generatedPitch.fundingRequirements}</p>
+                </div>
+
+                <Button
+                  className="mt-6"
+                  style={{
+                    background: '#ffd700',
+                    color: '#333',
+                    borderRadius: '25px'
+                  }}
+                  onClick={copyPitchToClipboard}
+                >
+                  Copy Pitch to Clipboard
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Core Features */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
