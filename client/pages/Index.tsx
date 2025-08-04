@@ -127,6 +127,56 @@ export default function Index() {
     }
   ];
 
+  const generateAIPitch = async () => {
+    setIsGeneratingPitch(true);
+
+    // Simulate AI generation delay
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    const pitchContent = {
+      executiveSummary: "StartupValidator is revolutionizing how entrepreneurs validate their business ideas through AI-powered analysis. Our platform provides instant, comprehensive feedback on startup viability, helping founders make data-driven decisions before investing time and money.",
+      problemStatement: "90% of startups fail due to lack of market need and insufficient validation. Entrepreneurs struggle to objectively assess their ideas' viability, often relying on biased feedback from friends and family rather than systematic analysis.",
+      solutionOverview: "Our AI-powered platform guides entrepreneurs through a structured validation process, analyzing six key areas: problem-solution fit, market opportunity, business model, competition, team strength, and execution readiness. Users receive instant scoring and actionable recommendations.",
+      marketOpportunity: "The global startup ecosystem is valued at $3.8 trillion, with over 305 million startups launched annually. Our addressable market includes early-stage entrepreneurs, accelerator programs, and educational institutions seeking systematic validation tools.",
+      businessModel: "Freemium SaaS model with three tiers: Free (1 validation/month), Pro ($29/month for unlimited validations), and Enterprise (custom pricing for institutions). Revenue streams include subscriptions, premium features, and white-label licensing.",
+      competitiveAdvantage: "First-to-market AI-powered validation platform with proprietary scoring algorithm. Competitive moats include: comprehensive 6-factor analysis, real-time AI feedback, integration with pitch generation tools, and growing database of successful startup patterns.",
+      fundingRequirements: "Seeking $2M Series A to accelerate product development, expand AI capabilities, grow the team, and scale marketing efforts. Funds will be allocated: 40% product development, 30% team expansion, 20% marketing & sales, 10% operations."
+    };
+
+    setGeneratedPitch(pitchContent);
+    setPitchVisible(true);
+    setIsGeneratingPitch(false);
+  };
+
+  const copyPitchToClipboard = () => {
+    if (!generatedPitch) return;
+
+    const sections = [
+      'Executive Summary: ' + generatedPitch.executiveSummary,
+      'Problem Statement: ' + generatedPitch.problemStatement,
+      'Solution Overview: ' + generatedPitch.solutionOverview,
+      'Market Opportunity: ' + generatedPitch.marketOpportunity,
+      'Business Model: ' + generatedPitch.businessModel,
+      'Competitive Advantage: ' + generatedPitch.competitiveAdvantage,
+      'Funding Requirements: ' + generatedPitch.fundingRequirements
+    ];
+
+    const fullPitch = sections.join('\n\n');
+
+    navigator.clipboard.writeText(fullPitch).then(() => {
+      alert('Pitch copied to clipboard!');
+    }).catch(() => {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = fullPitch;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Pitch copied to clipboard!');
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
