@@ -1,12 +1,23 @@
-// Navigation functionality - immediately available
-window.navigateTo = function(page) {
-    window.location.href = page;
-};
+// Navigation functionality - defined immediately
+(function() {
+    'use strict';
 
-// Also define as regular function for compatibility
-function navigateTo(page) {
-    window.location.href = page;
-}
+    // Define navigateTo function immediately
+    function navigateTo(page) {
+        console.log('Navigating to:', page);
+        window.location.href = page;
+    }
+
+    // Make it available globally
+    window.navigateTo = navigateTo;
+
+    // Also attach to document for extra safety
+    if (typeof document !== 'undefined') {
+        document.navigateTo = navigateTo;
+    }
+
+    console.log('navigateTo function defined:', typeof window.navigateTo);
+})();
 
 // Demo functionality - immediately available
 window.playDemo = function() {
