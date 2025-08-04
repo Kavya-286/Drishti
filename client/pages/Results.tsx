@@ -1,0 +1,492 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Lightbulb, 
+  ArrowLeft, 
+  Download, 
+  Share2,
+  TrendingUp,
+  AlertTriangle,
+  CheckCircle,
+  Target,
+  Users,
+  DollarSign,
+  Zap,
+  FileText,
+  BarChart3,
+  Brain,
+  Trophy,
+  RefreshCw
+} from 'lucide-react';
+
+interface ValidationScore {
+  category: string;
+  score: number;
+  feedback: string;
+  suggestions: string[];
+}
+
+export default function Results() {
+  const [selectedView, setSelectedView] = useState<'overview' | 'detailed' | 'recommendations'>('overview');
+  
+  // Mock validation results
+  const overallScore = 78;
+  const viabilityLevel = 'High';
+  
+  const scores: ValidationScore[] = [
+    {
+      category: 'Problem-Solution Fit',
+      score: 85,
+      feedback: 'Strong problem identification with a clear solution approach. The value proposition is well-defined.',
+      suggestions: [
+        'Conduct user interviews to validate problem severity',
+        'Test solution assumptions with early prototypes',
+        'Quantify the problem impact with market research'
+      ]
+    },
+    {
+      category: 'Market Opportunity',
+      score: 72,
+      feedback: 'Good market understanding, but could benefit from more specific targeting and sizing.',
+      suggestions: [
+        'Define more specific customer personas',
+        'Research total addressable market (TAM)',
+        'Analyze market growth trends and dynamics'
+      ]
+    },
+    {
+      category: 'Business Model',
+      score: 80,
+      feedback: 'Solid revenue model with clear monetization strategy. Pricing approach is reasonable.',
+      suggestions: [
+        'Test pricing with potential customers',
+        'Consider multiple revenue streams',
+        'Plan for customer acquisition costs'
+      ]
+    },
+    {
+      category: 'Competitive Advantage',
+      score: 75,
+      feedback: 'Decent competitive analysis with some differentiation identified.',
+      suggestions: [
+        'Strengthen unique value proposition',
+        'Identify sustainable competitive moats',
+        'Monitor competitor strategies closely'
+      ]
+    },
+    {
+      category: 'Team Strength',
+      score: 68,
+      feedback: 'Good foundational team with relevant experience. Some skill gaps identified.',
+      suggestions: [
+        'Consider bringing in technical co-founder',
+        'Build advisory board with industry experts',
+        'Plan for key hiring priorities'
+      ]
+    },
+    {
+      category: 'Execution Readiness',
+      score: 82,
+      feedback: 'Strong execution plan with realistic milestones and funding strategy.',
+      suggestions: [
+        'Create detailed development roadmap',
+        'Establish key performance indicators',
+        'Plan for regulatory requirements'
+      ]
+    }
+  ];
+
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
+    if (score >= 60) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+    return 'text-red-600 bg-red-50 border-red-200';
+  };
+
+  const getViabilityBadge = (level: string) => {
+    const colors = {
+      'High': 'bg-green-500 text-white',
+      'Moderate': 'bg-yellow-500 text-white',
+      'Low': 'bg-red-500 text-white'
+    };
+    return colors[level as keyof typeof colors] || 'bg-gray-500 text-white';
+  };
+
+  const similarStartups = [
+    {
+      name: 'Slack',
+      description: 'Team communication platform',
+      similarity: 'Communication/collaboration focus',
+      outcome: 'Acquired by Salesforce for $27.7B'
+    },
+    {
+      name: 'Zoom',
+      description: 'Video conferencing platform',
+      similarity: 'Remote work enablement',
+      outcome: 'IPO 2019, valued at $100B+'
+    },
+    {
+      name: 'Notion',
+      description: 'All-in-one workspace',
+      similarity: 'Productivity and organization',
+      outcome: 'Valued at $10B in Series C'
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Link to="/" className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-500 rounded-lg flex items-center justify-center">
+                <Lightbulb className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-bold text-xl bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">
+                StartupValidator
+              </span>
+            </Link>
+            <div className="hidden md:block text-muted-foreground">|</div>
+            <div className="hidden md:block text-sm font-medium text-muted-foreground">
+              Validation Results
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Button variant="outline" size="sm">
+              <Share2 className="w-4 h-4 mr-2" />
+              Share
+            </Button>
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" />
+              Export PDF
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/validate">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                New Validation
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Results Header */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h1 className="text-3xl font-bold mb-2">Startup Validation Results</h1>
+                <p className="text-muted-foreground">
+                  Complete analysis of your startup idea with AI-powered insights
+                </p>
+              </div>
+              <div className="text-right">
+                <div className="text-4xl font-bold text-primary mb-2">{overallScore}/100</div>
+                <Badge className={getViabilityBadge(viabilityLevel)}>
+                  {viabilityLevel} Viability
+                </Badge>
+              </div>
+            </div>
+
+            {/* Overall Score Visualization */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Trophy className="w-5 h-5 text-primary" />
+                  <span>Overall Validation Score</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Startup Viability</span>
+                    <span className="text-2xl font-bold text-primary">{overallScore}%</span>
+                  </div>
+                  <Progress value={overallScore} className="h-3" />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Low (0-40)</span>
+                    <span>Moderate (41-70)</span>
+                    <span>High (71-100)</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Tabs value={selectedView} onValueChange={(value) => setSelectedView(value as any)} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="detailed">Detailed Analysis</TabsTrigger>
+              <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+            </TabsList>
+
+            {/* Overview Tab */}
+            <TabsContent value="overview" className="space-y-6">
+              {/* Score Breakdown */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {scores.map((score, index) => (
+                  <Card key={index} className={`border-l-4 ${
+                    score.score >= 80 ? 'border-l-green-500' : 
+                    score.score >= 60 ? 'border-l-yellow-500' : 'border-l-red-500'
+                  }`}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg">{score.category}</CardTitle>
+                        <Badge variant="outline" className={getScoreColor(score.score)}>
+                          {score.score}%
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <Progress value={score.score} className="mb-3 h-2" />
+                      <p className="text-sm text-muted-foreground">{score.feedback}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Key Insights */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2 text-green-600">
+                      <CheckCircle className="w-5 h-5" />
+                      <span>Strengths</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start space-x-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <span>Strong problem-solution fit with clear value proposition</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <span>Solid business model with viable revenue streams</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <span>Good execution readiness and planning</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <span>Realistic approach to market entry</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2 text-yellow-600">
+                      <AlertTriangle className="w-5 h-5" />
+                      <span>Areas for Improvement</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start space-x-2">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <span>Team could benefit from additional technical expertise</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <span>Market sizing and segmentation needs refinement</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <span>Competitive differentiation could be stronger</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <span>Consider more diverse revenue models</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            {/* Detailed Analysis Tab */}
+            <TabsContent value="detailed" className="space-y-6">
+              {scores.map((score, index) => (
+                <Card key={index}>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-xl">{score.category}</CardTitle>
+                      <div className="flex items-center space-x-3">
+                        <Progress value={score.score} className="w-24 h-2" />
+                        <Badge variant="outline" className={getScoreColor(score.score)}>
+                          {score.score}%
+                        </Badge>
+                      </div>
+                    </div>
+                    <CardDescription>{score.feedback}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div>
+                      <h4 className="font-semibold mb-3 text-sm">Improvement Suggestions:</h4>
+                      <ul className="space-y-2">
+                        {score.suggestions.map((suggestion, suggestionIndex) => (
+                          <li key={suggestionIndex} className="flex items-start space-x-2 text-sm">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                            <span>{suggestion}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </TabsContent>
+
+            {/* Recommendations Tab */}
+            <TabsContent value="recommendations" className="space-y-6">
+              {/* Next Steps */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Target className="w-5 h-5 text-primary" />
+                    <span>Recommended Next Steps</span>
+                  </CardTitle>
+                  <CardDescription>
+                    Priority actions to strengthen your startup idea
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <Badge className="bg-red-500 text-white">1</Badge>
+                      <div>
+                        <h4 className="font-semibold">Validate Problem-Solution Fit</h4>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Conduct 20-30 customer interviews to validate the problem severity and solution approach
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Badge className="bg-orange-500 text-white">2</Badge>
+                      <div>
+                        <h4 className="font-semibold">Build MVP</h4>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Create a minimum viable product to test core assumptions with early users
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Badge className="bg-yellow-500 text-white">3</Badge>
+                      <div>
+                        <h4 className="font-semibold">Strengthen Team</h4>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Consider adding technical co-founder or senior advisor with relevant experience
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Badge className="bg-green-500 text-white">4</Badge>
+                      <div>
+                        <h4 className="font-semibold">Market Research</h4>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Conduct detailed market sizing and competitive analysis
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Similar Startups */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <BarChart3 className="w-5 h-5 text-primary" />
+                    <span>Similar Successful Startups</span>
+                  </CardTitle>
+                  <CardDescription>
+                    Learn from companies with similar models or markets
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {similarStartups.map((startup, index) => (
+                      <div key={index} className="border rounded-lg p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <h4 className="font-semibold">{startup.name}</h4>
+                          <Badge variant="outline">Similar</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-2">{startup.description}</p>
+                        <p className="text-sm"><strong>Similarity:</strong> {startup.similarity}</p>
+                        <p className="text-sm text-green-600 mt-1"><strong>Outcome:</strong> {startup.outcome}</p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Additional Tools */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Brain className="w-5 h-5 text-primary" />
+                      <span>AI-Powered Add-ons</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <Button variant="outline" className="w-full justify-start">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Generate Pitch Deck
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start">
+                      <BarChart3 className="w-4 h-4 mr-2" />
+                      SWOT Analysis
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Users className="w-4 h-4 mr-2" />
+                      Founder Readiness Check
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Market Research Report
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Zap className="w-5 h-5 text-primary" />
+                      <span>Quick Actions</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <Button className="w-full">
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Full Report
+                    </Button>
+                    <Button variant="outline" className="w-full">
+                      <Share2 className="w-4 h-4 mr-2" />
+                      Share with Team
+                    </Button>
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link to="/validate">
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Validate Another Idea
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    </div>
+  );
+}
