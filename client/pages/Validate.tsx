@@ -587,10 +587,45 @@ export default function Validate() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  💡 <strong>Quick Tip:</strong> Based on your inputs so far, consider expanding on your target market segmentation. 
-                  More specific customer personas will help improve your validation score.
-                </p>
+                <div className="space-y-3">
+                  {currentStep === 2 && (
+                    <p className="text-sm text-muted-foreground">
+                      💡 <strong>Market Tip:</strong> Based on your problem statement, consider defining specific customer personas.
+                      More targeted market segmentation will improve your validation score significantly.
+                    </p>
+                  )}
+                  {currentStep === 3 && (
+                    <p className="text-sm text-muted-foreground">
+                      💰 <strong>Business Model Tip:</strong> Consider multiple revenue streams. Successful startups often have
+                      2-3 ways to monetize their solution to reduce dependency on a single income source.
+                    </p>
+                  )}
+                  {currentStep === 4 && (
+                    <p className="text-sm text-muted-foreground">
+                      🎯 <strong>Competition Tip:</strong> Don't just list competitors - explain why customers would switch to your solution.
+                      Focus on unique differentiators that are hard to replicate.
+                    </p>
+                  )}
+                  {currentStep === 5 && (
+                    <p className="text-sm text-muted-foreground">
+                      �� <strong>Team Tip:</strong> Highlight relevant experience and domain expertise. Investors look for teams that
+                      understand the problem deeply and have the skills to execute the solution.
+                    </p>
+                  )}
+                  {currentStep === 6 && (
+                    <p className="text-sm text-muted-foreground">
+                      🚀 <strong>Traction Tip:</strong> Even early-stage validation like customer interviews, surveys, or beta sign-ups
+                      counts as traction. Quantify your progress wherever possible.
+                    </p>
+                  )}
+                  {validationData.problemStatement && validationData.solutionDescription && (
+                    <div className="mt-2 pt-2 border-t border-primary/20">
+                      <p className="text-xs text-primary">
+                        <strong>Progress:</strong> Your startup idea is taking shape! Keep adding details to get more accurate validation insights.
+                      </p>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           )}
