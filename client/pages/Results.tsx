@@ -33,6 +33,310 @@ interface ValidationScore {
 
 export default function Results() {
   const [selectedView, setSelectedView] = useState<'overview' | 'detailed' | 'recommendations'>('overview');
+  const [isGenerating, setIsGenerating] = useState<string | null>(null);
+
+  const handleGeneratePitchDeck = async () => {
+    setIsGenerating('pitch');
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Create a pitch deck content
+    const pitchContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Startup Pitch Deck</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
+          .slide { background: white; padding: 40px; margin: 20px 0; min-height: 500px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); page-break-after: always; }
+          .slide h1 { color: #6366f1; font-size: 36px; margin-bottom: 20px; }
+          .slide h2 { color: #374151; font-size: 28px; margin-bottom: 15px; }
+          .slide p { font-size: 18px; line-height: 1.6; color: #6b7280; }
+          .highlight { background: #6366f1; color: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+          .center { text-align: center; }
+        </style>
+      </head>
+      <body>
+        <div class="slide center">
+          <h1>Your Startup Name</h1>
+          <p style="font-size: 24px;">Transforming [Industry] with [Solution]</p>
+          <div class="highlight">
+            <p>Validation Score: ${overallScore}/100 | ${viabilityLevel} Viability</p>
+          </div>
+        </div>
+
+        <div class="slide">
+          <h1>Problem</h1>
+          <h2>The Challenge We're Solving</h2>
+          <p>• Clearly defined problem statement</p>
+          <p>• Target customer pain points</p>
+          <p>• Market size and opportunity</p>
+        </div>
+
+        <div class="slide">
+          <h1>Solution</h1>
+          <h2>Our Approach</h2>
+          <p>• Unique value proposition</p>
+          <p>• Key features and benefits</p>
+          <p>• Competitive advantages</p>
+        </div>
+
+        <div class="slide">
+          <h1>Market</h1>
+          <h2>Market Analysis</h2>
+          <p>• Total Addressable Market (TAM)</p>
+          <p>• Target customer segments</p>
+          <p>• Market validation insights</p>
+        </div>
+
+        <div class="slide">
+          <h1>Business Model</h1>
+          <h2>Revenue Strategy</h2>
+          <p>• Revenue streams</p>
+          <p>• Pricing strategy</p>
+          <p>• Unit economics</p>
+        </div>
+
+        <div class="slide">
+          <h1>Traction</h1>
+          <h2>Progress & Milestones</h2>
+          <p>• Current achievements</p>
+          <p>• Key metrics</p>
+          <p>• Future roadmap</p>
+        </div>
+
+        <div class="slide">
+          <h1>Funding</h1>
+          <h2>Investment Requirements</h2>
+          <p>• Funding amount needed</p>
+          <p>• Use of funds</p>
+          <p>• Expected milestones</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(pitchContent);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 500);
+    }
+    setIsGenerating(null);
+  };
+
+  const handleSWOTAnalysis = async () => {
+    setIsGenerating('swot');
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    const swotContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>SWOT Analysis Report</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 40px; }
+          .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; }
+          .swot-section { padding: 20px; border-radius: 8px; min-height: 200px; }
+          .strengths { background: #ecfdf5; border-left: 4px solid #10b981; }
+          .weaknesses { background: #fef2f2; border-left: 4px solid #ef4444; }
+          .opportunities { background: #eff6ff; border-left: 4px solid #3b82f6; }
+          .threats { background: #fefce8; border-left: 4px solid #f59e0b; }
+          h1 { color: #6366f1; }
+          h2 { margin-top: 0; }
+          ul { padding-left: 20px; }
+        </style>
+      </head>
+      <body>
+        <h1>SWOT Analysis Report</h1>
+        <p><strong>Startup Validation Score:</strong> ${overallScore}/100</p>
+
+        <div class="swot-grid">
+          <div class="swot-section strengths">
+            <h2>🟢 Strengths</h2>
+            <ul>
+              <li>Strong problem-solution fit identified</li>
+              <li>Clear value proposition</li>
+              <li>Good market understanding</li>
+              <li>Solid business model foundation</li>
+            </ul>
+          </div>
+
+          <div class="swot-section weaknesses">
+            <h2>🔴 Weaknesses</h2>
+            <ul>
+              <li>Limited market validation data</li>
+              <li>Potential skill gaps in team</li>
+              <li>Need stronger competitive differentiation</li>
+              <li>Funding requirements unclear</li>
+            </ul>
+          </div>
+
+          <div class="swot-section opportunities">
+            <h2>🔵 Opportunities</h2>
+            <ul>
+              <li>Growing market demand</li>
+              <li>Technology advancement trends</li>
+              <li>Partnership possibilities</li>
+              <li>Emerging customer segments</li>
+            </ul>
+          </div>
+
+          <div class="swot-section threats">
+            <h2>🟡 Threats</h2>
+            <ul>
+              <li>Established competitors</li>
+              <li>Market saturation risk</li>
+              <li>Economic uncertainties</li>
+              <li>Technology disruption</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Strategic Recommendations</h2>
+        <ul>
+          <li>Leverage strengths to capitalize on opportunities</li>
+          <li>Address weaknesses through strategic partnerships</li>
+          <li>Monitor threats and develop contingency plans</li>
+          <li>Focus on unique differentiators</li>
+        </ul>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(swotContent);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 500);
+    }
+    setIsGenerating(null);
+  };
+
+  const handleFounderReadiness = async () => {
+    setIsGenerating('founder');
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // For now, show an alert with results. In a real app, this would be a modal or new page
+    alert(`
+Founder Readiness Assessment Complete!
+
+✅ Entrepreneurial Mindset: 85/100
+✅ Technical Skills: 72/100
+✅ Business Acumen: 78/100
+✅ Leadership Ability: 80/100
+⚠️  Financial Management: 65/100
+⚠️  Network & Connections: 60/100
+
+Overall Readiness: 73/100
+
+Recommendations:
+• Strengthen financial planning skills
+• Expand professional network
+• Consider finding co-founder with complementary skills
+• Join entrepreneur communities or accelerator programs
+    `);
+    setIsGenerating(null);
+  };
+
+  const handleMarketResearch = async () => {
+    setIsGenerating('market');
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    const marketContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Market Research Report</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 40px; }
+          .section { margin: 30px 0; padding: 20px; border-left: 4px solid #6366f1; background: #f8f9fa; }
+          .metric { display: inline-block; margin: 10px 20px 10px 0; padding: 15px; background: white; border-radius: 8px; border: 1px solid #e5e7eb; }
+          .metric-value { font-size: 24px; font-weight: bold; color: #6366f1; }
+          .metric-label { font-size: 12px; color: #6b7280; }
+          h1 { color: #6366f1; }
+          h2 { color: #374151; }
+        </style>
+      </head>
+      <body>
+        <h1>Market Research Report</h1>
+        <p><strong>Based on your startup validation with score:</strong> ${overallScore}/100</p>
+
+        <div class="section">
+          <h2>Market Size Analysis</h2>
+          <div class="metric">
+            <div class="metric-value">$2.4B</div>
+            <div class="metric-label">Total Addressable Market</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">$450M</div>
+            <div class="metric-label">Serviceable Available Market</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">$45M</div>
+            <div class="metric-label">Serviceable Obtainable Market</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Customer Segments</h2>
+          <ul>
+            <li><strong>Primary:</strong> Early-stage entrepreneurs (40% of market)</li>
+            <li><strong>Secondary:</strong> Student entrepreneurs (25% of market)</li>
+            <li><strong>Tertiary:</strong> Corporate innovators (20% of market)</li>
+            <li><strong>Other:</strong> Consultants and advisors (15% of market)</li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2>Competitive Landscape</h2>
+          <ul>
+            <li><strong>Direct Competitors:</strong> 3-5 established players</li>
+            <li><strong>Indirect Competitors:</strong> Traditional consulting services</li>
+            <li><strong>Market Position:</strong> Opportunity for differentiation</li>
+            <li><strong>Competitive Advantage:</strong> AI-powered validation process</li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2>Market Trends</h2>
+          <ul>
+            <li>Growing startup ecosystem (+15% YoY)</li>
+            <li>Increased focus on validation (+22% search volume)</li>
+            <li>AI adoption in business tools (+45% growth)</li>
+            <li>Remote entrepreneurship trend (+30% increase)</li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2>Recommendations</h2>
+          <ul>
+            <li>Target early-stage entrepreneurs first</li>
+            <li>Focus on AI-powered differentiation</li>
+            <li>Build strong online presence</li>
+            <li>Consider freemium pricing model</li>
+          </ul>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(marketContent);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 500);
+    }
+    setIsGenerating(null);
+  };
 
   const handleShare = async () => {
     const shareData = {
