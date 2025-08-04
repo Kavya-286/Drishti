@@ -11,6 +11,9 @@ function playDemo() {
     alert('Demo video would play here! For now, try the validation tool to see StartupValidator in action.');
 }
 
+// Make playDemo available globally
+window.playDemo = playDemo;
+
 // Smooth scrolling for anchor links
 function smoothScroll(target) {
     document.querySelector(target).scrollIntoView({
