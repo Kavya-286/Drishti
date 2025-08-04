@@ -147,6 +147,9 @@ export default function Validate() {
           <div className="flex items-center space-x-4">
             <Badge variant="secondary">{currentStep}/{totalSteps}</Badge>
             <Button variant="outline" size="sm" asChild>
+              <Link to="/auth">Sign In</Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
               <Link to="/">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
