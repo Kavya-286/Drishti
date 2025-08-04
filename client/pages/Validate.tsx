@@ -279,9 +279,36 @@ export default function Validate() {
                       placeholder="What specific problem are you solving? Who faces this problem?"
                       value={validationData.problemStatement}
                       onChange={(e) => updateData('problemStatement', e.target.value)}
+                      onBlur={(e) => {
+                        if (e.target.value.length > 20) {
+                          generateSuggestions(e.target.value);
+                        }
+                      }}
                       className="mt-2"
                       rows={4}
                     />
+                    {isGeneratingSuggestion && (
+                      <div className="mt-2 text-sm text-muted-foreground flex items-center">
+                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin mr-2"></div>
+                        Generating AI suggestions...
+                      </div>
+                    )}
+                    {suggestions.length > 0 && (
+                      <div className="mt-3 p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                        <h4 className="text-sm font-medium text-primary mb-2 flex items-center">
+                          <Lightbulb className="w-4 h-4 mr-1" />
+                          AI Suggestions for Problem Validation
+                        </h4>
+                        <ul className="space-y-1 text-sm text-muted-foreground">
+                          {suggestions.map((suggestion, index) => (
+                            <li key={index} className="flex items-start">
+                              <span className="text-primary mr-2">•</span>
+                              {suggestion}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="solutionDescription">Solution Description *</Label>
