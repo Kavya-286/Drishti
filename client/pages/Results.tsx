@@ -574,7 +574,7 @@ export default function Results() {
                       <Download className="w-4 h-4 mr-2" />
                       Download Full Report
                     </Button>
-                    <Button variant="outline" className="w-full">
+                    <Button variant="outline" className="w-full" onClick={handleShare}>
                       <Share2 className="w-4 h-4 mr-2" />
                       Share with Team
                     </Button>
