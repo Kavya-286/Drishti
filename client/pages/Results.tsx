@@ -663,6 +663,82 @@ Recommendations:
                 </div>
               </CardContent>
             </Card>
+
+            {/* Investor Readiness Meter */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Target className="w-5 h-5 text-primary" />
+                  <span>Investor Readiness Meter</span>
+                </CardTitle>
+                <CardDescription>
+                  Combined assessment of viability, founder readiness, and idea clarity
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Main Readiness Score */}
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-primary mb-2">{investorReadinessScore}/100</div>
+                    <Badge className={`${readinessLevel.color} ${readinessLevel.bg} ${readinessLevel.border} border`}>
+                      {readinessLevel.level}
+                    </Badge>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span>Investor Readiness</span>
+                      <span className="font-semibold">{investorReadinessScore}%</span>
+                    </div>
+                    <Progress value={investorReadinessScore} className="h-4" />
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>Bootstrap (0-49)</span>
+                      <span>Accelerator (50-64)</span>
+                      <span>Angel (65-79)</span>
+                      <span>Investor (80+)</span>
+                    </div>
+                  </div>
+
+                  {/* Component Breakdown */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="text-center p-4 bg-muted/30 rounded-lg">
+                      <div className="text-2xl font-bold text-primary mb-1">{overallScore}%</div>
+                      <div className="text-sm text-muted-foreground">Viability Score</div>
+                    </div>
+                    <div className="text-center p-4 bg-muted/30 rounded-lg">
+                      <div className="text-2xl font-bold text-primary mb-1">{founderReadinessScore}%</div>
+                      <div className="text-sm text-muted-foreground">Founder Readiness</div>
+                    </div>
+                    <div className="text-center p-4 bg-muted/30 rounded-lg">
+                      <div className="text-2xl font-bold text-primary mb-1">{clarityScore}%</div>
+                      <div className="text-sm text-muted-foreground">Idea Clarity</div>
+                    </div>
+                  </div>
+
+                  {/* Recommendation */}
+                  <div className={`p-4 rounded-lg border ${readinessLevel.border} ${readinessLevel.bg}`}>
+                    <h4 className={`font-semibold mb-2 ${readinessLevel.color}`}>
+                      📊 {recommendation.title}
+                    </h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      {recommendation.description}
+                    </p>
+                    <div>
+                      <div className="text-sm font-medium mb-2">Recommended Actions:</div>
+                      <ul className="space-y-1 text-sm text-muted-foreground">
+                        {recommendation.actions.map((action, index) => (
+                          <li key={index} className="flex items-start">
+                            <span className="text-primary mr-2">•</span>
+                            {action}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           <Tabs value={selectedView} onValueChange={(value) => setSelectedView(value as any)} className="space-y-6">
