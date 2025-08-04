@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Validate from "./pages/Validate";
 import Results from "./pages/Results";
+import Auth from "./pages/Auth";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
