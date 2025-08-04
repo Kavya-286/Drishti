@@ -136,18 +136,13 @@ export default function Index() {
               StartupValidator
             </span>
           </div>
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/features" className="text-sm font-medium hover:text-primary transition-colors">
-              Features
-            </Link>
-            <Link to="/pricing" className="text-sm font-medium hover:text-primary transition-colors">
-              Pricing
-            </Link>
-            <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
-              About
-            </Link>
-            <Button variant="outline" size="sm">Sign In</Button>
-            <Button size="sm">Get Started</Button>
+          <nav className="hidden md:flex items-center space-x-4">
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/auth">Sign In</Link>
+            </Button>
+            <Button size="sm" asChild>
+              <Link to="/validate">Get Started</Link>
+            </Button>
           </nav>
         </div>
       </header>
