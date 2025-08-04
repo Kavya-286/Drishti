@@ -313,11 +313,38 @@
         </div>
     </div>
 
+    <script>
+        // Critical functions defined inline as fallback
+        window.navigateTo = window.navigateTo || function(page) {
+            window.location.href = page;
+        };
+
+        window.shareResults = window.shareResults || function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Startup Validation Results',
+                    text: 'Check out my startup validation results!',
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link copied to clipboard!');
+            }
+        };
+
+        window.exportToPDF = window.exportToPDF || function() {
+            window.print();
+        };
+    </script>
+
     <script src="script.js"></script>
     <script src="results.js"></script>
+
     <script>
         // Initialize Lucide icons
-        lucide.createIcons();
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
     </script>
 </body>
 </html>
