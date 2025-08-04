@@ -570,7 +570,7 @@ export default function Results() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <Button className="w-full">
+                    <Button className="w-full" onClick={handleExportPDF}>
                       <Download className="w-4 h-4 mr-2" />
                       Download Full Report
                     </Button>
