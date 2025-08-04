@@ -89,6 +89,57 @@ export default function Validate() {
     setValidationData(prev => ({ ...prev, [field]: value }));
   };
 
+  const generateSuggestions = async (problemText: string) => {
+    if (!problemText || problemText.length < 10) return;
+
+    setIsGeneratingSuggestion(true);
+
+    // Simulate AI suggestion generation based on the problem
+    const suggestionTemplates = [
+      "Consider validating the problem severity with customer interviews to understand the pain level",
+      "Research if existing solutions adequately address this problem or leave gaps",
+      "Quantify the financial impact of this problem on your target customers",
+      "Identify specific customer segments most affected by this problem",
+      "Explore if this problem occurs frequently enough to warrant a solution",
+      "Investigate the root causes behind this problem to ensure your solution targets the right issue",
+      "Validate that customers are actively seeking solutions for this problem",
+      "Research market trends that make this problem more or less relevant over time"
+    ];
+
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Generate contextual suggestions based on keywords in the problem
+    const keywords = problemText.toLowerCase();
+    let contextualSuggestions = [];
+
+    if (keywords.includes('time') || keywords.includes('slow') || keywords.includes('efficiency')) {
+      contextualSuggestions = [
+        "Measure the actual time lost due to this problem to quantify the value proposition",
+        "Research automation tools or processes that could solve this efficiency issue",
+        "Consider if customers would pay for time-saving solutions in this context"
+      ];
+    } else if (keywords.includes('cost') || keywords.includes('expensive') || keywords.includes('money')) {
+      contextualSuggestions = [
+        "Calculate the exact cost impact of this problem on your target customers",
+        "Explore if customers have budget allocated for solving cost-related problems",
+        "Research price sensitivity in your target market for cost-saving solutions"
+      ];
+    } else if (keywords.includes('communication') || keywords.includes('connect') || keywords.includes('collaborate')) {
+      contextualSuggestions = [
+        "Study existing communication tools to identify specific gaps your solution could fill",
+        "Investigate if the communication problem is due to process or technology issues",
+        "Consider the network effects and adoption challenges for communication solutions"
+      ];
+    } else {
+      // General suggestions
+      contextualSuggestions = suggestionTemplates.slice(0, 3);
+    }
+
+    setSuggestions(contextualSuggestions);
+    setIsGeneratingSuggestion(false);
+  };
+
   const nextStep = () => {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
