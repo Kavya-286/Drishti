@@ -25,6 +25,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/validate" element={<Validate />} />
           <Route path="/results" element={<Results />} />
+          <Route path="/auth" element={<Auth />} />
 
           {/* Placeholder pages */}
           <Route
