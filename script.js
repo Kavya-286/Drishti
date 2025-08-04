@@ -1,10 +1,12 @@
-// Navigation functionality
+// Navigation functionality - immediately available
+window.navigateTo = function(page) {
+    window.location.href = page;
+};
+
+// Also define as regular function for compatibility
 function navigateTo(page) {
     window.location.href = page;
 }
-
-// Ensure functions are available globally
-window.navigateTo = navigateTo;
 
 // Demo functionality
 function playDemo() {
