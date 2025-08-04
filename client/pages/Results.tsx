@@ -847,21 +847,41 @@ Recommendations:
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <Button variant="outline" className="w-full justify-start">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={handleGeneratePitchDeck}
+                      disabled={isGenerating === 'pitch'}
+                    >
                       <FileText className="w-4 h-4 mr-2" />
-                      Generate Pitch Deck
+                      {isGenerating === 'pitch' ? 'Generating...' : 'Generate Pitch Deck'}
                     </Button>
-                    <Button variant="outline" className="w-full justify-start">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={handleSWOTAnalysis}
+                      disabled={isGenerating === 'swot'}
+                    >
                       <BarChart3 className="w-4 h-4 mr-2" />
-                      SWOT Analysis
+                      {isGenerating === 'swot' ? 'Generating...' : 'SWOT Analysis'}
                     </Button>
-                    <Button variant="outline" className="w-full justify-start">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={handleFounderReadiness}
+                      disabled={isGenerating === 'founder'}
+                    >
                       <Users className="w-4 h-4 mr-2" />
-                      Founder Readiness Check
+                      {isGenerating === 'founder' ? 'Analyzing...' : 'Founder Readiness Check'}
                     </Button>
-                    <Button variant="outline" className="w-full justify-start">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={handleMarketResearch}
+                      disabled={isGenerating === 'market'}
+                    >
                       <TrendingUp className="w-4 h-4 mr-2" />
-                      Market Research Report
+                      {isGenerating === 'market' ? 'Researching...' : 'Market Research Report'}
                     </Button>
                   </CardContent>
                 </Card>
