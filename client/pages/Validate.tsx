@@ -58,6 +58,9 @@ interface ValidationData {
 export default function Validate() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isValidating, setIsValidating] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isGeneratingSuggestion, setIsGeneratingSuggestion] = useState(false);
+
   const [validationData, setValidationData] = useState<ValidationData>({
     problemStatement: '',
     solutionDescription: '',
