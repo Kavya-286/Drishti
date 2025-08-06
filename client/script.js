@@ -1,436 +1,542 @@
-// Navigation functionality - defined immediately
-(function() {
-    'use strict';
+// StartupValidator JavaScript - ML Backend Integration
+class StartupValidator {
+    constructor() {
+        this.apiBase = window.location.origin;
+        this.currentValidation = null;
+        this.isLoading = false;
+        
+        this.init();
+    }
     
-    // Define navigateTo function immediately
-    function navigateTo(page) {
+    init() {
+        this.bindEvents();
+        this.initScrollAnimations();
+        this.checkHealthStatus();
+    }
+    
+    bindEvents() {
+        // Global navigation functions
+        window.navigateTo = this.navigateTo.bind(this);
+        window.playDemo = this.playDemo.bind(this);
+        window.generateAIPitch = this.generateAIPitch.bind(this);
+        window.copyPitchToClipboard = this.copyPitchToClipboard.bind(this);
+        
+        // Intersection observer for animations
+        this.setupIntersectionObserver();
+    }
+    
+    // Navigation
+    navigateTo(page) {
         console.log('Navigating to:', page);
         window.location.href = page;
     }
     
-    // Make it available globally
-    window.navigateTo = navigateTo;
-    
-    // Also attach to document for extra safety
-    if (typeof document !== 'undefined') {
-        document.navigateTo = navigateTo;
+    playDemo() {
+        this.showNotification('Demo feature coming soon! Try our validation tool to see StartupValidator in action.', 'info');
     }
     
-    console.log('navigateTo function defined:', typeof window.navigateTo);
-})();
-
-// Demo functionality - defined immediately  
-(function() {
-    'use strict';
-    
-    function playDemo() {
-        alert('Demo video would play here! For now, try the validation tool to see StartupValidator in action.');
-    }
-    
-    // Make it available globally
-    window.playDemo = playDemo;
-    
-    console.log('playDemo function defined:', typeof window.playDemo);
-})();
-
-// Smooth scrolling for anchor links
-function smoothScroll(target) {
-    document.querySelector(target).scrollIntoView({
-        behavior: 'smooth'
-    });
-}
-
-// Form validation utilities
-function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-function validateRequired(value) {
-    return value && value.trim().length > 0;
-}
-
-// Show loading state on button
-function showLoading(button, originalText = 'Loading...') {
-    button.disabled = true;
-    button.classList.add('loading');
-    button.textContent = originalText;
-}
-
-// Hide loading state on button
-function hideLoading(button, originalText) {
-    button.disabled = false;
-    button.classList.remove('loading');
-    button.textContent = originalText;
-}
-
-// Show modal
-function showModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.classList.add('active');
-    }
-}
-
-// Hide modal
-function hideModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.classList.remove('active');
-    }
-}
-
-// Close modal when clicking outside
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal')) {
-        e.target.classList.remove('active');
-    }
-});
-
-// Progress bar animation
-function animateProgress(progressElement, targetValue, duration = 1000) {
-    let currentValue = 0;
-    const increment = targetValue / (duration / 16);
-    
-    const timer = setInterval(() => {
-        currentValue += increment;
-        if (currentValue >= targetValue) {
-            currentValue = targetValue;
-            clearInterval(timer);
-        }
-        progressElement.style.width = currentValue + '%';
-    }, 16);
-}
-
-// Intersection Observer for animations
-function initScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-fade-in-up');
+    // API Communication
+    async makeRequest(endpoint, method = 'GET', data = null) {
+        const config = {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
             }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-
-    // Observe elements to animate
-    document.querySelectorAll('.feature-card, .addon-card, .pricing-card').forEach(el => {
-        observer.observe(el);
-    });
-}
-
-// Local storage utilities
-function saveToStorage(key, data) {
-    try {
-        localStorage.setItem(key, JSON.stringify(data));
-        return true;
-    } catch (error) {
-        console.error('Error saving to localStorage:', error);
-        return false;
-    }
-}
-
-function loadFromStorage(key) {
-    try {
-        const data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : null;
-    } catch (error) {
-        console.error('Error loading from localStorage:', error);
-        return null;
-    }
-}
-
-function removeFromStorage(key) {
-    try {
-        localStorage.removeItem(key);
-        return true;
-    } catch (error) {
-        console.error('Error removing from localStorage:', error);
-        return false;
-    }
-}
-
-// API simulation utilities
-async function simulateApiCall(data, delay = 1500) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve({
-                success: true,
-                data: data,
-                timestamp: new Date().toISOString()
-            });
-        }, delay);
-    });
-}
-
-// Share functionality
-async function shareResults(title, text, url) {
-    const shareData = {
-        title: title,
-        text: text,
-        url: url || window.location.href
-    };
-
-    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        };
+        
+        if (data) {
+            config.body = JSON.stringify(data);
+        }
+        
         try {
-            await navigator.share(shareData);
+            const response = await fetch(`${this.apiBase}/api/${endpoint}`, config);
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.error || 'Request failed');
+            }
+            
+            return result;
+        } catch (error) {
+            console.error('API Request failed:', error);
+            throw error;
+        }
+    }
+    
+    // Health Check
+    async checkHealthStatus() {
+        try {
+            const health = await this.makeRequest('health');
+            console.log('Backend status:', health);
+        } catch (error) {
+            console.warn('Backend not available:', error.message);
+        }
+    }
+    
+    // AI Pitch Generation
+    async generateAIPitch() {
+        const button = document.querySelector('.btn-glow');
+        const originalText = button.innerHTML;
+        
+        // Show loading state
+        button.disabled = true;
+        button.innerHTML = `
+            <div class="loading-spinner"></div>
+            Generating AI Pitch...
+        `;
+        
+        try {
+            // Get validation data if available
+            const validationData = this.loadFromStorage('validationData') || {};
+            
+            const result = await this.makeRequest('generate-pitch', 'POST', validationData);
+            
+            if (result.success) {
+                this.displayPitchContent(result.pitch_content);
+                this.showNotification('AI Pitch generated successfully!', 'success');
+            } else {
+                throw new Error(result.error || 'Pitch generation failed');
+            }
+            
+        } catch (error) {
+            this.showNotification('Failed to generate pitch: ' + error.message, 'error');
+            console.error('Pitch generation error:', error);
+        } finally {
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }
+    }
+    
+    displayPitchContent(pitchContent) {
+        const container = document.getElementById('pitch-output-container');
+        const sectionsContainer = document.getElementById('pitch-sections');
+        
+        if (!container || !sectionsContainer) return;
+        
+        // Store pitch content for copying
+        this.currentPitch = pitchContent;
+        
+        const sections = [
+            { key: 'executiveSummary', title: '🎯 Executive Summary', icon: 'target' },
+            { key: 'problemStatement', title: '🔍 Problem Statement', icon: 'search' },
+            { key: 'solutionOverview', title: '💡 Solution Overview', icon: 'lightbulb' },
+            { key: 'marketOpportunity', title: '📈 Market Opportunity', icon: 'trending-up' },
+            { key: 'businessModel', title: '💰 Business Model', icon: 'dollar-sign' },
+            { key: 'competitiveAdvantage', title: '🏆 Competitive Advantage', icon: 'award' },
+            { key: 'fundingRequirements', title: '💼 Funding Requirements', icon: 'briefcase' }
+        ];
+        
+        sectionsContainer.innerHTML = sections.map(section => `
+            <div class="pitch-section">
+                <h4>
+                    <i data-lucide="${section.icon}"></i>
+                    ${section.title}
+                </h4>
+                <p>${pitchContent[section.key]}</p>
+            </div>
+        `).join('');
+        
+        // Show the container
+        container.style.display = 'block';
+        container.scrollIntoView({ behavior: 'smooth' });
+        
+        // Re-initialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+    
+    copyPitchToClipboard() {
+        if (!this.currentPitch) {
+            this.showNotification('No pitch content to copy', 'warning');
+            return;
+        }
+        
+        const sections = [
+            'Executive Summary: ' + this.currentPitch.executiveSummary,
+            'Problem Statement: ' + this.currentPitch.problemStatement,
+            'Solution Overview: ' + this.currentPitch.solutionOverview,
+            'Market Opportunity: ' + this.currentPitch.marketOpportunity,
+            'Business Model: ' + this.currentPitch.businessModel,
+            'Competitive Advantage: ' + this.currentPitch.competitiveAdvantage,
+            'Funding Requirements: ' + this.currentPitch.fundingRequirements
+        ];
+        
+        const fullPitch = sections.join('\n\n');
+        
+        this.copyToClipboard(fullPitch, 'Pitch copied to clipboard!');
+    }
+    
+    // Startup Validation (for validation page)
+    async validateStartup(formData) {
+        try {
+            this.isLoading = true;
+            
+            const result = await this.makeRequest('validate', 'POST', formData);
+            
+            if (result.success) {
+                // Store validation results
+                this.saveToStorage('validationResults', result);
+                this.saveToStorage('validationData', formData);
+                
+                return result;
+            } else {
+                throw new Error(result.error || 'Validation failed');
+            }
+            
+        } catch (error) {
+            console.error('Validation error:', error);
+            throw error;
+        } finally {
+            this.isLoading = false;
+        }
+    }
+    
+    // Generate SWOT Analysis
+    async generateSWOT(formData = {}) {
+        try {
+            const result = await this.makeRequest('generate-swot', 'POST', formData);
+            
+            if (result.success) {
+                return result.swot_analysis;
+            } else {
+                throw new Error(result.error || 'SWOT generation failed');
+            }
+        } catch (error) {
+            console.error('SWOT generation error:', error);
+            throw error;
+        }
+    }
+    
+    // Check Founder Readiness
+    async checkFounderReadiness(formData = {}) {
+        try {
+            const result = await this.makeRequest('founder-readiness', 'POST', formData);
+            
+            if (result.success) {
+                return result.assessment;
+            } else {
+                throw new Error(result.error || 'Founder assessment failed');
+            }
+        } catch (error) {
+            console.error('Founder readiness error:', error);
+            throw error;
+        }
+    }
+    
+    // Generate Market Research
+    async generateMarketResearch(formData = {}) {
+        try {
+            const result = await this.makeRequest('market-research', 'POST', formData);
+            
+            if (result.success) {
+                return result.market_data;
+            } else {
+                throw new Error(result.error || 'Market research failed');
+            }
+        } catch (error) {
+            console.error('Market research error:', error);
+            throw error;
+        }
+    }
+    
+    // Utility Functions
+    copyToClipboard(text, successMessage = 'Copied to clipboard!') {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.showNotification(successMessage, 'success');
+            }).catch(() => {
+                this.fallbackCopyToClipboard(text, successMessage);
+            });
+        } else {
+            this.fallbackCopyToClipboard(text, successMessage);
+        }
+    }
+    
+    fallbackCopyToClipboard(text, successMessage) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        try {
+            document.execCommand('copy');
+            this.showNotification(successMessage, 'success');
+        } catch (err) {
+            this.showNotification('Failed to copy to clipboard', 'error');
+        }
+        
+        document.body.removeChild(textArea);
+    }
+    
+    // Notification System
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="${this.getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.parentElement.remove()" style="margin-left: auto; background: none; border: none; cursor: pointer; opacity: 0.7;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Re-initialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+    
+    getNotificationIcon(type) {
+        const icons = {
+            success: 'check-circle',
+            error: 'alert-circle',
+            warning: 'alert-triangle',
+            info: 'info'
+        };
+        return icons[type] || 'info';
+    }
+    
+    // Local Storage
+    saveToStorage(key, data) {
+        try {
+            localStorage.setItem(key, JSON.stringify(data));
             return true;
         } catch (error) {
-            console.log('Share cancelled or failed');
+            console.error('Failed to save to localStorage:', error);
             return false;
         }
-    } else {
-        // Fallback to clipboard
+    }
+    
+    loadFromStorage(key) {
         try {
-            await navigator.clipboard.writeText(`${text} ${shareData.url}`);
-            showNotification('Link copied to clipboard!', 'success');
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : null;
+        } catch (error) {
+            console.error('Failed to load from localStorage:', error);
+            return null;
+        }
+    }
+    
+    removeFromStorage(key) {
+        try {
+            localStorage.removeItem(key);
             return true;
         } catch (error) {
-            // Final fallback for older browsers
-            const textArea = document.createElement('textarea');
-            textArea.value = `${text} ${shareData.url}`;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            showNotification('Link copied to clipboard!', 'success');
+            console.error('Failed to remove from localStorage:', error);
+            return false;
+        }
+    }
+    
+    // Animation Setup
+    initScrollAnimations() {
+        const animateElements = document.querySelectorAll('.feature-card, .step, .pricing-card');
+        
+        animateElements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+        });
+    }
+    
+    setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.transition = 'all 0.6s ease';
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+        
+        // Observe feature cards, steps, and pricing cards
+        document.querySelectorAll('.feature-card, .step, .pricing-card').forEach(el => {
+            observer.observe(el);
+        });
+    }
+    
+    // Validation Helpers
+    validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    validateRequired(value) {
+        return value && value.trim().length > 0;
+    }
+    
+    // Share functionality
+    async shareResults(title, text, url) {
+        const shareData = {
+            title: title,
+            text: text,
+            url: url || window.location.href
+        };
+        
+        if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+            try {
+                await navigator.share(shareData);
+                return true;
+            } catch (error) {
+                console.log('Share cancelled or failed');
+                return false;
+            }
+        } else {
+            this.copyToClipboard(`${text} ${shareData.url}`, 'Link copied to clipboard!');
             return true;
         }
     }
-}
-
-// Notification system
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-        <span>${message}</span>
-        <button onclick="this.parentElement.remove()" style="margin-left: 10px; background: none; border: none; color: inherit; cursor: pointer;">×</button>
-    `;
     
-    // Add styles
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#6366f1'};
-        color: white;
-        padding: 12px 16px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 1001;
-        font-size: 14px;
-        max-width: 300px;
-        animation: slideIn 0.3s ease;
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.remove();
+    // PDF Generation
+    generatePDF(content, filename = 'startup-validation-report.pdf') {
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${filename}</title>
+                    <style>
+                        body { 
+                            font-family: 'Inter', Arial, sans-serif; 
+                            margin: 40px; 
+                            line-height: 1.6;
+                            color: #1e293b;
+                        }
+                        h1, h2, h3 { 
+                            color: #6366f1; 
+                            margin-bottom: 16px;
+                        }
+                        .header { 
+                            text-align: center; 
+                            margin-bottom: 40px; 
+                            padding-bottom: 20px;
+                            border-bottom: 3px solid #6366f1;
+                        }
+                        .section { 
+                            margin: 30px 0; 
+                            padding: 20px; 
+                            border-left: 4px solid #6366f1; 
+                            background: #f8fafc; 
+                            border-radius: 8px;
+                        }
+                        .score { 
+                            font-size: 24px; 
+                            font-weight: bold; 
+                            color: #6366f1; 
+                        }
+                        ul { 
+                            margin-left: 20px; 
+                        }
+                        li { 
+                            margin: 8px 0; 
+                        }
+                        .footer {
+                            margin-top: 40px;
+                            text-align: center;
+                            color: #64748b;
+                            border-top: 1px solid #e2e8f0;
+                            padding-top: 20px;
+                        }
+                        @media print { 
+                            .no-print { display: none; } 
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${content}
+                    <div class="footer">
+                        <p>Generated by StartupValidator - AI-Powered Startup Validation</p>
+                        <p>Visit startupvalidator.com for more insights</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
         }
-    }, 5000);
-}
-
-// Add slide-in animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-`;
-document.head.appendChild(style);
-
-// PDF generation utility
-function generatePDF(content, filename = 'startup-validation-report.pdf') {
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-        printWindow.document.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>${filename}</title>
-                <style>
-                    body { 
-                        font-family: Arial, sans-serif; 
-                        margin: 40px; 
-                        line-height: 1.6;
-                    }
-                    h1, h2, h3 { 
-                        color: #6366f1; 
-                        margin-bottom: 16px;
-                    }
-                    .header { 
-                        text-align: center; 
-                        margin-bottom: 40px; 
-                        padding-bottom: 20px;
-                        border-bottom: 2px solid #6366f1;
-                    }
-                    .section { 
-                        margin: 30px 0; 
-                        padding: 20px; 
-                        border-left: 4px solid #6366f1; 
-                        background: #f8f9fa; 
-                    }
-                    .score { 
-                        font-size: 24px; 
-                        font-weight: bold; 
-                        color: #6366f1; 
-                    }
-                    ul { 
-                        margin-left: 20px; 
-                    }
-                    li { 
-                        margin: 8px 0; 
-                    }
-                    @media print { 
-                        .no-print { display: none; } 
-                    }
-                </style>
-            </head>
-            <body>
-                ${content}
-            </body>
-            </html>
-        `);
-        printWindow.document.close();
-        
-        setTimeout(() => {
-            printWindow.print();
-            printWindow.close();
-        }, 500);
     }
 }
 
-// Scoring algorithm
-function calculateValidationScore(data) {
-    let totalScore = 0;
-    let categories = 0;
-    
-    // Problem-Solution Fit (0-100)
-    let problemSolutionScore = 0;
-    if (data.problemStatement && data.problemStatement.length > 50) problemSolutionScore += 30;
-    if (data.solutionDescription && data.solutionDescription.length > 50) problemSolutionScore += 30;
-    if (data.uniqueValueProposition && data.uniqueValueProposition.length > 30) problemSolutionScore += 40;
-    totalScore += problemSolutionScore;
-    categories++;
-    
-    // Market Opportunity (0-100)
-    let marketScore = 0;
-    if (data.targetMarket && data.targetMarket.length > 30) marketScore += 40;
-    if (data.marketSize) marketScore += 30;
-    if (data.customerSegments && data.customerSegments.length > 30) marketScore += 30;
-    totalScore += marketScore;
-    categories++;
-    
-    // Business Model (0-100)
-    let businessScore = 0;
-    if (data.revenueModel) businessScore += 40;
-    if (data.pricingStrategy && data.pricingStrategy.length > 30) businessScore += 40;
-    if (data.keyMetrics && data.keyMetrics.length > 20) businessScore += 20;
-    totalScore += businessScore;
-    categories++;
-    
-    // Competition (0-100)
-    let competitionScore = 0;
-    if (data.competitiveAdvantage && data.competitiveAdvantage.length > 30) competitionScore += 50;
-    if (data.directCompetitors && data.directCompetitors.length > 20) competitionScore += 25;
-    if (data.indirectCompetitors && data.indirectCompetitors.length > 20) competitionScore += 25;
-    totalScore += competitionScore;
-    categories++;
-    
-    // Team (0-100)
-    let teamScore = 0;
-    if (data.foundersExperience && data.foundersExperience.length > 30) teamScore += 50;
-    if (data.teamSize) teamScore += 25;
-    if (data.keySkills && data.keySkills.length > 20) teamScore += 25;
-    totalScore += teamScore;
-    categories++;
-    
-    // Traction (0-100)
-    let tractionScore = 0;
-    if (data.currentStage) tractionScore += 40;
-    if (data.existingTraction && data.existingTraction.length > 20) tractionScore += 40;
-    if (data.fundingNeeds && data.fundingNeeds.length > 20) tractionScore += 20;
-    totalScore += tractionScore;
-    categories++;
-    
-    const overallScore = categories > 0 ? Math.round(totalScore / categories) : 0;
-    
-    return {
-        overall: overallScore,
-        categories: {
-            problemSolution: problemSolutionScore,
-            market: marketScore,
-            business: businessScore,
-            competition: competitionScore,
-            team: teamScore,
-            traction: tractionScore
-        }
-    };
-}
-
-// Initialize page
+// Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize scroll animations
-    initScrollAnimations();
+    window.startupValidator = new StartupValidator();
     
-    // Initialize lucide icons
+    // Initialize Lucide icons
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
     
-    // Add smooth scrolling to all anchor links
+    // Add smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
                 target.scrollIntoView({
-                    behavior: 'smooth'
+                    behavior: 'smooth',
+                    block: 'start'
                 });
             }
         });
     });
     
-    // Initialize progress bars
-    const progressBars = document.querySelectorAll('.progress-bar');
-    progressBars.forEach(bar => {
-        const value = bar.getAttribute('data-value') || 0;
-        animateProgress(bar, value);
+    // Navbar scroll effect
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+        } else {
+            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            navbar.style.boxShadow = 'none';
+        }
     });
     
-    console.log('StartupValidator initialized successfully!');
+    console.log('🚀 StartupValidator initialized successfully!');
+    console.log('🤖 ML Backend integration ready');
+    console.log('🎨 Modern UI loaded without Tailwind');
 });
 
-// Export functions for use in other files
-window.StartupValidator = {
-    navigateTo,
-    playDemo,
-    showLoading,
-    hideLoading,
-    showModal,
-    hideModal,
-    showNotification,
-    shareResults,
-    generatePDF,
-    calculateValidationScore,
-    saveToStorage,
-    loadFromStorage,
-    removeFromStorage,
-    simulateApiCall,
-    validateEmail,
-    validateRequired
-};
+// Add loading spinner styles
+const style = document.createElement('style');
+style.textContent = `
+    .loading-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid transparent;
+        border-top: 2px solid currentColor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+`;
+document.head.appendChild(style);
