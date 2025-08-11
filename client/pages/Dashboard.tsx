@@ -158,14 +158,18 @@ export default function Dashboard() {
     setCurrentUser(userData);
 
     // Load validation history from localStorage if available
-    const storedHistory = localStorage.getItem('validationHistory');
+    const storedHistory = localStorage.getItem(`validationHistory_${userData.id}`);
     if (storedHistory) {
       try {
         const history = JSON.parse(storedHistory);
-        setValidationHistory([...history, ...mockValidationHistory]);
+        setValidationHistory(history);
       } catch (error) {
         console.warn('Failed to load validation history:', error);
+        setValidationHistory([]);
       }
+    } else {
+      // New user - no validation history
+      setValidationHistory([]);
     }
   }, [navigate]);
 
