@@ -1095,7 +1095,7 @@ ${assessment.recommendations.map(rec => `• ${rec}`).join('\n')}
                     <span className="text-sm font-medium">Startup Viability</span>
                     <span className="text-2xl font-bold text-primary">{overallScore}%</span>
                   </div>
-                  <Progress value={overallScore} className="h-3" />
+                  <Progress value={typeof overallScore === 'number' && !isNaN(overallScore) ? overallScore : 0} className="h-3" />
                   <div className="flex justify-between text-xs text-muted-foreground">
                     <span>Low (0-40)</span>
                     <span>Moderate (41-70)</span>
