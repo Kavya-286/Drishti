@@ -367,7 +367,13 @@ export default function InvestorDashboard() {
                 </div>
 
                 <div className="space-y-4">
-                  {recentStartups.map((startup) => (
+                  {publicStartupIdeas
+                    .filter(startup =>
+                      startup.ideaName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      startup.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      startup.industry.toLowerCase().includes(searchQuery.toLowerCase())
+                    )
+                    .map((startup) => (
                     <div key={startup.id} className="p-6 border rounded-lg hover:shadow-md transition-shadow">
                       <div className="flex items-start justify-between mb-4">
                         <div>
