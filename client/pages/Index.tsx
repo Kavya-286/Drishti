@@ -124,83 +124,6 @@ export default function Index() {
     }
   ];
 
-  const generateAIPitchDemo = async () => {
-    setIsGeneratingPitch(true);
-
-    try {
-      // Use sample data for the demo pitch generation
-      const sampleData = {
-        problemStatement: "Entrepreneurs struggle to objectively validate their startup ideas, often relying on biased feedback from friends and family rather than systematic analysis.",
-        solutionDescription: "AI-powered platform that guides entrepreneurs through a structured validation process, providing instant scoring and actionable recommendations.",
-        targetMarket: "Early-stage entrepreneurs, accelerator programs, and educational institutions",
-        revenueModel: "Freemium SaaS model",
-        currentStage: "Early revenue stage"
-      };
-
-      let pitchResult;
-
-      try {
-        // Generate pitch using API (with fallback built into the API service)
-        pitchResult = await generateAIPitch(sampleData);
-      } catch (apiError) {
-        console.warn('API pitch generation failed, using local fallback:', apiError);
-        // Ultimate fallback if API service fails completely
-        pitchResult = {
-          success: true,
-          pitch_content: {
-            executiveSummary: "Drishti is revolutionizing startup intelligence through advanced AI-powered analysis and market insights. Our platform provides comprehensive validation, competitive analysis, and strategic guidance, helping entrepreneurs make data-driven decisions with confidence.",
-            problemStatement: "90% of startups fail due to lack of market need and insufficient validation. Entrepreneurs struggle to objectively assess their ideas' viability, often relying on biased feedback from friends and family rather than systematic analysis.",
-            solutionOverview: "Our AI-powered platform guides entrepreneurs through a structured validation process, analyzing six key areas: problem-solution fit, market opportunity, business model, competition, team strength, and execution readiness. Users receive instant scoring and actionable recommendations.",
-            marketOpportunity: "The global startup ecosystem is valued at $3.8 trillion, with over 305 million startups launched annually. Our addressable market includes early-stage entrepreneurs, accelerator programs, and educational institutions seeking systematic validation tools.",
-            businessModel: "Freemium SaaS model with three tiers: Free (1 validation/month), Pro ($29/month for unlimited validations), and Enterprise (custom pricing for institutions). Revenue streams include subscriptions, premium features, and white-label licensing.",
-            competitiveAdvantage: "First-to-market AI-powered validation platform with proprietary scoring algorithm. Competitive moats include: comprehensive 6-factor analysis, real-time AI feedback, integration with pitch generation tools, and growing database of successful startup patterns.",
-            fundingRequirements: "Seeking $2M Series A to accelerate product development, expand AI capabilities, grow the team, and scale marketing efforts. Funds will be allocated: 40% product development, 30% team expansion, 20% marketing & sales, 10% operations."
-          }
-        };
-      }
-
-      if (pitchResult && pitchResult.success && pitchResult.pitch_content) {
-        setGeneratedPitch(pitchResult.pitch_content);
-        setPitchVisible(true);
-      } else {
-        throw new Error('Failed to generate pitch content');
-      }
-    } catch (error) {
-      console.error('Pitch generation failed:', error);
-      alert('Failed to generate AI pitch. Please try again.');
-    } finally {
-      setIsGeneratingPitch(false);
-    }
-  };
-
-  const copyPitchToClipboard = () => {
-    if (!generatedPitch) return;
-
-    const sections = [
-      'Executive Summary: ' + generatedPitch.executiveSummary,
-      'Problem Statement: ' + generatedPitch.problemStatement,
-      'Solution Overview: ' + generatedPitch.solutionOverview,
-      'Market Opportunity: ' + generatedPitch.marketOpportunity,
-      'Business Model: ' + generatedPitch.businessModel,
-      'Competitive Advantage: ' + generatedPitch.competitiveAdvantage,
-      'Funding Requirements: ' + generatedPitch.fundingRequirements
-    ];
-
-    const fullPitch = sections.join('\n\n');
-
-    navigator.clipboard.writeText(fullPitch).then(() => {
-      alert('Pitch copied to clipboard!');
-    }).catch(() => {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = fullPitch;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      alert('Pitch copied to clipboard!');
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -295,7 +218,7 @@ export default function Index() {
               <div className="grid gap-6">
                 <div>
                   <h3 className="text-xl font-bold mb-3" style={{ color: '#ffd700' }}>
-                    🎯 Executive Summary
+                    �� Executive Summary
                   </h3>
                   <p style={{ opacity: 0.95, lineHeight: 1.6 }}>{generatedPitch.executiveSummary}</p>
                 </div>
