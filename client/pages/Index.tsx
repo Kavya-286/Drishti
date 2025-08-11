@@ -140,28 +140,8 @@ export default function Index() {
         currentStage: "Early revenue stage"
       };
 
-      // Try to generate pitch using API, fall back to demo content
-      let pitchResult;
-      try {
-        pitchResult = await generateAIPitch(sampleData);
-        if (!pitchResult.success) {
-          throw new Error('API call failed');
-        }
-      } catch (apiError) {
-        console.warn('API pitch generation failed, using demo content:', apiError);
-        pitchResult = {
-          success: true,
-          pitch_content: {
-            executiveSummary: "Drishti is revolutionizing startup intelligence through advanced AI-powered analysis and market insights. Our platform provides comprehensive validation, competitive analysis, and strategic guidance, helping entrepreneurs make data-driven decisions with confidence.",
-            problemStatement: "90% of startups fail due to lack of market need and insufficient validation. Entrepreneurs struggle to objectively assess their ideas' viability, often relying on biased feedback from friends and family rather than systematic analysis.",
-            solutionOverview: "Our AI-powered platform guides entrepreneurs through a structured validation process, analyzing six key areas: problem-solution fit, market opportunity, business model, competition, team strength, and execution readiness. Users receive instant scoring and actionable recommendations.",
-            marketOpportunity: "The global startup ecosystem is valued at $3.8 trillion, with over 305 million startups launched annually. Our addressable market includes early-stage entrepreneurs, accelerator programs, and educational institutions seeking systematic validation tools.",
-            businessModel: "Freemium SaaS model with three tiers: Free (1 validation/month), Pro ($29/month for unlimited validations), and Enterprise (custom pricing for institutions). Revenue streams include subscriptions, premium features, and white-label licensing.",
-            competitiveAdvantage: "First-to-market AI-powered validation platform with proprietary scoring algorithm. Competitive moats include: comprehensive 6-factor analysis, real-time AI feedback, integration with pitch generation tools, and growing database of successful startup patterns.",
-            fundingRequirements: "Seeking $2M Series A to accelerate product development, expand AI capabilities, grow the team, and scale marketing efforts. Funds will be allocated: 40% product development, 30% team expansion, 20% marketing & sales, 10% operations."
-          }
-        };
-      }
+      // Generate pitch using API (with fallback built into the API service)
+      const pitchResult = await generateAIPitch(sampleData);
 
       if (pitchResult.success && pitchResult.pitch_content) {
         setGeneratedPitch(pitchResult.pitch_content);
