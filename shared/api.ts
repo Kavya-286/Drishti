@@ -258,11 +258,9 @@ class StartupValidatorAPI {
   }
 
   async generatePitch(data: Partial<ValidationData>): Promise<{ success: boolean; pitch_content?: PitchContent; error?: string }> {
-    // Layer 1: Try to force fallback if enabled
-    const forceFallback = localStorage.getItem('forceFallback') === 'true';
-
-    if (forceFallback) {
-      console.log('Force fallback enabled for pitch generation');
+    // Layer 1: Check if fallback is enabled (global or endpoint-specific)
+    if (isFallbackEnabled('/generate-pitch')) {
+      console.log('Fallback enabled for pitch generation');
       return this.generateFallbackPitch(data);
     }
 
