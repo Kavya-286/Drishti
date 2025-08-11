@@ -261,7 +261,12 @@ export default function Dashboard() {
                     <div className="ml-4">
                       <p className="text-sm font-medium text-muted-foreground">Avg. Score</p>
                       <p className="text-2xl font-bold">
-                        {Math.round(validationHistory.filter(v => v.status === 'completed').reduce((acc, v) => acc + v.overallScore, 0) / validationHistory.filter(v => v.status === 'completed').length)}
+                        {(() => {
+                          const completedValidations = validationHistory.filter(v => v.status === 'completed');
+                          if (completedValidations.length === 0) return '—';
+                          const totalScore = completedValidations.reduce((acc, v) => acc + (v.overallScore || 0), 0);
+                          return Math.round(totalScore / completedValidations.length);
+                        })()}
                       </p>
                     </div>
                   </div>
