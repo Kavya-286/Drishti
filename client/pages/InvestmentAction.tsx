@@ -278,8 +278,9 @@ export default function InvestmentAction() {
                         </div>
                       </RadioGroup>
                     </div>
-                  </>
-                )}
+                  </div>
+                </>
+              )}
 
               <div>
                 <Label htmlFor="timeframe">
