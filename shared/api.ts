@@ -279,7 +279,9 @@ class StartupValidatorAPI {
         return this.generateFallbackPitch(data);
       }
     } catch (error) {
-      console.warn('Pitch generation API error, using service fallback:', error);
+      console.warn('Pitch generation API error, enabling temporary fallback:', error);
+      // Enable temporary fallback for this endpoint to avoid repeated failures
+      enableTemporaryFallback('/generate-pitch', 600000); // 10 minutes
       return this.generateFallbackPitch(data);
     }
   }
