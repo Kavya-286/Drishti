@@ -132,6 +132,12 @@ const Header = ({ showBreadcrumbs = true }: HeaderProps) => {
                         Dashboard
                       </Link>
                     </Button>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link to="/watchlist">
+                        <Star className="w-4 h-4 mr-2" />
+                        Watchlist
+                      </Link>
+                    </Button>
                     <Button variant="outline" size="sm">
                       <Bell className="w-4 h-4 mr-2" />
                       Alerts
