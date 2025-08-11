@@ -165,6 +165,14 @@ class StartupValidatorAPI {
   }
 
   async validateStartup(data: ValidationData): Promise<ValidationResult> {
+    // Check if we should force fallback for development
+    const forceFallback = localStorage.getItem('forceFallback') === 'true';
+
+    if (forceFallback) {
+      console.log('Force fallback enabled, using mock validation');
+      return generateMockValidationResult(data);
+    }
+
     // Always ensure we return a result, even if everything fails
     try {
       const result = await this.request<any>('/validate', {
