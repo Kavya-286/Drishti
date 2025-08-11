@@ -171,28 +171,28 @@ class StartupValidatorAPI {
         body: JSON.stringify(data),
       });
 
-      if (!result.success) {
-        throw new Error(result.error || 'Validation failed');
+      if (result && result.success) {
+        // Transform the Python response to match our TypeScript interface
+        const transformedResult: ValidationResult = {
+          success: true,
+          overall_score: result.overall_score || 0,
+          viability_level: result.viability_level || 'Low',
+          scores: result.scores?.map((score: any) => ({
+            category: score.category,
+            score: score.score,
+            feedback: score.feedback,
+            suggestions: score.suggestions || []
+          })) || [],
+          investor_readiness_score: result.investor_readiness_score || 0,
+          founder_readiness_score: result.founder_readiness_score || 0,
+          clarity_score: result.clarity_score || 0,
+          timestamp: result.timestamp || new Date().toISOString()
+        };
+
+        return transformedResult;
+      } else {
+        throw new Error(result?.error || 'Validation failed');
       }
-
-      // Transform the Python response to match our TypeScript interface
-      const transformedResult: ValidationResult = {
-        success: true,
-        overall_score: result.overall_score || 0,
-        viability_level: result.viability_level || 'Low',
-        scores: result.scores?.map((score: any) => ({
-          category: score.category,
-          score: score.score,
-          feedback: score.feedback,
-          suggestions: score.suggestions || []
-        })) || [],
-        investor_readiness_score: result.investor_readiness_score || 0,
-        founder_readiness_score: result.founder_readiness_score || 0,
-        clarity_score: result.clarity_score || 0,
-        timestamp: result.timestamp || new Date().toISOString()
-      };
-
-      return transformedResult;
     } catch (error) {
       console.warn('ML backend unavailable, using fallback validation:', error);
       // Use the mock data generator as fallback
