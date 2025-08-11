@@ -263,6 +263,7 @@ export default function Validate() {
             <div className="flex items-center justify-between mb-4">
               <h1 className="text-2xl font-bold">Startup Idea Validation</h1>
               <div className="flex items-center space-x-4">
+                <Badge variant="secondary">Step {currentStep} of {totalSteps}</Badge>
                 {backendStatus === 'fallback' && (
                   <div className="flex items-center space-x-2 text-sm text-amber-600 bg-amber-50 px-3 py-1 rounded-full">
                     <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
