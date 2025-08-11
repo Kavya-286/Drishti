@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import InvestorDashboard from "./pages/InvestorDashboard";
 import StartupDetails from "./pages/StartupDetails";
 import InvestmentAction from "./pages/InvestmentAction";
+import Watchlist from "./pages/Watchlist";
 import Validate from "./pages/Validate";
 import Results from "./pages/Results";
 import Auth from "./pages/Auth";
