@@ -27,6 +27,7 @@ export default function InvestorDashboard() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [selectedTab, setSelectedTab] = useState('overview');
   const [searchQuery, setSearchQuery] = useState('');
+  const [publicStartupIdeas, setPublicStartupIdeas] = useState<any[]>([]);
 
   useEffect(() => {
     const user = localStorage.getItem('currentUser');
