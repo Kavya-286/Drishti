@@ -143,60 +143,103 @@ export default function Auth() {
     setIsLoading(true);
 
     try {
+      // Clear any existing user data first
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('validationResults');
+      localStorage.removeItem('validationData');
+      localStorage.removeItem('validationUsedFallback');
+      localStorage.removeItem('publicStartupIdeas');
+      localStorage.removeItem('investorWatchlist');
+      localStorage.removeItem('investmentRecords');
+
       // In a real application, this would redirect to the actual OAuth providers
-      // For demo purposes, we'll simulate the OAuth flow
+      // For demo purposes, we'll simulate the OAuth flow with user input
 
       if (provider === 'google') {
-        // Simulate opening Google OAuth
-        const confirmed = confirm(`🔗 This would redirect you to Google for authentication.\n\nFor demo purposes, would you like to simulate a successful Google login?`);
-        if (!confirmed) {
+        // Simulate Google OAuth with user data collection
+        const email = prompt(`🔗 Connecting to Google...\n\nFor demo purposes, enter your email:`) || `user${Date.now()}@gmail.com`;
+        const firstName = prompt('Enter your first name:') || 'Google';
+        const lastName = prompt('Enter your last name:') || 'User';
+
+        if (!email || !firstName || !lastName) {
           setIsLoading(false);
           return;
         }
 
-        // Simulate successful Google login
+        // Create realistic user data
         const userData = {
-          email: 'user@gmail.com',
-          firstName: 'Google',
-          lastName: 'User',
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
           userType,
           id: `google_${Date.now()}`,
           joinDate: new Date().toISOString(),
           planType: 'Free',
           isAuthenticated: true,
-          authProvider: 'google'
+          authProvider: 'google',
+          // Add user type specific fields
+          ...(userType === 'investor' ? {
+            investorType: 'Individual',
+            fundName: '',
+            investmentStage: 'seed',
+            checkSizeMin: '10000',
+            checkSizeMax: '100000',
+            industry: 'Technology'
+          } : {
+            experience: 'First-time entrepreneur',
+            interests: 'Technology'
+          })
         };
 
         localStorage.setItem('currentUser', JSON.stringify(userData));
         localStorage.setItem('isAuthenticated', 'true');
 
-        alert('✅ Successfully signed in with Google!');
+        alert(`✅ Successfully signed in with Google!\nWelcome ${firstName} ${lastName}!`);
 
       } else if (provider === 'linkedin') {
-        // Simulate opening LinkedIn OAuth
-        const confirmed = confirm(`🔗 This would redirect you to LinkedIn for authentication.\n\nFor demo purposes, would you like to simulate a successful LinkedIn login?`);
-        if (!confirmed) {
+        // Simulate LinkedIn OAuth with professional data collection
+        const email = prompt(`🔗 Connecting to LinkedIn...\n\nFor demo purposes, enter your professional email:`) || `user${Date.now()}@company.com`;
+        const firstName = prompt('Enter your first name:') || 'LinkedIn';
+        const lastName = prompt('Enter your last name:') || 'Professional';
+        const company = prompt('Enter your company/organization:') || 'Tech Company';
+
+        if (!email || !firstName || !lastName) {
           setIsLoading(false);
           return;
         }
 
-        // Simulate successful LinkedIn login
+        // Create realistic professional user data
         const userData = {
-          email: 'user@linkedin.com',
-          firstName: 'LinkedIn',
-          lastName: 'Professional',
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          company: company,
           userType,
           id: `linkedin_${Date.now()}`,
           joinDate: new Date().toISOString(),
           planType: 'Free',
           isAuthenticated: true,
-          authProvider: 'linkedin'
+          authProvider: 'linkedin',
+          // Add user type specific fields
+          ...(userType === 'investor' ? {
+            investorType: 'Angel Investor',
+            fundName: company,
+            investmentStage: 'seed',
+            checkSizeMin: '25000',
+            checkSizeMax: '250000',
+            industry: 'Technology'
+          } : {
+            experience: '3-5 years experience',
+            interests: 'B2B Technology',
+            company: company
+          })
         };
 
         localStorage.setItem('currentUser', JSON.stringify(userData));
         localStorage.setItem('isAuthenticated', 'true');
 
-        alert('✅ Successfully signed in with LinkedIn!');
+        alert(`✅ Successfully signed in with LinkedIn!\nWelcome ${firstName} from ${company}!`);
       }
 
       // Redirect based on user type
