@@ -251,7 +251,7 @@ export default function Validate() {
                 <Lightbulb className="w-5 h-5 text-white" />
               </div>
               <span className="font-bold text-xl bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">
-                StartupValidator
+                Drishti
               </span>
             </Link>
             <div className="hidden md:block text-muted-foreground">|</div>
