@@ -24,6 +24,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { ValidationData, ValidationResult, ValidationScore, generateAIPitch, generateSWOTAnalysis, checkFounderReadiness, generateMarketResearch, getViabilityLevel, getInvestorReadinessLevel, getScoreColor } from '@shared/api';
+import StartupComparison from './StartupComparison';
 
 export default function Results() {
   const [selectedView, setSelectedView] = useState<'overview' | 'detailed' | 'recommendations'>('overview');
@@ -270,7 +271,7 @@ export default function Results() {
         alert(`
 Founder Readiness Assessment Complete!
 
-�� Entrepreneurial Mindset: ${assessment.categories.entrepreneurial_mindset}/100
+✅ Entrepreneurial Mindset: ${assessment.categories.entrepreneurial_mindset}/100
 ✅ Technical Skills: ${assessment.categories.technical_skills}/100
 ✅ Business Acumen: ${assessment.categories.business_acumen}/100
 ✅ Leadership Ability: ${assessment.categories.leadership_ability}/100
