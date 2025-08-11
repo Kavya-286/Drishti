@@ -221,6 +221,7 @@ export default function Validate() {
         }
       } catch (apiError) {
         console.warn('API validation failed, using mock data:', apiError);
+        usingFallback = true;
         // Generate mock result for development
         try {
           result = generateMockValidationResult(validationData);
