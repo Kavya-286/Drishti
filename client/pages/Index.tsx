@@ -216,7 +216,7 @@ export default function Index() {
               <Lightbulb className="w-5 h-5 text-white" />
             </div>
             <span className="font-bold text-xl bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">
-              StartupValidator
+              Drishti
             </span>
           </div>
           <nav className="hidden md:flex items-center space-x-4">
