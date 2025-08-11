@@ -141,11 +141,21 @@ class StartupValidatorAPI {
 
     try {
       const response = await fetch(url, config);
-      
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // For server errors (5xx), try to get error details from response
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          if (errorData.error) {
+            errorMessage = errorData.error;
+          }
+        } catch (parseError) {
+          // If we can't parse the error response, use the default message
+        }
+        throw new Error(errorMessage);
       }
-      
+
       const data = await response.json();
       return data;
     } catch (error) {
