@@ -446,11 +446,11 @@ export default function StartupDetails() {
                 <CardContent>
                   <div className="space-y-6">
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-primary mb-2">{startup.validationScore}/100</div>
+                      <div className="text-4xl font-bold text-primary mb-2">{typeof startup.validationScore === 'number' && !isNaN(startup.validationScore) ? startup.validationScore : 0}/100</div>
                       <Badge className={`${getViabilityBadge(startup.viabilityLevel)} mb-4`}>
                         {startup.viabilityLevel} Viability
                       </Badge>
-                      <Progress value={startup.validationScore} className="max-w-md mx-auto" />
+                      <Progress value={typeof startup.validationScore === 'number' && !isNaN(startup.validationScore) ? startup.validationScore : 0} className="max-w-md mx-auto" />
                     </div>
 
                     {startup.validationResults?.scores && (
