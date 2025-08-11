@@ -6,10 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Lightbulb, 
-  ArrowLeft, 
-  Download, 
+import {
+  Lightbulb,
+  ArrowLeft,
+  Download,
   Share2,
   TrendingUp,
   AlertTriangle,
@@ -22,7 +22,13 @@ import {
   BarChart3,
   Brain,
   Trophy,
-  RefreshCw
+  RefreshCw,
+  Globe,
+  Lock,
+  X,
+  Copy,
+  Eye,
+  Sparkles
 } from 'lucide-react';
 import { ValidationData, ValidationResult, ValidationScore, generateAIPitch, generateSWOTAnalysis, checkFounderReadiness, generateMarketResearch, getViabilityLevel, getInvestorReadinessLevel, getScoreColor } from '@shared/api';
 import StartupComparison from './StartupComparison';
