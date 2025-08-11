@@ -545,6 +545,24 @@ ${assessment.recommendations.map(rec => `• ${rec}`).join('\n')}
   const readinessLevel = getInvestorReadinessLevel(investorReadinessScore);
   const recommendation = getRecommendation(investorReadinessScore);
 
+  const handleViewComparison = () => {
+    setShowComparison(true);
+  };
+
+  const handleBackFromComparison = () => {
+    setShowComparison(false);
+  };
+
+  // If showing comparison, render the comparison component
+  if (showComparison) {
+    return (
+      <StartupComparison
+        validationData={validationData}
+        onBack={handleBackFromComparison}
+      />
+    );
+  }
+
   const getViabilityBadge = (level: string) => {
     const colors = {
       'High': 'bg-green-500 text-white',
