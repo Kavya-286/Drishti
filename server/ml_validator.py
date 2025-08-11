@@ -356,13 +356,54 @@ class StartupMLValidator:
             else:
                 viability_level = 'Low'
             
+            # Format scores for frontend
+            formatted_scores = [
+                {
+                    'category': 'Problem-Solution Fit',
+                    'score': round(scores['problem_solution']),
+                    'feedback': self.get_feedback('problem_solution', scores['problem_solution']),
+                    'suggestions': self.get_suggestions('problem_solution', scores['problem_solution'])
+                },
+                {
+                    'category': 'Market Opportunity',
+                    'score': round(scores['market']),
+                    'feedback': self.get_feedback('market', scores['market']),
+                    'suggestions': self.get_suggestions('market', scores['market'])
+                },
+                {
+                    'category': 'Business Model',
+                    'score': round(scores['business_model']),
+                    'feedback': self.get_feedback('business_model', scores['business_model']),
+                    'suggestions': self.get_suggestions('business_model', scores['business_model'])
+                },
+                {
+                    'category': 'Competitive Advantage',
+                    'score': round(scores['competition']),
+                    'feedback': self.get_feedback('competition', scores['competition']),
+                    'suggestions': self.get_suggestions('competition', scores['competition'])
+                },
+                {
+                    'category': 'Team Strength',
+                    'score': round(scores['team']),
+                    'feedback': self.get_feedback('team', scores['team']),
+                    'suggestions': self.get_suggestions('team', scores['team'])
+                },
+                {
+                    'category': 'Execution Readiness',
+                    'score': round(scores['traction']),
+                    'feedback': self.get_feedback('traction', scores['traction']),
+                    'suggestions': self.get_suggestions('traction', scores['traction'])
+                }
+            ]
+
             return {
                 'success': True,
                 'overall_score': round(overall_score),
                 'viability_level': viability_level,
-                'category_scores': {k: round(v) for k, v in scores.items()},
-                'investor_readiness': investor_metrics,
-                'recommendations': recommendations,
+                'scores': formatted_scores,
+                'investor_readiness_score': investor_metrics['score'],
+                'founder_readiness_score': investor_metrics['founder_readiness'],
+                'clarity_score': investor_metrics['idea_clarity'],
                 'timestamp': datetime.now().isoformat()
             }
             
