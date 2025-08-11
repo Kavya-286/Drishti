@@ -223,7 +223,7 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto">
           {/* Welcome Section */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Welcome back, {mockUser.name.split(' ')[0]}!</h1>
+            <h1 className="text-3xl font-bold mb-2">Welcome back, {currentUser?.firstName || 'User'}!</h1>
             <p className="text-muted-foreground mb-6">
               Track your startup validation journey and discover new opportunities with AI-powered insights.
             </p>
