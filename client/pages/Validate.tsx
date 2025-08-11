@@ -364,60 +364,141 @@ export default function Validate() {
               {/* Step 1: Problem & Solution */}
               {currentStep === 1 && (
                 <div className="space-y-6">
-                  <div>
-                    <Label htmlFor="problemStatement">Problem Statement *</Label>
-                    <Textarea
-                      id="problemStatement"
-                      placeholder="What specific problem are you solving? Who faces this problem?"
-                      value={validationData.problemStatement}
-                      onChange={(e) => updateData('problemStatement', e.target.value)}
-                      onBlur={(e) => {
-                        if (e.target.value.length > 20) {
-                          generateSuggestions(e.target.value);
-                        }
-                      }}
-                      className="mt-2"
-                      rows={4}
-                    />
-                    {isGeneratingSuggestion && (
-                      <div className="mt-2 text-sm text-muted-foreground flex items-center">
-                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin mr-2"></div>
-                        Generating AI suggestions...
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="problemStatement">Problem Statement *</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          Describe the specific problem your target customers face. Be clear and concise.
+                        </p>
+                        <Textarea
+                          id="problemStatement"
+                          placeholder="Example: Small business owners struggle to manage inventory efficiently, leading to 30% revenue loss due to stockouts and overstocking..."
+                          value={validationData.problemStatement}
+                          onChange={(e) => updateData('problemStatement', e.target.value)}
+                          onBlur={(e) => {
+                            if (e.target.value.length > 20) {
+                              generateSuggestions(e.target.value);
+                            }
+                          }}
+                          className="mt-2"
+                          rows={5}
+                        />
                       </div>
-                    )}
-                    {suggestions.length > 0 && (
-                      <div className="mt-3 p-3 bg-primary/5 border border-primary/20 rounded-lg">
-                        <h4 className="text-sm font-medium text-primary mb-2 flex items-center">
-                          <Lightbulb className="w-4 h-4 mr-1" />
-                          AI Suggestions for Problem Validation
-                        </h4>
-                        <ul className="space-y-1 text-sm text-muted-foreground">
-                          {suggestions.map((suggestion, index) => (
-                            <li key={index} className="flex items-start">
-                              <span className="text-primary mr-2">•</span>
-                              {suggestion}
-                            </li>
-                          ))}
-                        </ul>
+
+                      <div>
+                        <Label htmlFor="problemFrequency">Problem Frequency</Label>
+                        <Select onValueChange={(value) => updateData('problemFrequency', value)}>
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="How often does this problem occur?" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="daily">Daily</SelectItem>
+                            <SelectItem value="weekly">Weekly</SelectItem>
+                            <SelectItem value="monthly">Monthly</SelectItem>
+                            <SelectItem value="occasionally">Occasionally</SelectItem>
+                            <SelectItem value="rare">Rarely</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
-                    )}
+
+                      <div>
+                        <Label htmlFor="problemImpact">Problem Impact Level</Label>
+                        <Select onValueChange={(value) => updateData('problemImpact', value)}>
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="What's the impact level?" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="critical">Critical - Business stopping</SelectItem>
+                            <SelectItem value="high">High - Significant cost/time loss</SelectItem>
+                            <SelectItem value="medium">Medium - Moderate inconvenience</SelectItem>
+                            <SelectItem value="low">Low - Minor annoyance</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="solutionDescription">Solution Description *</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          Explain how your product/service solves the problem. Include key features and benefits.
+                        </p>
+                        <Textarea
+                          id="solutionDescription"
+                          placeholder="Example: Our AI-powered inventory management platform predicts demand patterns, automates reordering, and provides real-time analytics..."
+                          value={validationData.solutionDescription}
+                          onChange={(e) => updateData('solutionDescription', e.target.value)}
+                          className="mt-2"
+                          rows={5}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="solutionType">Solution Type</Label>
+                        <Select onValueChange={(value) => updateData('solutionType', value)}>
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="What type of solution is this?" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="software">Software/App</SelectItem>
+                            <SelectItem value="hardware">Hardware/Physical Product</SelectItem>
+                            <SelectItem value="service">Service</SelectItem>
+                            <SelectItem value="platform">Platform/Marketplace</SelectItem>
+                            <SelectItem value="hybrid">Hybrid (Software + Hardware)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="developmentStage">Development Stage</Label>
+                        <Select onValueChange={(value) => updateData('developmentStage', value)}>
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="Current development stage?" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="concept">Concept/Idea</SelectItem>
+                            <SelectItem value="wireframe">Wireframes/Design</SelectItem>
+                            <SelectItem value="prototype">Prototype/MVP</SelectItem>
+                            <SelectItem value="beta">Beta Testing</SelectItem>
+                            <SelectItem value="launched">Launched/Live</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="solutionDescription">Solution Description *</Label>
-                    <Textarea
-                      id="solutionDescription"
-                      placeholder="How does your product/service solve this problem?"
-                      value={validationData.solutionDescription}
-                      onChange={(e) => updateData('solutionDescription', e.target.value)}
-                      className="mt-2"
-                      rows={4}
-                    />
-                  </div>
+
+                  {isGeneratingSuggestion && (
+                    <div className="mt-4 text-sm text-muted-foreground flex items-center">
+                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Generating AI suggestions...
+                    </div>
+                  )}
+                  {suggestions.length > 0 && (
+                    <div className="mt-4 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                      <h4 className="text-sm font-medium text-primary mb-3 flex items-center">
+                        <Lightbulb className="w-4 h-4 mr-1" />
+                        AI Suggestions for Problem Validation
+                      </h4>
+                      <ul className="space-y-2 text-sm text-muted-foreground">
+                        {suggestions.map((suggestion, index) => (
+                          <li key={index} className="flex items-start">
+                            <span className="text-primary mr-2 mt-1">•</span>
+                            <span>{suggestion}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
                   <div>
                     <Label htmlFor="uniqueValueProposition">Unique Value Proposition *</Label>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      What makes your solution unique? Why would customers choose you over alternatives?
+                    </p>
                     <Textarea
                       id="uniqueValueProposition"
-                      placeholder="What makes your solution unique? Why would customers choose you?"
+                      placeholder="Example: Only inventory solution that combines AI predictions with real-time supplier integration, reducing stockouts by 70% while cutting inventory costs by 25%..."
                       value={validationData.uniqueValueProposition}
                       onChange={(e) => updateData('uniqueValueProposition', e.target.value)}
                       className="mt-2"
@@ -430,41 +511,100 @@ export default function Validate() {
               {/* Step 2: Target Market */}
               {currentStep === 2 && (
                 <div className="space-y-6">
-                  <div>
-                    <Label htmlFor="targetMarket">Target Market *</Label>
-                    <Textarea
-                      id="targetMarket"
-                      placeholder="Describe your ideal customers and target market"
-                      value={validationData.targetMarket}
-                      onChange={(e) => updateData('targetMarket', e.target.value)}
-                      className="mt-2"
-                      rows={4}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="marketSize">Market Size</Label>
-                    <Select onValueChange={(value) => updateData('marketSize', value)}>
-                      <SelectTrigger className="mt-2">
-                        <SelectValue placeholder="Select market size" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="local">Local (City/Region)</SelectItem>
-                        <SelectItem value="national">National</SelectItem>
-                        <SelectItem value="international">International</SelectItem>
-                        <SelectItem value="global">Global</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="customerSegments">Customer Segments *</Label>
-                    <Textarea
-                      id="customerSegments"
-                      placeholder="List and describe your key customer segments"
-                      value={validationData.customerSegments}
-                      onChange={(e) => updateData('customerSegments', e.target.value)}
-                      className="mt-2"
-                      rows={4}
-                    />
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="targetMarket">Primary Target Market *</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          Describe your ideal customers in detail - demographics, behavior, needs.
+                        </p>
+                        <Textarea
+                          id="targetMarket"
+                          placeholder="Example: Small to medium retail businesses (10-100 employees) with annual revenue of $1M-$50M, currently using manual or basic inventory systems..."
+                          value={validationData.targetMarket}
+                          onChange={(e) => updateData('targetMarket', e.target.value)}
+                          className="mt-2"
+                          rows={4}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="customerPersona">Primary Customer Persona</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          Who is the primary decision maker? Title, role, responsibilities.
+                        </p>
+                        <Textarea
+                          id="customerPersona"
+                          placeholder="Example: Operations Manager, 35-50 years old, responsible for inventory and supply chain, tech-savvy but time-constrained..."
+                          value={validationData.customerPersona}
+                          onChange={(e) => updateData('customerPersona', e.target.value)}
+                          className="mt-2"
+                          rows={3}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="marketSize">Geographic Market Size</Label>
+                        <Select onValueChange={(value) => updateData('marketSize', value)}>
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="Select market size" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="local">Local (City/Region)</SelectItem>
+                            <SelectItem value="national">National</SelectItem>
+                            <SelectItem value="international">International</SelectItem>
+                            <SelectItem value="global">Global</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="customerSegments">Customer Segments Breakdown *</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          List and describe 2-3 key customer segments with percentages.
+                        </p>
+                        <Textarea
+                          id="customerSegments"
+                          placeholder="Example: 1) Small retailers (40%) - Fashion/electronics stores, 2) E-commerce businesses (35%) - Online sellers, 3) Service companies (25%) - Restaurants, repair shops..."
+                          value={validationData.customerSegments}
+                          onChange={(e) => updateData('customerSegments', e.target.value)}
+                          className="mt-2"
+                          rows={4}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="marketValidation">Market Validation Evidence</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          What evidence do you have that this market exists and has this problem?
+                        </p>
+                        <Textarea
+                          id="marketValidation"
+                          placeholder="Example: Conducted 25 customer interviews, 80% confirmed the problem. Industry report shows $2B loss annually due to inventory mismanagement..."
+                          value={validationData.marketValidation}
+                          onChange={(e) => updateData('marketValidation', e.target.value)}
+                          className="mt-2"
+                          rows={3}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="customerAcquisition">Customer Acquisition Strategy</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          How will you reach and acquire your target customers?
+                        </p>
+                        <Textarea
+                          id="customerAcquisition"
+                          placeholder="Example: Digital marketing (Google Ads, LinkedIn), trade shows, partnerships with business consultants, referral program..."
+                          value={validationData.customerAcquisition}
+                          onChange={(e) => updateData('customerAcquisition', e.target.value)}
+                          className="mt-2"
+                          rows={3}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
