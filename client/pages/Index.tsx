@@ -237,7 +237,7 @@ export default function Index() {
             ✨ AI-Powered Startup Intelligence Platform
           </Badge>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Turn Your Idea Into a Validated Business Plan
+            Transform Your Vision Into Market Reality
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Get instant, AI-powered feedback on your startup idea's viability, market potential, and success probability. 
