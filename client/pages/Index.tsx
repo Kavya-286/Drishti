@@ -221,6 +221,9 @@ export default function Index() {
           </div>
           <nav className="hidden md:flex items-center space-x-4">
             <Button variant="outline" size="sm" asChild>
+              <Link to="/dashboard">Dashboard</Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
               <Link to="/auth">Sign In</Link>
             </Button>
             <Button size="sm" asChild>
