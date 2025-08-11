@@ -302,7 +302,7 @@ export default function StartupDetails() {
                       </div>
                       <div>
                         <div className="text-sm text-muted-foreground">Validation Score</div>
-                        <div className="font-semibold text-primary">{startup.validationScore}/100</div>
+                        <div className="font-semibold text-primary">{typeof startup.validationScore === 'number' && !isNaN(startup.validationScore) ? startup.validationScore : 0}/100</div>
                       </div>
                     </div>
                   </CardContent>
