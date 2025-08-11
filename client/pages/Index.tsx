@@ -152,7 +152,7 @@ export default function Index() {
         pitchResult = {
           success: true,
           pitch_content: {
-            executiveSummary: "StartupValidator is revolutionizing how entrepreneurs validate their business ideas through AI-powered analysis. Our platform provides instant, comprehensive feedback on startup viability, helping founders make data-driven decisions before investing time and money.",
+            executiveSummary: "Drishti is revolutionizing startup intelligence through advanced AI-powered analysis and market insights. Our platform provides comprehensive validation, competitive analysis, and strategic guidance, helping entrepreneurs make data-driven decisions with confidence.",
             problemStatement: "90% of startups fail due to lack of market need and insufficient validation. Entrepreneurs struggle to objectively assess their ideas' viability, often relying on biased feedback from friends and family rather than systematic analysis.",
             solutionOverview: "Our AI-powered platform guides entrepreneurs through a structured validation process, analyzing six key areas: problem-solution fit, market opportunity, business model, competition, team strength, and execution readiness. Users receive instant scoring and actionable recommendations.",
             marketOpportunity: "The global startup ecosystem is valued at $3.8 trillion, with over 305 million startups launched annually. Our addressable market includes early-stage entrepreneurs, accelerator programs, and educational institutions seeking systematic validation tools.",
