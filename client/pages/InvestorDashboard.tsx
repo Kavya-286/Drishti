@@ -137,11 +137,43 @@ export default function InvestorDashboard() {
   ];
 
   const handleInvestmentInterest = (startup: any) => {
-    alert(`🎯 Investment interest registered for "${startup.ideaName}"!\n\nNext steps:\n• Review full business details\n• Contact founder: ${startup.founder?.firstName || 'Founder'}\n• Schedule investor meeting\n• Conduct due diligence`);
+    navigate(`/investment-action/${startup.id}`, {
+      state: { action: 'express-interest', startup }
+    });
+  };
+
+  const handleInvest = (startup: any) => {
+    navigate(`/investment-action/${startup.id}`, {
+      state: { action: 'invest', startup }
+    });
   };
 
   const handleViewDetails = (startup: any) => {
-    alert(`📋 Startup Details:\n\n${startup.description}\n\nProblem: ${startup.problemStatement?.substring(0, 100)}...\n\nValidation Score: ${startup.validationScore}/100\nViability: ${startup.viabilityLevel}`);
+    navigate(`/startup-details/${startup.id}`);
+  };
+
+  const handleAddToWatchlist = (startup: any) => {
+    const watchlist = JSON.parse(localStorage.getItem('investorWatchlist') || '[]');
+
+    const isAlreadyWatchlisted = watchlist.some((item: any) => item.id === startup.id);
+
+    if (isAlreadyWatchlisted) {
+      alert('Already in your watchlist!');
+      return;
+    }
+
+    const watchlistItem = {
+      id: startup.id,
+      ideaName: startup.ideaName,
+      industry: startup.industry,
+      validationScore: startup.validationScore,
+      viabilityLevel: startup.viabilityLevel,
+      addedAt: new Date().toISOString()
+    };
+
+    watchlist.push(watchlistItem);
+    localStorage.setItem('investorWatchlist', JSON.stringify(watchlist));
+    alert('✅ Added to watchlist!');
   };
 
   if (!currentUser) {
