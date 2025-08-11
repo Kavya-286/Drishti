@@ -612,44 +612,105 @@ export default function Validate() {
               {/* Step 3: Business Model */}
               {currentStep === 3 && (
                 <div className="space-y-6">
-                  <div>
-                    <Label htmlFor="revenueModel">Revenue Model *</Label>
-                    <Select onValueChange={(value) => updateData('revenueModel', value)}>
-                      <SelectTrigger className="mt-2">
-                        <SelectValue placeholder="Select revenue model" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="subscription">Subscription</SelectItem>
-                        <SelectItem value="one-time">One-time Purchase</SelectItem>
-                        <SelectItem value="freemium">Freemium</SelectItem>
-                        <SelectItem value="marketplace">Marketplace Commission</SelectItem>
-                        <SelectItem value="advertising">Advertising</SelectItem>
-                        <SelectItem value="licensing">Licensing</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="pricingStrategy">Pricing Strategy *</Label>
-                    <Textarea
-                      id="pricingStrategy"
-                      placeholder="How will you price your product? What's your pricing rationale?"
-                      value={validationData.pricingStrategy}
-                      onChange={(e) => updateData('pricingStrategy', e.target.value)}
-                      className="mt-2"
-                      rows={4}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="keyMetrics">Key Metrics</Label>
-                    <Textarea
-                      id="keyMetrics"
-                      placeholder="What metrics will you track to measure success?"
-                      value={validationData.keyMetrics}
-                      onChange={(e) => updateData('keyMetrics', e.target.value)}
-                      className="mt-2"
-                      rows={3}
-                    />
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="revenueModel">Primary Revenue Model *</Label>
+                        <Select onValueChange={(value) => updateData('revenueModel', value)}>
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="Select primary revenue model" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="subscription">Subscription (SaaS)</SelectItem>
+                            <SelectItem value="one-time">One-time Purchase</SelectItem>
+                            <SelectItem value="freemium">Freemium Model</SelectItem>
+                            <SelectItem value="marketplace">Marketplace Commission</SelectItem>
+                            <SelectItem value="advertising">Advertising Revenue</SelectItem>
+                            <SelectItem value="licensing">Licensing/Royalties</SelectItem>
+                            <SelectItem value="transaction">Transaction Fees</SelectItem>
+                            <SelectItem value="hybrid">Hybrid Model</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="pricingStrategy">Pricing Strategy *</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          Describe your pricing approach, tiers, and rationale behind pricing decisions.
+                        </p>
+                        <Textarea
+                          id="pricingStrategy"
+                          placeholder="Example: Tiered SaaS pricing - Starter $29/month (up to 1,000 SKUs), Professional $99/month (up to 10,000 SKUs), Enterprise custom pricing. Based on value provided and competitor analysis..."
+                          value={validationData.pricingStrategy}
+                          onChange={(e) => updateData('pricingStrategy', e.target.value)}
+                          className="mt-2"
+                          rows={4}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="unitEconomics">Unit Economics</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          Customer acquisition cost (CAC), lifetime value (LTV), and other key economics.
+                        </p>
+                        <Textarea
+                          id="unitEconomics"
+                          placeholder="Example: CAC: $150, LTV: $2,400 (2-year avg), LTV:CAC ratio 16:1, Gross margin: 85%, Payback period: 8 months..."
+                          value={validationData.unitEconomics}
+                          onChange={(e) => updateData('unitEconomics', e.target.value)}
+                          className="mt-2"
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="revenueStreams">Additional Revenue Streams</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          List any secondary or future revenue opportunities.
+                        </p>
+                        <Textarea
+                          id="revenueStreams"
+                          placeholder="Example: 1) Implementation/setup fees, 2) Premium support packages, 3) Data analytics add-ons, 4) Integration marketplace commissions..."
+                          value={validationData.revenueStreams}
+                          onChange={(e) => updateData('revenueStreams', e.target.value)}
+                          className="mt-2"
+                          rows={3}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="keyMetrics">Key Success Metrics *</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          What KPIs will you track to measure business success and growth?
+                        </p>
+                        <Textarea
+                          id="keyMetrics"
+                          placeholder="Example: Monthly Recurring Revenue (MRR), Customer Churn Rate, Net Promoter Score (NPS), Customer Acquisition Cost (CAC), Daily/Monthly Active Users..."
+                          value={validationData.keyMetrics}
+                          onChange={(e) => updateData('keyMetrics', e.target.value)}
+                          className="mt-2"
+                          rows={3}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="salesCycle">Sales Cycle & Process</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          How long is your sales cycle and what's the process?
+                        </p>
+                        <Textarea
+                          id="salesCycle"
+                          placeholder="Example: 30-45 day sales cycle. Lead qualification → Demo → Free trial → Contract negotiation → Onboarding. Direct sales for enterprise, self-serve for SMB..."
+                          value={validationData.salesCycle}
+                          onChange={(e) => updateData('salesCycle', e.target.value)}
+                          className="mt-2"
+                          rows={3}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -657,33 +718,80 @@ export default function Validate() {
               {/* Step 4: Competition */}
               {currentStep === 4 && (
                 <div className="space-y-6">
-                  <div>
-                    <Label htmlFor="directCompetitors">Direct Competitors</Label>
-                    <Textarea
-                      id="directCompetitors"
-                      placeholder="List your direct competitors and their key features"
-                      value={validationData.directCompetitors}
-                      onChange={(e) => updateData('directCompetitors', e.target.value)}
-                      className="mt-2"
-                      rows={4}
-                    />
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="directCompetitors">Direct Competitors</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          List 3-5 companies that solve the same problem with similar solutions.
+                        </p>
+                        <Textarea
+                          id="directCompetitors"
+                          placeholder="Example: 1) TradeGecko (acquired by QuickBooks) - Inventory management for SMBs, $39-199/month, 2) Cin7 - Multi-channel inventory, $325+/month, 3) Katana - Manufacturing inventory, $99+/month..."
+                          value={validationData.directCompetitors}
+                          onChange={(e) => updateData('directCompetitors', e.target.value)}
+                          className="mt-2"
+                          rows={5}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="competitiveAnalysis">Competitive Analysis Matrix</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          Compare key features, pricing, strengths, and weaknesses.
+                        </p>
+                        <Textarea
+                          id="competitiveAnalysis"
+                          placeholder="Example: TradeGecko - Strong integrations (+), High price (-); Cin7 - Feature-rich (+), Complex UX (-); Us - AI predictions (+), New brand (-), Better pricing (+)..."
+                          value={validationData.competitiveAnalysis}
+                          onChange={(e) => updateData('competitiveAnalysis', e.target.value)}
+                          className="mt-2"
+                          rows={4}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="indirectCompetitors">Indirect Competitors & Alternatives</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          What alternatives might customers use instead of any software solution?
+                        </p>
+                        <Textarea
+                          id="indirectCompetitors"
+                          placeholder="Example: 1) Excel spreadsheets (most common current solution), 2) Manual pen-and-paper tracking, 3) Basic POS systems with limited inventory, 4) ERP systems (overkill for SMBs)..."
+                          value={validationData.indirectCompetitors}
+                          onChange={(e) => updateData('indirectCompetitors', e.target.value)}
+                          className="mt-2"
+                          rows={4}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="marketPosition">Market Positioning</Label>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          How do you position yourself in the market? What's your category?
+                        </p>
+                        <Textarea
+                          id="marketPosition"
+                          placeholder="Example: 'The intelligent inventory platform for growing retailers' - positioned between basic tools and enterprise ERP, focusing on AI-driven insights for SMBs..."
+                          value={validationData.marketPosition}
+                          onChange={(e) => updateData('marketPosition', e.target.value)}
+                          className="mt-2"
+                          rows={3}
+                        />
+                      </div>
+                    </div>
                   </div>
+
                   <div>
-                    <Label htmlFor="indirectCompetitors">Indirect Competitors</Label>
-                    <Textarea
-                      id="indirectCompetitors"
-                      placeholder="List alternatives your customers might use instead"
-                      value={validationData.indirectCompetitors}
-                      onChange={(e) => updateData('indirectCompetitors', e.target.value)}
-                      className="mt-2"
-                      rows={4}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="competitiveAdvantage">Competitive Advantage *</Label>
+                    <Label htmlFor="competitiveAdvantage">Unique Competitive Advantages *</Label>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      What gives you a sustainable competitive edge? How will you defend against competition?
+                    </p>
                     <Textarea
                       id="competitiveAdvantage"
-                      placeholder="What gives you a competitive edge? How will you defend it?"
+                      placeholder="Example: 1) Proprietary AI algorithm with 2 years of R&D (hard to replicate), 2) Exclusive partnerships with major suppliers (network effects), 3) Superior user experience (design moat), 4) First-mover advantage in AI-powered inventory for SMBs..."
                       value={validationData.competitiveAdvantage}
                       onChange={(e) => updateData('competitiveAdvantage', e.target.value)}
                       className="mt-2"
