@@ -81,8 +81,12 @@ export default function Auth() {
 
     setIsLoading(false);
 
-    // Redirect to dashboard
-    navigate('/dashboard');
+    // Redirect based on user type
+    if (userType === 'investor') {
+      navigate('/investor-dashboard');
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   const industries = [
