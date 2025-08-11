@@ -134,11 +134,29 @@ interface ValidationHistory {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [validationHistory, setValidationHistory] = useState<ValidationHistory[]>(mockValidationHistory);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   useEffect(() => {
+    // Check authentication
+    const user = localStorage.getItem('currentUser');
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+
+    if (!user || !isAuthenticated || isAuthenticated !== 'true') {
+      navigate('/auth');
+      return;
+    }
+
+    const userData = JSON.parse(user);
+    if (userData.userType === 'investor') {
+      navigate('/investor-dashboard');
+      return;
+    }
+
+    setCurrentUser(userData);
+
     // Load validation history from localStorage if available
     const storedHistory = localStorage.getItem('validationHistory');
     if (storedHistory) {
@@ -149,7 +167,7 @@ export default function Dashboard() {
         console.warn('Failed to load validation history:', error);
       }
     }
-  }, []);
+  }, [navigate]);
 
   const handleStartNewValidation = () => {
     localStorage.removeItem('validationProgress');
