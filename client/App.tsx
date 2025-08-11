@@ -9,6 +9,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import InvestorDashboard from "./pages/InvestorDashboard";
+import StartupDetails from "./pages/StartupDetails";
+import InvestmentAction from "./pages/InvestmentAction";
 import Validate from "./pages/Validate";
 import Results from "./pages/Results";
 import Auth from "./pages/Auth";
