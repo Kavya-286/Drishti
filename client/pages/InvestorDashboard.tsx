@@ -260,60 +260,81 @@ export default function InvestorDashboard() {
               </CardContent>
             </Card>
 
-            {/* Recent Opportunities */}
+            {/* Public Startup Ideas */}
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>Recent Opportunities</CardTitle>
-                    <CardDescription>Startups matching your investment criteria</CardDescription>
+                    <CardTitle>Public Startup Ideas</CardTitle>
+                    <CardDescription>Validated startup ideas from entrepreneurs on Drishti</CardDescription>
                   </div>
-                  <Button size="sm">
-                    View All
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
+                  <Badge variant="secondary">{publicStartupIdeas.length} ideas available</Badge>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {recentStartups.slice(0, 3).map((startup) => (
-                    <div key={startup.id} className="p-4 border rounded-lg hover:shadow-md transition-shadow">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h3 className="font-semibold">{startup.name}</h3>
-                          <p className="text-sm text-muted-foreground">{startup.description}</p>
-                        </div>
-                        <Badge variant="secondary">
-                          {startup.matchScore}% match
-                        </Badge>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
-                        <div>
-                          <p className="text-xs text-muted-foreground">Industry</p>
-                          <p className="text-sm font-medium">{startup.industry}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Stage</p>
-                          <p className="text-sm font-medium">{startup.stage}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Seeking</p>
-                          <p className="text-sm font-medium">{startup.fundingNeeded}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Valuation</p>
-                          <p className="text-sm font-medium">{startup.valuation}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs text-muted-foreground">{startup.traction}</p>
-                        <Button size="sm" variant="outline">
-                          <Eye className="w-4 h-4 mr-2" />
-                          View Details
-                        </Button>
-                      </div>
+                  {publicStartupIdeas.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Building2 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="font-semibold mb-2">No public startup ideas yet</h3>
+                      <p className="text-muted-foreground text-sm">
+                        When entrepreneurs make their ideas public, they'll appear here for investment opportunities.
+                      </p>
                     </div>
-                  ))}
+                  ) : (
+                    publicStartupIdeas.slice(0, 3).map((startup) => (
+                      <div key={startup.id} className="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <h3 className="font-semibold">{startup.ideaName}</h3>
+                            <p className="text-sm text-muted-foreground">{startup.description}</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              by {startup.founder?.firstName} {startup.founder?.lastName} •
+                              Created {new Date(startup.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <Badge variant="default">
+                            {startup.validationScore}/100 score
+                          </Badge>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                          <div>
+                            <p className="text-xs text-muted-foreground">Industry</p>
+                            <p className="text-sm font-medium">{startup.industry}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground">Stage</p>
+                            <p className="text-sm font-medium">{startup.stage}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground">Funding Needs</p>
+                            <p className="text-sm font-medium">{startup.fundingNeeds}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground">Viability</p>
+                            <Badge variant={startup.viabilityLevel === 'High' ? 'default' : startup.viabilityLevel === 'Moderate' ? 'secondary' : 'destructive'}>
+                              {startup.viabilityLevel}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs text-muted-foreground">
+                            Target: {startup.targetMarket?.substring(0, 50)}...
+                          </p>
+                          <div className="flex space-x-2">
+                            <Button size="sm" variant="outline" onClick={() => handleViewDetails(startup)}>
+                              <Eye className="w-4 h-4 mr-2" />
+                              View Details
+                            </Button>
+                            <Button size="sm" onClick={() => handleInvestmentInterest(startup)}>
+                              <DollarSign className="w-4 h-4 mr-2" />
+                              Invest
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </CardContent>
             </Card>
