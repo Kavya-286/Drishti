@@ -201,16 +201,11 @@ class StartupValidatorAPI {
   }
 
   async generatePitch(data: Partial<ValidationData>): Promise<{ success: boolean; pitch_content?: PitchContent; error?: string }> {
-    console.log('generatePitch called with data:', data);
-
     try {
-      console.log('Attempting API request to /generate-pitch');
       const result = await this.request<any>('/generate-pitch', {
         method: 'POST',
         body: JSON.stringify(data),
       });
-
-      console.log('API request successful, result:', result);
 
       if (result && result.success) {
         return result;
@@ -218,7 +213,7 @@ class StartupValidatorAPI {
         throw new Error('API returned unsuccessful response');
       }
     } catch (error) {
-      console.warn('Pitch generation API unavailable, using fallback. Error:', error);
+      console.warn('Pitch generation API unavailable, using fallback:', error);
 
       // Generate sophisticated fallback pitch content based on input data
       const generateSmartPitchContent = (data: Partial<ValidationData>): PitchContent => {
