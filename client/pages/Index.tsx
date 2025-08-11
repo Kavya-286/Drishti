@@ -391,7 +391,7 @@ export default function Index() {
               Complete Startup Intelligence Platform
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Our comprehensive validation platform covers every aspect of startup idea assessment
+              Drishti's AI-powered platform provides comprehensive startup intelligence and strategic insights
             </p>
           </div>
           
