@@ -102,6 +102,18 @@ export default function Auth() {
         return;
       }
 
+      // Clear any existing user data first (especially for new signups)
+      if (authMode === 'signup') {
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('validationResults');
+        localStorage.removeItem('validationData');
+        localStorage.removeItem('validationUsedFallback');
+        localStorage.removeItem('publicStartupIdeas');
+        localStorage.removeItem('investorWatchlist');
+        localStorage.removeItem('investmentRecords');
+      }
+
       // Simulate authentication
       await new Promise(resolve => setTimeout(resolve, 1500));
 
@@ -112,7 +124,8 @@ export default function Auth() {
         id: `user_${Date.now()}`,
         joinDate: new Date().toISOString(),
         planType: 'Free',
-        isAuthenticated: true
+        isAuthenticated: true,
+        authProvider: 'email'
       };
 
       localStorage.setItem('currentUser', JSON.stringify(userData));
@@ -195,7 +208,7 @@ export default function Auth() {
         localStorage.setItem('currentUser', JSON.stringify(userData));
         localStorage.setItem('isAuthenticated', 'true');
 
-        alert(`✅ Successfully signed in with Google!\nWelcome ${firstName} ${lastName}!`);
+        alert(`�� Successfully signed in with Google!\nWelcome ${firstName} ${lastName}!`);
 
       } else if (provider === 'linkedin') {
         // Simulate LinkedIn OAuth with professional data collection
