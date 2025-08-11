@@ -45,6 +45,19 @@ export default function InvestorDashboard() {
     }
 
     setCurrentUser(userData);
+
+    // Load public startup ideas
+    const loadPublicIdeas = () => {
+      try {
+        const ideas = JSON.parse(localStorage.getItem('publicStartupIdeas') || '[]');
+        setPublicStartupIdeas(ideas);
+      } catch (error) {
+        console.error('Failed to load public startup ideas:', error);
+        setPublicStartupIdeas([]);
+      }
+    };
+
+    loadPublicIdeas();
   }, [navigate]);
 
   // Mock data for demo purposes
