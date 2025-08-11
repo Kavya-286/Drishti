@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,325 +23,392 @@ import {
   Trophy,
   RefreshCw
 } from 'lucide-react';
-
-interface ValidationScore {
-  category: string;
-  score: number;
-  feedback: string;
-  suggestions: string[];
-}
+import { ValidationData, ValidationResult, ValidationScore, generateAIPitch, generateSWOTAnalysis, checkFounderReadiness, generateMarketResearch, getViabilityLevel, getInvestorReadinessLevel, getScoreColor } from '@shared/api';
 
 export default function Results() {
   const [selectedView, setSelectedView] = useState<'overview' | 'detailed' | 'recommendations'>('overview');
   const [isGenerating, setIsGenerating] = useState<string | null>(null);
+  const [validationResults, setValidationResults] = useState<ValidationResult | null>(null);
+  const [validationData, setValidationData] = useState<ValidationData | null>(null);
+  const [loading, setLoading] = useState(true);
+  
+  // Load validation results and data on component mount
+  useEffect(() => {
+    const loadResults = () => {
+      try {
+        const resultsStr = localStorage.getItem('validationResults');
+        const dataStr = localStorage.getItem('validationData');
+        
+        if (resultsStr && dataStr) {
+          const results = JSON.parse(resultsStr);
+          const data = JSON.parse(dataStr);
+          setValidationResults(results);
+          setValidationData(data);
+        } else {
+          console.warn('No validation results found, redirecting to validate page');
+          window.location.href = '/validate';
+        }
+      } catch (error) {
+        console.error('Failed to load validation results:', error);
+        window.location.href = '/validate';
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadResults();
+  }, []);
+  
+  if (loading || !validationResults || !validationData) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading your validation results...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleGeneratePitchDeck = async () => {
     setIsGenerating('pitch');
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    try {
+      // Try to generate pitch using API
+      const result = await generateAIPitch(validationData);
+      
+      if (result.success && result.pitch_content) {
+        // Create a pitch deck content with real data
+        const pitchContent = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Startup Pitch Deck</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
+              .slide { background: white; padding: 40px; margin: 20px 0; min-height: 500px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); page-break-after: always; }
+              .slide h1 { color: #6366f1; font-size: 36px; margin-bottom: 20px; }
+              .slide h2 { color: #374151; font-size: 28px; margin-bottom: 15px; }
+              .slide p { font-size: 18px; line-height: 1.6; color: #6b7280; }
+              .highlight { background: #6366f1; color: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+              .center { text-align: center; }
+            </style>
+          </head>
+          <body>
+            <div class="slide center">
+              <h1>Your Startup Name</h1>
+              <p style="font-size: 24px;">Transforming [Industry] with [Solution]</p>
+              <div class="highlight">
+                <p>Validation Score: ${validationResults.overall_score}/100 | ${validationResults.viability_level} Viability</p>
+              </div>
+            </div>
 
-    // Create a pitch deck content
-    const pitchContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Startup Pitch Deck</title>
-        <style>
-          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
-          .slide { background: white; padding: 40px; margin: 20px 0; min-height: 500px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); page-break-after: always; }
-          .slide h1 { color: #6366f1; font-size: 36px; margin-bottom: 20px; }
-          .slide h2 { color: #374151; font-size: 28px; margin-bottom: 15px; }
-          .slide p { font-size: 18px; line-height: 1.6; color: #6b7280; }
-          .highlight { background: #6366f1; color: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
-          .center { text-align: center; }
-        </style>
-      </head>
-      <body>
-        <div class="slide center">
-          <h1>Your Startup Name</h1>
-          <p style="font-size: 24px;">Transforming [Industry] with [Solution]</p>
-          <div class="highlight">
-            <p>Validation Score: ${overallScore}/100 | ${viabilityLevel} Viability</p>
-          </div>
-        </div>
+            <div class="slide">
+              <h1>Problem</h1>
+              <h2>The Challenge We're Solving</h2>
+              <p>${validationData.problemStatement}</p>
+            </div>
 
-        <div class="slide">
-          <h1>Problem</h1>
-          <h2>The Challenge We're Solving</h2>
-          <p>• Clearly defined problem statement</p>
-          <p>• Target customer pain points</p>
-          <p>• Market size and opportunity</p>
-        </div>
+            <div class="slide">
+              <h1>Solution</h1>
+              <h2>Our Approach</h2>
+              <p>${validationData.solutionDescription}</p>
+              <p><strong>Unique Value Proposition:</strong></p>
+              <p>${validationData.uniqueValueProposition}</p>
+            </div>
 
-        <div class="slide">
-          <h1>Solution</h1>
-          <h2>Our Approach</h2>
-          <p>• Unique value proposition</p>
-          <p>• Key features and benefits</p>
-          <p>• Competitive advantages</p>
-        </div>
+            <div class="slide">
+              <h1>Market</h1>
+              <h2>Market Analysis</h2>
+              <p><strong>Target Market:</strong> ${validationData.targetMarket}</p>
+              <p><strong>Market Size:</strong> ${validationData.marketSize}</p>
+              <p><strong>Customer Segments:</strong> ${validationData.customerSegments}</p>
+            </div>
 
-        <div class="slide">
-          <h1>Market</h1>
-          <h2>Market Analysis</h2>
-          <p>• Total Addressable Market (TAM)</p>
-          <p>• Target customer segments</p>
-          <p>• Market validation insights</p>
-        </div>
+            <div class="slide">
+              <h1>Business Model</h1>
+              <h2>Revenue Strategy</h2>
+              <p><strong>Revenue Model:</strong> ${validationData.revenueModel}</p>
+              <p><strong>Pricing Strategy:</strong> ${validationData.pricingStrategy}</p>
+              <p><strong>Key Metrics:</strong> ${validationData.keyMetrics}</p>
+            </div>
 
-        <div class="slide">
-          <h1>Business Model</h1>
-          <h2>Revenue Strategy</h2>
-          <p>• Revenue streams</p>
-          <p>• Pricing strategy</p>
-          <p>• Unit economics</p>
-        </div>
+            <div class="slide">
+              <h1>Traction</h1>
+              <h2>Progress & Milestones</h2>
+              <p><strong>Current Stage:</strong> ${validationData.currentStage}</p>
+              <p><strong>Existing Traction:</strong> ${validationData.existingTraction}</p>
+            </div>
 
-        <div class="slide">
-          <h1>Traction</h1>
-          <h2>Progress & Milestones</h2>
-          <p>• Current achievements</p>
-          <p>• Key metrics</p>
-          <p>• Future roadmap</p>
-        </div>
+            <div class="slide">
+              <h1>Funding</h1>
+              <h2>Investment Requirements</h2>
+              <p>${validationData.fundingNeeds}</p>
+            </div>
+          </body>
+          </html>
+        `;
 
-        <div class="slide">
-          <h1>Funding</h1>
-          <h2>Investment Requirements</h2>
-          <p>• Funding amount needed</p>
-          <p>• Use of funds</p>
-          <p>• Expected milestones</p>
-        </div>
-      </body>
-      </html>
-    `;
-
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(pitchContent);
-      printWindow.document.close();
-      setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-      }, 500);
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          printWindow.document.write(pitchContent);
+          printWindow.document.close();
+          setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+          }, 500);
+        }
+      } else {
+        throw new Error(result.error || 'Failed to generate pitch');
+      }
+    } catch (error) {
+      console.error('Pitch generation failed:', error);
+      alert('Failed to generate pitch. Please try again.');
+    } finally {
+      setIsGenerating(null);
     }
-    setIsGenerating(null);
   };
 
   const handleSWOTAnalysis = async () => {
     setIsGenerating('swot');
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    try {
+      const result = await generateSWOTAnalysis(validationData);
+      
+      if (result.success && result.swot_analysis) {
+        const swotContent = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>SWOT Analysis Report</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 40px; }
+              .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; }
+              .swot-section { padding: 20px; border-radius: 8px; min-height: 200px; }
+              .strengths { background: #ecfdf5; border-left: 4px solid #10b981; }
+              .weaknesses { background: #fef2f2; border-left: 4px solid #ef4444; }
+              .opportunities { background: #eff6ff; border-left: 4px solid #3b82f6; }
+              .threats { background: #fefce8; border-left: 4px solid #f59e0b; }
+              h1 { color: #6366f1; }
+              h2 { margin-top: 0; }
+              ul { padding-left: 20px; }
+            </style>
+          </head>
+          <body>
+            <h1>SWOT Analysis Report</h1>
+            <p><strong>Startup Validation Score:</strong> ${validationResults.overall_score}/100</p>
 
-    const swotContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>SWOT Analysis Report</title>
-        <style>
-          body { font-family: Arial, sans-serif; margin: 40px; }
-          .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; }
-          .swot-section { padding: 20px; border-radius: 8px; min-height: 200px; }
-          .strengths { background: #ecfdf5; border-left: 4px solid #10b981; }
-          .weaknesses { background: #fef2f2; border-left: 4px solid #ef4444; }
-          .opportunities { background: #eff6ff; border-left: 4px solid #3b82f6; }
-          .threats { background: #fefce8; border-left: 4px solid #f59e0b; }
-          h1 { color: #6366f1; }
-          h2 { margin-top: 0; }
-          ul { padding-left: 20px; }
-        </style>
-      </head>
-      <body>
-        <h1>SWOT Analysis Report</h1>
-        <p><strong>Startup Validation Score:</strong> ${overallScore}/100</p>
+            <div class="swot-grid">
+              <div class="swot-section strengths">
+                <h2>🟢 Strengths</h2>
+                <ul>
+                  ${result.swot_analysis.strengths.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+              </div>
 
-        <div class="swot-grid">
-          <div class="swot-section strengths">
-            <h2>🟢 Strengths</h2>
+              <div class="swot-section weaknesses">
+                <h2>🔴 Weaknesses</h2>
+                <ul>
+                  ${result.swot_analysis.weaknesses.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+              </div>
+
+              <div class="swot-section opportunities">
+                <h2>🔵 Opportunities</h2>
+                <ul>
+                  ${result.swot_analysis.opportunities.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+              </div>
+
+              <div class="swot-section threats">
+                <h2>🟡 Threats</h2>
+                <ul>
+                  ${result.swot_analysis.threats.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+
+            <h2>Strategic Recommendations</h2>
             <ul>
-              <li>Strong problem-solution fit identified</li>
-              <li>Clear value proposition</li>
-              <li>Good market understanding</li>
-              <li>Solid business model foundation</li>
+              <li>Leverage strengths to capitalize on opportunities</li>
+              <li>Address weaknesses through strategic partnerships</li>
+              <li>Monitor threats and develop contingency plans</li>
+              <li>Focus on unique differentiators</li>
             </ul>
-          </div>
+          </body>
+          </html>
+        `;
 
-          <div class="swot-section weaknesses">
-            <h2>🔴 Weaknesses</h2>
-            <ul>
-              <li>Limited market validation data</li>
-              <li>Potential skill gaps in team</li>
-              <li>Need stronger competitive differentiation</li>
-              <li>Funding requirements unclear</li>
-            </ul>
-          </div>
-
-          <div class="swot-section opportunities">
-            <h2>🔵 Opportunities</h2>
-            <ul>
-              <li>Growing market demand</li>
-              <li>Technology advancement trends</li>
-              <li>Partnership possibilities</li>
-              <li>Emerging customer segments</li>
-            </ul>
-          </div>
-
-          <div class="swot-section threats">
-            <h2>🟡 Threats</h2>
-            <ul>
-              <li>Established competitors</li>
-              <li>Market saturation risk</li>
-              <li>Economic uncertainties</li>
-              <li>Technology disruption</li>
-            </ul>
-          </div>
-        </div>
-
-        <h2>Strategic Recommendations</h2>
-        <ul>
-          <li>Leverage strengths to capitalize on opportunities</li>
-          <li>Address weaknesses through strategic partnerships</li>
-          <li>Monitor threats and develop contingency plans</li>
-          <li>Focus on unique differentiators</li>
-        </ul>
-      </body>
-      </html>
-    `;
-
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(swotContent);
-      printWindow.document.close();
-      setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-      }, 500);
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          printWindow.document.write(swotContent);
+          printWindow.document.close();
+          setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+          }, 500);
+        }
+      } else {
+        throw new Error(result.error || 'Failed to generate SWOT analysis');
+      }
+    } catch (error) {
+      console.error('SWOT analysis failed:', error);
+      alert('Failed to generate SWOT analysis. Please try again.');
+    } finally {
+      setIsGenerating(null);
     }
-    setIsGenerating(null);
   };
 
   const handleFounderReadiness = async () => {
     setIsGenerating('founder');
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // For now, show an alert with results. In a real app, this would be a modal or new page
-    alert(`
+    
+    try {
+      const result = await checkFounderReadiness(validationData);
+      
+      if (result.success && result.assessment) {
+        const assessment = result.assessment;
+        alert(`
 Founder Readiness Assessment Complete!
 
-✅ Entrepreneurial Mindset: 85/100
-✅ Technical Skills: 72/100
-✅ Business Acumen: 78/100
-✅ Leadership Ability: 80/100
-⚠️  Financial Management: 65/100
-⚠️  Network & Connections: 60/100
+✅ Entrepreneurial Mindset: ${assessment.categories.entrepreneurial_mindset}/100
+✅ Technical Skills: ${assessment.categories.technical_skills}/100
+✅ Business Acumen: ${assessment.categories.business_acumen}/100
+✅ Leadership Ability: ${assessment.categories.leadership_ability}/100
+⚠️  Financial Management: ${assessment.categories.financial_management}/100
+⚠️  Network & Connections: ${assessment.categories.network_connections}/100
 
-Overall Readiness: 73/100
+Overall Readiness: ${assessment.overall_score}/100
 
 Recommendations:
-• Strengthen financial planning skills
-• Expand professional network
-• Consider finding co-founder with complementary skills
-• Join entrepreneur communities or accelerator programs
-    `);
-    setIsGenerating(null);
+${assessment.recommendations.map(rec => `• ${rec}`).join('\n')}
+        `);
+      } else {
+        throw new Error(result.error || 'Failed to assess founder readiness');
+      }
+    } catch (error) {
+      console.error('Founder readiness assessment failed:', error);
+      alert('Failed to assess founder readiness. Please try again.');
+    } finally {
+      setIsGenerating(null);
+    }
   };
 
   const handleMarketResearch = async () => {
     setIsGenerating('market');
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    try {
+      const result = await generateMarketResearch(validationData);
+      
+      if (result.success && result.market_data) {
+        const marketContent = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Market Research Report</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 40px; }
+              .section { margin: 30px 0; padding: 20px; border-left: 4px solid #6366f1; background: #f8f9fa; }
+              .metric { display: inline-block; margin: 10px 20px 10px 0; padding: 15px; background: white; border-radius: 8px; border: 1px solid #e5e7eb; }
+              .metric-value { font-size: 24px; font-weight: bold; color: #6366f1; }
+              .metric-label { font-size: 12px; color: #6b7280; }
+              h1 { color: #6366f1; }
+              h2 { color: #374151; }
+            </style>
+          </head>
+          <body>
+            <h1>Market Research Report</h1>
+            <p><strong>Based on your startup validation with score:</strong> ${validationResults.overall_score}/100</p>
 
-    const marketContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Market Research Report</title>
-        <style>
-          body { font-family: Arial, sans-serif; margin: 40px; }
-          .section { margin: 30px 0; padding: 20px; border-left: 4px solid #6366f1; background: #f8f9fa; }
-          .metric { display: inline-block; margin: 10px 20px 10px 0; padding: 15px; background: white; border-radius: 8px; border: 1px solid #e5e7eb; }
-          .metric-value { font-size: 24px; font-weight: bold; color: #6366f1; }
-          .metric-label { font-size: 12px; color: #6b7280; }
-          h1 { color: #6366f1; }
-          h2 { color: #374151; }
-        </style>
-      </head>
-      <body>
-        <h1>Market Research Report</h1>
-        <p><strong>Based on your startup validation with score:</strong> ${overallScore}/100</p>
+            <div class="section">
+              <h2>Market Size Analysis</h2>
+              <div class="metric">
+                <div class="metric-value">${result.market_data.market_size.tam}</div>
+                <div class="metric-label">Total Addressable Market</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value">${result.market_data.market_size.sam}</div>
+                <div class="metric-label">Serviceable Available Market</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value">${result.market_data.market_size.som}</div>
+                <div class="metric-label">Serviceable Obtainable Market</div>
+              </div>
+            </div>
 
-        <div class="section">
-          <h2>Market Size Analysis</h2>
-          <div class="metric">
-            <div class="metric-value">$2.4B</div>
-            <div class="metric-label">Total Addressable Market</div>
-          </div>
-          <div class="metric">
-            <div class="metric-value">$450M</div>
-            <div class="metric-label">Serviceable Available Market</div>
-          </div>
-          <div class="metric">
-            <div class="metric-value">$45M</div>
-            <div class="metric-label">Serviceable Obtainable Market</div>
-          </div>
-        </div>
+            <div class="section">
+              <h2>Customer Segments</h2>
+              <ul>
+                <li><strong>Primary:</strong> ${result.market_data.customer_segments.primary}</li>
+                <li><strong>Secondary:</strong> ${result.market_data.customer_segments.secondary}</li>
+                <li><strong>Tertiary:</strong> ${result.market_data.customer_segments.tertiary}</li>
+                <li><strong>Other:</strong> ${result.market_data.customer_segments.other}</li>
+              </ul>
+            </div>
 
-        <div class="section">
-          <h2>Customer Segments</h2>
-          <ul>
-            <li><strong>Primary:</strong> Early-stage entrepreneurs (40% of market)</li>
-            <li><strong>Secondary:</strong> Student entrepreneurs (25% of market)</li>
-            <li><strong>Tertiary:</strong> Corporate innovators (20% of market)</li>
-            <li><strong>Other:</strong> Consultants and advisors (15% of market)</li>
-          </ul>
-        </div>
+            <div class="section">
+              <h2>Competitive Landscape</h2>
+              <ul>
+                <li><strong>Direct Competitors:</strong> ${result.market_data.competitive_landscape.direct_competitors} established players</li>
+                <li><strong>Indirect Competitors:</strong> ${result.market_data.competitive_landscape.indirect_competitors} alternative solutions</li>
+                <li><strong>Market Position:</strong> ${result.market_data.competitive_landscape.competitive_intensity} competitive intensity</li>
+                <li><strong>Market Leader Share:</strong> ${result.market_data.competitive_landscape.market_leader_share}</li>
+              </ul>
+            </div>
 
-        <div class="section">
-          <h2>Competitive Landscape</h2>
-          <ul>
-            <li><strong>Direct Competitors:</strong> 3-5 established players</li>
-            <li><strong>Indirect Competitors:</strong> Traditional consulting services</li>
-            <li><strong>Market Position:</strong> Opportunity for differentiation</li>
-            <li><strong>Competitive Advantage:</strong> AI-powered validation process</li>
-          </ul>
-        </div>
+            <div class="section">
+              <h2>Market Trends</h2>
+              <ul>
+                ${result.market_data.market_trends.map(trend => `<li>${trend}</li>`).join('')}
+              </ul>
+            </div>
 
-        <div class="section">
-          <h2>Market Trends</h2>
-          <ul>
-            <li>Growing startup ecosystem (+15% YoY)</li>
-            <li>Increased focus on validation (+22% search volume)</li>
-            <li>AI adoption in business tools (+45% growth)</li>
-            <li>Remote entrepreneurship trend (+30% increase)</li>
-          </ul>
-        </div>
+            <div class="section">
+              <h2>Growth Projections</h2>
+              <ul>
+                <li><strong>Year 1:</strong> ${result.market_data.growth_projections.year_1}</li>
+                <li><strong>Year 2:</strong> ${result.market_data.growth_projections.year_2}</li>
+                <li><strong>Year 3:</strong> ${result.market_data.growth_projections.year_3}</li>
+                <li><strong>Year 5:</strong> ${result.market_data.growth_projections.year_5}</li>
+              </ul>
+            </div>
 
-        <div class="section">
-          <h2>Recommendations</h2>
-          <ul>
-            <li>Target early-stage entrepreneurs first</li>
-            <li>Focus on AI-powered differentiation</li>
-            <li>Build strong online presence</li>
-            <li>Consider freemium pricing model</li>
-          </ul>
-        </div>
-      </body>
-      </html>
-    `;
+            <div class="section">
+              <h2>Recommendations</h2>
+              <ul>
+                <li>Target early-stage entrepreneurs first</li>
+                <li>Focus on AI-powered differentiation</li>
+                <li>Build strong online presence</li>
+                <li>Consider freemium pricing model</li>
+              </ul>
+            </div>
+          </body>
+          </html>
+        `;
 
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(marketContent);
-      printWindow.document.close();
-      setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-      }, 500);
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          printWindow.document.write(marketContent);
+          printWindow.document.close();
+          setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+          }, 500);
+        }
+      } else {
+        throw new Error(result.error || 'Failed to generate market research');
+      }
+    } catch (error) {
+      console.error('Market research failed:', error);
+      alert('Failed to generate market research. Please try again.');
+    } finally {
+      setIsGenerating(null);
     }
-    setIsGenerating(null);
   };
 
   const handleShare = async () => {
     const shareData = {
       title: 'My Startup Validation Results',
-      text: `I just validated my startup idea with StartupValidator and got a ${overallScore}/100 score with ${viabilityLevel} viability!`,
+      text: `I just validated my startup idea with StartupValidator and got a ${validationResults.overall_score}/100 score with ${validationResults.viability_level} viability!`,
       url: window.location.href
     };
 
@@ -394,13 +461,13 @@ Recommendations:
         <body>
           <div class="header">
             <h1>Startup Validation Results</h1>
-            <div class="score">Overall Score: ${overallScore}/100</div>
-            <div>Viability Level: ${viabilityLevel}</div>
+            <div class="score">Overall Score: ${validationResults.overall_score}/100</div>
+            <div>Viability Level: ${validationResults.viability_level}</div>
           </div>
 
           <div class="score-section">
             <h2>Category Breakdown</h2>
-            ${scores.map(score => `
+            ${validationResults.scores.map(score => `
               <div class="category">
                 <h3>${score.category}: ${score.score}%</h3>
                 <p>${score.feedback}</p>
@@ -442,21 +509,13 @@ Recommendations:
     }
   };
   
-  // Mock validation results
-  const overallScore = 78;
-  const viabilityLevel = 'High';
-
-  // Calculate Investor Readiness components
-  const founderReadinessScore = 73; // From founder assessment
-  const clarityScore = 82; // Based on how well-defined the idea is
-  const investorReadinessScore = Math.round((overallScore + founderReadinessScore + clarityScore) / 3);
-
-  const getInvestorReadinessLevel = (score: number) => {
-    if (score >= 80) return { level: 'Investor Ready', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200' };
-    if (score >= 65) return { level: 'Angel Ready', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' };
-    if (score >= 50) return { level: 'Accelerator Ready', color: 'text-yellow-600', bg: 'bg-yellow-50', border: 'border-yellow-200' };
-    return { level: 'Bootstrap Stage', color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-200' };
-  };
+  // Use real validation results
+  const overallScore = validationResults.overall_score;
+  const viabilityLevel = validationResults.viability_level;
+  const scores = validationResults.scores;
+  const founderReadinessScore = validationResults.founder_readiness_score;
+  const clarityScore = validationResults.clarity_score;
+  const investorReadinessScore = validationResults.investor_readiness_score;
 
   const getRecommendation = (score: number) => {
     if (score >= 80) return {
@@ -483,75 +542,6 @@ Recommendations:
 
   const readinessLevel = getInvestorReadinessLevel(investorReadinessScore);
   const recommendation = getRecommendation(investorReadinessScore);
-  
-  const scores: ValidationScore[] = [
-    {
-      category: 'Problem-Solution Fit',
-      score: 85,
-      feedback: 'Strong problem identification with a clear solution approach. The value proposition is well-defined.',
-      suggestions: [
-        'Conduct user interviews to validate problem severity',
-        'Test solution assumptions with early prototypes',
-        'Quantify the problem impact with market research'
-      ]
-    },
-    {
-      category: 'Market Opportunity',
-      score: 72,
-      feedback: 'Good market understanding, but could benefit from more specific targeting and sizing.',
-      suggestions: [
-        'Define more specific customer personas',
-        'Research total addressable market (TAM)',
-        'Analyze market growth trends and dynamics'
-      ]
-    },
-    {
-      category: 'Business Model',
-      score: 80,
-      feedback: 'Solid revenue model with clear monetization strategy. Pricing approach is reasonable.',
-      suggestions: [
-        'Test pricing with potential customers',
-        'Consider multiple revenue streams',
-        'Plan for customer acquisition costs'
-      ]
-    },
-    {
-      category: 'Competitive Advantage',
-      score: 75,
-      feedback: 'Decent competitive analysis with some differentiation identified.',
-      suggestions: [
-        'Strengthen unique value proposition',
-        'Identify sustainable competitive moats',
-        'Monitor competitor strategies closely'
-      ]
-    },
-    {
-      category: 'Team Strength',
-      score: 68,
-      feedback: 'Good foundational team with relevant experience. Some skill gaps identified.',
-      suggestions: [
-        'Consider bringing in technical co-founder',
-        'Build advisory board with industry experts',
-        'Plan for key hiring priorities'
-      ]
-    },
-    {
-      category: 'Execution Readiness',
-      score: 82,
-      feedback: 'Strong execution plan with realistic milestones and funding strategy.',
-      suggestions: [
-        'Create detailed development roadmap',
-        'Establish key performance indicators',
-        'Plan for regulatory requirements'
-      ]
-    }
-  ];
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
-    if (score >= 60) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-    return 'text-red-600 bg-red-50 border-red-200';
-  };
 
   const getViabilityBadge = (level: string) => {
     const colors = {
