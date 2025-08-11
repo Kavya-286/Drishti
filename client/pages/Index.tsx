@@ -18,6 +18,7 @@ import {
   ArrowRight,
   Star
 } from 'lucide-react';
+import { generateAIPitch } from '@shared/api';
 
 export default function Index() {
   const [selectedPlan, setSelectedPlan] = useState<'basic' | 'pro' | 'enterprise'>('pro');
@@ -127,25 +128,54 @@ export default function Index() {
     }
   ];
 
-  const generateAIPitch = async () => {
+  const generateAIPitchDemo = async () => {
     setIsGeneratingPitch(true);
 
-    // Simulate AI generation delay
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    try {
+      // Use sample data for the demo pitch generation
+      const sampleData = {
+        problemStatement: "Entrepreneurs struggle to objectively validate their startup ideas, often relying on biased feedback from friends and family rather than systematic analysis.",
+        solutionDescription: "AI-powered platform that guides entrepreneurs through a structured validation process, providing instant scoring and actionable recommendations.",
+        targetMarket: "Early-stage entrepreneurs, accelerator programs, and educational institutions",
+        revenueModel: "Freemium SaaS model",
+        currentStage: "Early revenue stage"
+      };
 
-    const pitchContent = {
-      executiveSummary: "StartupValidator is revolutionizing how entrepreneurs validate their business ideas through AI-powered analysis. Our platform provides instant, comprehensive feedback on startup viability, helping founders make data-driven decisions before investing time and money.",
-      problemStatement: "90% of startups fail due to lack of market need and insufficient validation. Entrepreneurs struggle to objectively assess their ideas' viability, often relying on biased feedback from friends and family rather than systematic analysis.",
-      solutionOverview: "Our AI-powered platform guides entrepreneurs through a structured validation process, analyzing six key areas: problem-solution fit, market opportunity, business model, competition, team strength, and execution readiness. Users receive instant scoring and actionable recommendations.",
-      marketOpportunity: "The global startup ecosystem is valued at $3.8 trillion, with over 305 million startups launched annually. Our addressable market includes early-stage entrepreneurs, accelerator programs, and educational institutions seeking systematic validation tools.",
-      businessModel: "Freemium SaaS model with three tiers: Free (1 validation/month), Pro ($29/month for unlimited validations), and Enterprise (custom pricing for institutions). Revenue streams include subscriptions, premium features, and white-label licensing.",
-      competitiveAdvantage: "First-to-market AI-powered validation platform with proprietary scoring algorithm. Competitive moats include: comprehensive 6-factor analysis, real-time AI feedback, integration with pitch generation tools, and growing database of successful startup patterns.",
-      fundingRequirements: "Seeking $2M Series A to accelerate product development, expand AI capabilities, grow the team, and scale marketing efforts. Funds will be allocated: 40% product development, 30% team expansion, 20% marketing & sales, 10% operations."
-    };
+      // Try to generate pitch using API, fall back to demo content
+      let pitchResult;
+      try {
+        pitchResult = await generateAIPitch(sampleData);
+        if (!pitchResult.success) {
+          throw new Error('API call failed');
+        }
+      } catch (apiError) {
+        console.warn('API pitch generation failed, using demo content:', apiError);
+        pitchResult = {
+          success: true,
+          pitch_content: {
+            executiveSummary: "StartupValidator is revolutionizing how entrepreneurs validate their business ideas through AI-powered analysis. Our platform provides instant, comprehensive feedback on startup viability, helping founders make data-driven decisions before investing time and money.",
+            problemStatement: "90% of startups fail due to lack of market need and insufficient validation. Entrepreneurs struggle to objectively assess their ideas' viability, often relying on biased feedback from friends and family rather than systematic analysis.",
+            solutionOverview: "Our AI-powered platform guides entrepreneurs through a structured validation process, analyzing six key areas: problem-solution fit, market opportunity, business model, competition, team strength, and execution readiness. Users receive instant scoring and actionable recommendations.",
+            marketOpportunity: "The global startup ecosystem is valued at $3.8 trillion, with over 305 million startups launched annually. Our addressable market includes early-stage entrepreneurs, accelerator programs, and educational institutions seeking systematic validation tools.",
+            businessModel: "Freemium SaaS model with three tiers: Free (1 validation/month), Pro ($29/month for unlimited validations), and Enterprise (custom pricing for institutions). Revenue streams include subscriptions, premium features, and white-label licensing.",
+            competitiveAdvantage: "First-to-market AI-powered validation platform with proprietary scoring algorithm. Competitive moats include: comprehensive 6-factor analysis, real-time AI feedback, integration with pitch generation tools, and growing database of successful startup patterns.",
+            fundingRequirements: "Seeking $2M Series A to accelerate product development, expand AI capabilities, grow the team, and scale marketing efforts. Funds will be allocated: 40% product development, 30% team expansion, 20% marketing & sales, 10% operations."
+          }
+        };
+      }
 
-    setGeneratedPitch(pitchContent);
-    setPitchVisible(true);
-    setIsGeneratingPitch(false);
+      if (pitchResult.success && pitchResult.pitch_content) {
+        setGeneratedPitch(pitchResult.pitch_content);
+        setPitchVisible(true);
+      } else {
+        throw new Error('Failed to generate pitch content');
+      }
+    } catch (error) {
+      console.error('Pitch generation failed:', error);
+      alert('Failed to generate AI pitch. Please try again.');
+    } finally {
+      setIsGeneratingPitch(false);
+    }
   };
 
   const copyPitchToClipboard = () => {
@@ -266,7 +296,7 @@ export default function Index() {
               borderRadius: '50px',
               backdropFilter: 'blur(10px)'
             }}
-            onClick={generateAIPitch}
+            onClick={generateAIPitchDemo}
             disabled={isGeneratingPitch}
           >
             {isGeneratingPitch ? (
