@@ -521,7 +521,7 @@ export default function Index() {
                 <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-500 rounded-lg flex items-center justify-center">
                   <Lightbulb className="w-5 h-5 text-white" />
                 </div>
-                <span className="font-bold text-xl">StartupValidator</span>
+                <span className="font-bold text-xl">Drishti</span>
               </div>
               <p className="text-muted-foreground">
                 Validate your startup ideas with AI-powered insights and expert guidance.
