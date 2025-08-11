@@ -334,7 +334,11 @@ class StartupValidatorAPI {
         body: JSON.stringify(data),
       });
 
-      return result;
+      if (result && result.success) {
+        return result;
+      } else {
+        throw new Error('API returned unsuccessful response');
+      }
     } catch (error) {
       console.warn('Founder readiness API unavailable, using fallback:', error);
 
