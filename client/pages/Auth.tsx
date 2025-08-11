@@ -695,6 +695,38 @@ export default function Auth() {
                     <Button type="submit" className="w-full" disabled={isLoading}>
                       {isLoading ? 'Creating Account...' : 'Create Account'}
                     </Button>
+
+                    <div className="relative my-6">
+                      <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t" />
+                      </div>
+                      <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-background px-2 text-muted-foreground">
+                          Or sign up with
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <Button
+                        variant="outline"
+                        type="button"
+                        onClick={() => handleSocialLogin('google')}
+                        disabled={isLoading}
+                      >
+                        <Chrome className="w-4 h-4 mr-2" />
+                        Google
+                      </Button>
+                      <Button
+                        variant="outline"
+                        type="button"
+                        onClick={() => handleSocialLogin('linkedin')}
+                        disabled={isLoading}
+                      >
+                        <Linkedin className="w-4 h-4 mr-2" />
+                        LinkedIn
+                      </Button>
+                    </div>
                   </TabsContent>
                 </form>
               </Tabs>
