@@ -532,7 +532,97 @@ ${assessment.recommendations.map(rec => `• ${rec}`).join('\n')}
       }, 500);
     }
   };
-  
+
+  // New handler functions for post-validation features
+  const handleGenerateAIPitch = async () => {
+    if (!validationData) return;
+
+    setIsGenerating('ai-pitch');
+    try {
+      const result = await generateAIPitch(validationData);
+      if (result.success && result.pitch_content) {
+        setGeneratedPitch(result.pitch_content);
+        setShowPitchModal(true);
+      } else {
+        alert('Failed to generate pitch. Please try again.');
+      }
+    } catch (error) {
+      console.error('Pitch generation failed:', error);
+      alert('Failed to generate pitch. Please try again.');
+    } finally {
+      setIsGenerating(null);
+    }
+  };
+
+  const handleVisibilityChange = (isPublicValue: boolean) => {
+    setIsPublic(isPublicValue);
+
+    if (isPublicValue && validationData && validationResults) {
+      // Save to public startup ideas
+      const publicIdea = {
+        id: `idea_${Date.now()}`,
+        ideaName: validationData.problemStatement?.substring(0, 50) + '...' || 'Unnamed Startup Idea',
+        description: validationData.solutionDescription || 'No description provided',
+        problemStatement: validationData.problemStatement || '',
+        solutionDescription: validationData.solutionDescription || '',
+        targetMarket: validationData.targetMarket || '',
+        revenueModel: validationData.revenueModel || '',
+        fundingNeeds: validationData.fundingNeeds || 'Not specified',
+        industry: validationData.customerSegments || 'General',
+        stage: validationData.currentStage || 'Idea',
+        validationScore: validationResults.overall_score,
+        viabilityLevel: validationResults.viability_level,
+        createdAt: new Date().toISOString(),
+        founder: JSON.parse(localStorage.getItem('currentUser') || '{}'),
+        validationData: validationData,
+        validationResults: validationResults
+      };
+
+      // Store in localStorage for demo (in real app would be database)
+      const existingIdeas = JSON.parse(localStorage.getItem('publicStartupIdeas') || '[]');
+      existingIdeas.push(publicIdea);
+      localStorage.setItem('publicStartupIdeas', JSON.stringify(existingIdeas));
+
+      alert('✅ Your startup idea is now public and visible to investors!');
+    } else if (!isPublicValue) {
+      alert('✅ Your startup idea is now private and hidden from public view.');
+    }
+  };
+
+  const handlePostValidationSubmit = () => {
+    setShowPostValidationOptions(false);
+    alert('✅ Your preferences have been saved successfully!');
+  };
+
+  const copyPitchToClipboard = () => {
+    if (!generatedPitch) return;
+
+    const sections = [
+      'Executive Summary: ' + generatedPitch.executiveSummary,
+      'Problem Statement: ' + generatedPitch.problemStatement,
+      'Solution Overview: ' + generatedPitch.solutionOverview,
+      'Market Opportunity: ' + generatedPitch.marketOpportunity,
+      'Business Model: ' + generatedPitch.businessModel,
+      'Competitive Advantage: ' + generatedPitch.competitiveAdvantage,
+      'Funding Requirements: ' + generatedPitch.fundingRequirements
+    ];
+
+    const fullPitch = sections.join('\n\n');
+
+    navigator.clipboard.writeText(fullPitch).then(() => {
+      alert('Pitch copied to clipboard!');
+    }).catch(() => {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = fullPitch;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Pitch copied to clipboard!');
+    });
+  };
+
   // Use real validation results
   const overallScore = validationResults.overall_score;
   const viabilityLevel = validationResults.viability_level;
