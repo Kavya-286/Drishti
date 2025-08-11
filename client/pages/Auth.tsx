@@ -22,7 +22,8 @@ import {
   Briefcase,
   Star,
   Eye,
-  EyeOff
+  EyeOff,
+  DollarSign
 } from 'lucide-react';
 
 export default function Auth() {
