@@ -201,16 +201,56 @@ class StartupValidatorAPI {
     } catch (error) {
       console.warn('Pitch generation API unavailable, using fallback:', error);
 
-      // Generate fallback pitch content
-      const fallbackPitch: PitchContent = {
-        executiveSummary: `${data.solutionDescription || 'Our innovative solution'} addresses a critical market need by providing comprehensive validation and analysis tools. We're targeting ${data.targetMarket || 'entrepreneurs and innovators'} with a proven ${data.revenueModel || 'subscription'} business model.`,
-        problemStatement: data.problemStatement || 'There is a significant gap in the market for comprehensive startup validation tools that provide data-driven insights to entrepreneurs.',
-        solutionOverview: data.solutionDescription || 'Our platform provides AI-powered analysis and validation tools to help entrepreneurs make informed decisions about their startup ideas.',
-        marketOpportunity: `We're targeting ${data.targetMarket || 'early-stage entrepreneurs'}. The total addressable market is estimated at $2-5 billion, with strong growth indicators and increasing demand for validation tools.`,
-        businessModel: `Our ${data.revenueModel || 'subscription'} model ensures sustainable revenue growth. ${data.pricingStrategy || 'We have validated our pricing strategy through market research and early customer feedback.'} This approach projects strong unit economics.`,
-        competitiveAdvantage: data.competitiveAdvantage || 'Our key differentiators include proprietary AI technology, comprehensive analysis framework, and deep domain expertise in startup validation.',
-        fundingRequirements: data.fundingNeeds || 'We are seeking strategic funding to accelerate growth, expand our team, and scale our proven solution. Funds will be allocated primarily to product development and customer acquisition.'
+      // Generate sophisticated fallback pitch content based on input data
+      const generateSmartPitchContent = (data: Partial<ValidationData>): PitchContent => {
+        // Analyze problem urgency and impact
+        const problemUrgency = data.problemFrequency === 'daily' ? 'critical' :
+                              data.problemFrequency === 'weekly' ? 'significant' : 'moderate';
+        const impactLevel = data.problemImpact || 'high';
+
+        // Generate context-aware executive summary
+        const executiveSummary = `Our ${data.solutionType || 'platform'} addresses a ${problemUrgency} market need faced by ${data.targetMarket || 'our target customers'}. ${data.solutionDescription ? `${data.solutionDescription.substring(0, 150)}...` : 'Our innovative solution'} With our ${data.revenueModel || 'subscription'} business model and ${data.developmentStage || 'prototype'} stage development, we're positioned to capture significant market share in the ${data.marketSize || 'growing'} market.`;
+
+        // Enhanced problem statement with urgency and frequency
+        const problemStatement = `${data.problemStatement || 'Our target market faces a significant challenge that impacts their daily operations.'} This problem occurs ${data.problemFrequency || 'regularly'} and has a ${impactLevel} impact on ${data.targetMarket || 'our customers'}, resulting in measurable costs and inefficiencies. ${data.marketValidation ? 'Our market validation confirms: ' + data.marketValidation.substring(0, 100) + '...' : 'Market research validates the widespread nature of this problem.'}`;
+
+        // Solution with technical details and differentiation
+        const solutionOverview = `Our ${data.solutionType || 'innovative platform'} solves this through ${data.solutionDescription || 'advanced technology and user-centric design'}. Currently in ${data.developmentStage || 'development'} stage, our solution provides: ${data.uniqueValueProposition || 'unique value to customers'}. ${data.competitiveAdvantage ? 'Our competitive advantages include: ' + data.competitiveAdvantage.substring(0, 100) + '...' : 'We differentiate through superior technology and user experience.'}`;
+
+        // Market opportunity with TAM/SAM estimates
+        const getMarketSizeEstimate = (size: string) => {
+          switch(size) {
+            case 'global': return 'multi-billion dollar global market';
+            case 'international': return 'billion-dollar international market';
+            case 'national': return 'substantial national market opportunity';
+            case 'local': return 'significant local market with expansion potential';
+            default: return 'substantial market opportunity';
+          }
+        };
+
+        const marketOpportunity = `We're targeting ${data.customerSegments || data.targetMarket || 'a diverse customer base'} within a ${getMarketSizeEstimate(data.marketSize || '')}. ${data.customerPersona ? 'Our primary customers are ' + data.customerPersona.substring(0, 100) + '...' : 'Our target customers have demonstrated strong willingness to pay for solutions.'} ${data.customerAcquisition ? 'Our acquisition strategy includes: ' + data.customerAcquisition.substring(0, 100) + '...' : 'We have clear paths to customer acquisition and growth.'}`;
+
+        // Business model with unit economics
+        const businessModel = `Our ${data.revenueModel || 'subscription'} model ensures predictable revenue growth. ${data.pricingStrategy || 'Our pricing strategy is competitive and value-based.'} ${data.unitEconomics ? 'Key economics: ' + data.unitEconomics.substring(0, 100) + '...' : 'Strong unit economics with healthy margins.'} ${data.revenueStreams ? 'Additional revenue opportunities: ' + data.revenueStreams.substring(0, 100) + '...' : 'Multiple revenue streams ensure diversified income.'}`;
+
+        // Competitive advantage with market positioning
+        const competitiveAdvantage = `${data.competitiveAdvantage || 'Our solution provides unique value through advanced technology and superior user experience.'} ${data.marketPosition ? data.marketPosition.substring(0, 100) + '...' : 'We position ourselves as the leading solution in our category.'} ${data.competitiveAnalysis ? 'Compared to competitors: ' + data.competitiveAnalysis.substring(0, 100) + '...' : 'Our analysis shows clear advantages over existing alternatives.'}`;
+
+        // Funding requirements with specific use cases
+        const fundingRequirements = `${data.fundingNeeds || 'We are seeking strategic investment to accelerate our growth trajectory.'} ${data.salesCycle ? 'With our ' + data.salesCycle.substring(0, 50) + '... we project strong scalability.' : 'Our business model supports rapid and sustainable scaling.'} Funding will be allocated across product development, team expansion, customer acquisition, and market expansion to achieve our ambitious growth targets.`;
+
+        return {
+          executiveSummary,
+          problemStatement,
+          solutionOverview,
+          marketOpportunity,
+          businessModel,
+          competitiveAdvantage,
+          fundingRequirements
+        };
       };
+
+      const fallbackPitch = generateSmartPitchContent(data);
 
       return {
         success: true,
