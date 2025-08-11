@@ -367,76 +367,86 @@ export default function InvestorDashboard() {
                 </div>
 
                 <div className="space-y-4">
-                  {publicStartupIdeas
-                    .filter(startup =>
-                      startup.ideaName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                      startup.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                      startup.industry.toLowerCase().includes(searchQuery.toLowerCase())
-                    )
-                    .map((startup) => (
-                    <div key={startup.id} className="p-6 border rounded-lg hover:shadow-md transition-shadow">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h3 className="text-lg font-semibold">{startup.ideaName}</h3>
-                          <p className="text-muted-foreground mb-2">{startup.description}</p>
-                          <p className="text-sm text-muted-foreground">
-                            by {startup.founder?.firstName} {startup.founder?.lastName} •
-                            Created {new Date(startup.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <Badge variant="default" className="mb-2">
-                            {startup.validationScore}/100 validated
-                          </Badge>
-                          <p className="text-sm text-muted-foreground">{startup.industry}</p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                        <div>
-                          <p className="text-xs text-muted-foreground">Stage</p>
-                          <p className="text-sm font-medium">{startup.stage}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Funding Needs</p>
-                          <p className="text-sm font-medium text-green-600">{startup.fundingNeeds}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Revenue Model</p>
-                          <p className="text-sm font-medium">{startup.revenueModel}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Viability</p>
-                          <Badge variant={startup.viabilityLevel === 'High' ? 'default' : startup.viabilityLevel === 'Moderate' ? 'secondary' : 'destructive'}>
-                            {startup.viabilityLevel}
-                          </Badge>
-                        </div>
-                      </div>
-
-                      <div className="bg-muted/30 p-3 rounded-lg mb-4">
-                        <p className="text-sm">
-                          <strong>Problem:</strong> {startup.problemStatement?.substring(0, 200)}...
-                        </p>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline" onClick={() => handleViewDetails(startup)}>
-                            <Eye className="w-4 h-4 mr-2" />
-                            View Full Details
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Star className="w-4 h-4 mr-2" />
-                            Add to Watchlist
-                          </Button>
-                        </div>
-                        <Button size="sm" onClick={() => handleInvestmentInterest(startup)}>
-                          <DollarSign className="w-4 h-4 mr-2" />
-                          Express Interest
-                        </Button>
-                      </div>
+                  {publicStartupIdeas.length === 0 ? (
+                    <div className="text-center py-12">
+                      <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="font-semibold mb-2">No public startup ideas yet</h3>
+                      <p className="text-muted-foreground text-sm">
+                        When entrepreneurs make their ideas public, they'll appear here for investment opportunities.
+                      </p>
                     </div>
-                  ))}
+                  ) : (
+                    publicStartupIdeas
+                      .filter(startup =>
+                        startup.ideaName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        startup.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        startup.industry.toLowerCase().includes(searchQuery.toLowerCase())
+                      )
+                      .map((startup) => (
+                        <div key={startup.id} className="p-6 border rounded-lg hover:shadow-md transition-shadow">
+                          <div className="flex items-start justify-between mb-4">
+                            <div>
+                              <h3 className="text-lg font-semibold">{startup.ideaName}</h3>
+                              <p className="text-muted-foreground mb-2">{startup.description}</p>
+                              <p className="text-sm text-muted-foreground">
+                                by {startup.founder?.firstName} {startup.founder?.lastName} •
+                                Created {new Date(startup.createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <Badge variant="default" className="mb-2">
+                                {startup.validationScore}/100 validated
+                              </Badge>
+                              <p className="text-sm text-muted-foreground">{startup.industry}</p>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                            <div>
+                              <p className="text-xs text-muted-foreground">Stage</p>
+                              <p className="text-sm font-medium">{startup.stage}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground">Funding Needs</p>
+                              <p className="text-sm font-medium text-green-600">{startup.fundingNeeds}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground">Revenue Model</p>
+                              <p className="text-sm font-medium">{startup.revenueModel}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground">Viability</p>
+                              <Badge variant={startup.viabilityLevel === 'High' ? 'default' : startup.viabilityLevel === 'Moderate' ? 'secondary' : 'destructive'}>
+                                {startup.viabilityLevel}
+                              </Badge>
+                            </div>
+                          </div>
+
+                          <div className="bg-muted/30 p-3 rounded-lg mb-4">
+                            <p className="text-sm">
+                              <strong>Problem:</strong> {startup.problemStatement?.substring(0, 200)}...
+                            </p>
+                          </div>
+
+                          <div className="flex items-center justify-between">
+                            <div className="flex space-x-2">
+                              <Button size="sm" variant="outline" onClick={() => handleViewDetails(startup)}>
+                                <Eye className="w-4 h-4 mr-2" />
+                                View Full Details
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <Star className="w-4 h-4 mr-2" />
+                                Add to Watchlist
+                              </Button>
+                            </div>
+                            <Button size="sm" onClick={() => handleInvestmentInterest(startup)}>
+                              <DollarSign className="w-4 h-4 mr-2" />
+                              Express Interest
+                            </Button>
+                          </div>
+                        </div>
+                      ))
+                  )}
                 </div>
               </CardContent>
             </Card>
