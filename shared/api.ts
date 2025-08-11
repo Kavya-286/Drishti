@@ -147,7 +147,7 @@ class StartupValidatorAPI {
         let errorMessage = `HTTP error! status: ${response.status}`;
         try {
           const errorData = await response.json();
-          if (errorData.error) {
+          if (errorData && errorData.error) {
             errorMessage = errorData.error;
           }
         } catch (parseError) {
