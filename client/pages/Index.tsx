@@ -22,9 +22,6 @@ import { generateAIPitch } from '@shared/api';
 
 export default function Index() {
   const [selectedPlan, setSelectedPlan] = useState<'basic' | 'pro' | 'enterprise'>('pro');
-  const [pitchVisible, setPitchVisible] = useState(false);
-  const [isGeneratingPitch, setIsGeneratingPitch] = useState(false);
-  const [generatedPitch, setGeneratedPitch] = useState<any>(null);
 
   const coreFeatures = [
     {
