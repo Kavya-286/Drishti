@@ -33,13 +33,17 @@ export function createServer() {
         body: JSON.stringify(req.body),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
       const data = await response.json();
       res.json(data);
     } catch (error) {
-      console.error('Python backend error:', error);
+      console.warn('Python ML backend unavailable, client will use fallback');
       res.status(500).json({
         success: false,
-        error: 'ML validation service unavailable. Using fallback validation.'
+        error: 'ML validation service unavailable'
       });
     }
   });
@@ -55,10 +59,14 @@ export function createServer() {
         body: JSON.stringify(req.body),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
       const data = await response.json();
       res.json(data);
     } catch (error) {
-      console.error('Python backend error:', error);
+      console.warn('Python ML backend unavailable for pitch generation, client will use fallback');
       res.status(500).json({
         success: false,
         error: 'Pitch generation service unavailable'
@@ -77,10 +85,14 @@ export function createServer() {
         body: JSON.stringify(req.body),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
       const data = await response.json();
       res.json(data);
     } catch (error) {
-      console.error('Python backend error:', error);
+      console.warn('Python ML backend unavailable for SWOT analysis, client will use fallback');
       res.status(500).json({
         success: false,
         error: 'SWOT analysis service unavailable'
@@ -99,10 +111,14 @@ export function createServer() {
         body: JSON.stringify(req.body),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
       const data = await response.json();
       res.json(data);
     } catch (error) {
-      console.error('Python backend error:', error);
+      console.warn('Python ML backend unavailable for founder readiness, client will use fallback');
       res.status(500).json({
         success: false,
         error: 'Founder readiness service unavailable'
@@ -121,10 +137,14 @@ export function createServer() {
         body: JSON.stringify(req.body),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
       const data = await response.json();
       res.json(data);
     } catch (error) {
-      console.error('Python backend error:', error);
+      console.warn('Python ML backend unavailable for market research, client will use fallback');
       res.status(500).json({
         success: false,
         error: 'Market research service unavailable'
@@ -136,17 +156,20 @@ export function createServer() {
   app.get('/api/health', async (req, res) => {
     try {
       const response = await fetch(`${PYTHON_BACKEND_URL}/api/health`);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
       const data = await response.json();
       res.json({
         ...data,
         proxy_status: 'healthy'
       });
     } catch (error) {
-      console.error('Python backend health check failed:', error);
       res.json({
         status: 'degraded',
         proxy_status: 'healthy',
         ml_validator: 'unavailable',
+        message: 'Python ML backend is not running - using fallback functionality',
         timestamp: new Date().toISOString()
       });
     }
