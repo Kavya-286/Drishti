@@ -421,7 +421,7 @@ export default function InvestorDashboard() {
                               <h3 className="text-lg font-semibold">{startup.ideaName}</h3>
                               <p className="text-muted-foreground mb-2">{startup.description}</p>
                               <p className="text-sm text-muted-foreground">
-                                by {startup.founder?.firstName} {startup.founder?.lastName} •
+                                by {startup.founder?.firstName} {startup.founder?.lastName} ���
                                 Created {new Date(startup.createdAt).toLocaleDateString()}
                               </p>
                             </div>
@@ -466,7 +466,7 @@ export default function InvestorDashboard() {
                                 <Eye className="w-4 h-4 mr-2" />
                                 View Full Details
                               </Button>
-                              <Button size="sm" variant="outline">
+                              <Button size="sm" variant="outline" onClick={() => handleAddToWatchlist(startup)}>
                                 <Star className="w-4 h-4 mr-2" />
                                 Add to Watchlist
                               </Button>
