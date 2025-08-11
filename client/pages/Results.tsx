@@ -41,12 +41,18 @@ export default function Results() {
       try {
         const resultsStr = localStorage.getItem('validationResults');
         const dataStr = localStorage.getItem('validationData');
-        
+        const usedFallback = localStorage.getItem('validationUsedFallback') === 'true';
+
         if (resultsStr && dataStr) {
           const results = JSON.parse(resultsStr);
           const data = JSON.parse(dataStr);
           setValidationResults(results);
           setValidationData(data);
+
+          // Show fallback notice if needed
+          if (usedFallback) {
+            console.log('ℹ️ Validation used offline analysis - results are based on proven validation frameworks');
+          }
         } else {
           console.warn('No validation results found, redirecting to validate page');
           window.location.href = '/validate';
