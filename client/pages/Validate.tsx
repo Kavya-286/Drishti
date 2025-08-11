@@ -30,6 +30,7 @@ export default function Validate() {
   const [isValidating, setIsValidating] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isGeneratingSuggestion, setIsGeneratingSuggestion] = useState(false);
+  const [backendStatus, setBackendStatus] = useState<'checking' | 'available' | 'fallback'>('checking');
 
   // Load saved progress on component mount
   useEffect(() => {
