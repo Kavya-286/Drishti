@@ -447,7 +447,7 @@ export default function StartupDetails() {
                   <div className="space-y-6">
                     <div className="text-center">
                       <div className="text-4xl font-bold text-primary mb-2">{startup.validationScore}/100</div>
-                      <Badge className={getViabilityBadge(startup.viabilityLevel)} className="mb-4">
+                      <Badge className={`${getViabilityBadge(startup.viabilityLevel)} mb-4`}>
                         {startup.viabilityLevel} Viability
                       </Badge>
                       <Progress value={startup.validationScore} className="max-w-md mx-auto" />
