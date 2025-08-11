@@ -388,7 +388,7 @@ export default function Index() {
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Everything You Need to Validate Your Startup
+              Complete Startup Intelligence Platform
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Our comprehensive validation platform covers every aspect of startup idea assessment
