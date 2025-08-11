@@ -824,7 +824,7 @@ ${assessment.recommendations.map(rec => `• ${rec}`).join('\n')}
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-4xl font-bold text-primary mb-2">{overallScore}/100</div>
+                <div className="text-4xl font-bold text-primary mb-2">{typeof overallScore === 'number' && !isNaN(overallScore) ? overallScore : 0}/100</div>
                 <Badge className={getViabilityBadge(viabilityLevel)}>
                   {viabilityLevel} Viability
                 </Badge>
