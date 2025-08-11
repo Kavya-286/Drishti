@@ -240,8 +240,8 @@ export default function Index() {
             Transform Your Vision Into Market Reality
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Get instant, AI-powered feedback on your startup idea's viability, market potential, and success probability. 
-            Perfect for founders, students, and entrepreneurs.
+            Drishti provides comprehensive startup intelligence with AI-powered validation, market analysis, and strategic insights.
+            Perfect for aspiring entrepreneurs, existing founders, and innovation teams.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link to="/validate">
