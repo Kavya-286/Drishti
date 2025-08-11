@@ -581,6 +581,18 @@ export const isFallbackEnabled = (endpoint: string): boolean => {
   return globalFallback || endpointFallback;
 };
 
+// Reset all fallback states (useful for troubleshooting)
+export const resetFallbackStates = () => {
+  console.log('🔄 Resetting all fallback states...');
+  localStorage.removeItem('forceFallback');
+  localStorage.removeItem('fallback__generate-pitch');
+  localStorage.removeItem('fallback__validate');
+  localStorage.removeItem('fallback__generate-swot');
+  localStorage.removeItem('fallback__founder-readiness');
+  localStorage.removeItem('fallback__market-research');
+  console.log('✅ All fallback states reset - API will be retried on next request');
+};
+
 // Helper functions for common operations with guaranteed fallback
 export const validateStartupIdea = async (data: ValidationData): Promise<ValidationResult> => {
   try {
