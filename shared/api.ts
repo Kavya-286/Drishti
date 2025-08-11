@@ -207,10 +207,10 @@ class StartupValidatorAPI {
         body: JSON.stringify(data),
       });
 
-      if (result && result.success) {
+      if (result && result.success && result.pitch_content) {
         return result;
       } else {
-        throw new Error('API returned unsuccessful response');
+        throw new Error('API returned unsuccessful response or missing pitch content');
       }
     } catch (error) {
       console.warn('Pitch generation API unavailable, using fallback:', error);
