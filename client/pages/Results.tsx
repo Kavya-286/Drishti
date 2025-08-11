@@ -599,6 +599,24 @@ ${assessment.recommendations.map(rec => `• ${rec}`).join('\n')}
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
+          {/* Action Buttons */}
+          <div className="flex justify-end items-center space-x-4 mb-6">
+            <Button variant="outline" size="sm" onClick={handleShare}>
+              <Share2 className="w-4 h-4 mr-2" />
+              Share
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleExportPDF}>
+              <Download className="w-4 h-4 mr-2" />
+              Export PDF
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/validate">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                New Validation
+              </Link>
+            </Button>
+          </div>
+
           {/* Results Header */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-6">
