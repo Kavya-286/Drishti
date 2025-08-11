@@ -18,7 +18,6 @@ import {
   ArrowRight,
   Star
 } from 'lucide-react';
-import { generateAIPitch } from '@shared/api';
 
 export default function Index() {
   const [selectedPlan, setSelectedPlan] = useState<'basic' | 'pro' | 'enterprise'>('pro');
