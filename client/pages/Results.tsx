@@ -1144,7 +1144,7 @@ ${assessment.recommendations.map(rec => `• ${rec}`).join('\n')}
                   {/* Component Breakdown */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center p-4 bg-muted/30 rounded-lg">
-                      <div className="text-2xl font-bold text-primary mb-1">{overallScore}%</div>
+                      <div className="text-2xl font-bold text-primary mb-1">{typeof overallScore === 'number' && !isNaN(overallScore) ? overallScore : 0}%</div>
                       <div className="text-sm text-muted-foreground">Viability Score</div>
                     </div>
                     <div className="text-center p-4 bg-muted/30 rounded-lg">
