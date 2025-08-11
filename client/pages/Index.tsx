@@ -524,7 +524,7 @@ export default function Index() {
                 <span className="font-bold text-xl">Drishti</span>
               </div>
               <p className="text-muted-foreground">
-                Validate your startup ideas with AI-powered insights and expert guidance.
+                Empowering entrepreneurs with AI-driven startup intelligence and strategic insights.
               </p>
             </div>
             <div>
