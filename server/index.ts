@@ -51,13 +51,20 @@ export function createServer() {
   // Pitch generation endpoint
   app.post('/api/generate-pitch', async (req, res) => {
     try {
+      // Check if we can reach the Python backend with a timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+
       const response = await fetch(`${PYTHON_BACKEND_URL}/api/generate-pitch`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(req.body),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
