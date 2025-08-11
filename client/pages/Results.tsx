@@ -32,6 +32,7 @@ export default function Results() {
   const [validationResults, setValidationResults] = useState<ValidationResult | null>(null);
   const [validationData, setValidationData] = useState<ValidationData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showComparison, setShowComparison] = useState(false);
   
   // Load validation results and data on component mount
   useEffect(() => {
