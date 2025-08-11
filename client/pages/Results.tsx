@@ -1007,6 +1007,14 @@ ${assessment.recommendations.map(rec => `• ${rec}`).join('\n')}
                       <TrendingUp className="w-4 h-4 mr-2" />
                       {isGenerating === 'market' ? 'Researching...' : 'Market Research Report'}
                     </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={handleViewComparison}
+                    >
+                      <BarChart3 className="w-4 h-4 mr-2" />
+                      Compare with Similar Startups
+                    </Button>
                   </CardContent>
                 </Card>
 
