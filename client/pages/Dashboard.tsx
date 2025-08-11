@@ -199,62 +199,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-500 rounded-lg flex items-center justify-center">
-                <Lightbulb className="w-5 h-5 text-white" />
-              </div>
-              <span className="font-bold text-xl bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">
-                Drishti
-              </span>
-            </Link>
-          </div>
-
-          {/* Profile Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={mockUser.avatar} alt={mockUser.name} />
-                  <AvatarFallback className="bg-primary text-white">
-                    {mockUser.name.split(' ').map(n => n[0]).join('')}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64" align="end" forceMount>
-              <div className="flex items-center justify-start gap-2 p-2">
-                <div className="flex flex-col space-y-1 leading-none">
-                  <p className="font-medium text-sm">{mockUser.name}</p>
-                  <p className="w-[200px] truncate text-xs text-muted-foreground">
-                    {mockUser.email}
-                  </p>
-                  <Badge variant="secondary" className="w-fit text-xs">
-                    {mockUser.planType}
-                  </Badge>
-                </div>
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Account Settings</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
-                <FileText className="mr-2 h-4 w-4" />
-                <span>My Reports</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer text-red-600">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </header>
+      <Header />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
