@@ -12,7 +12,8 @@ import {
   Settings,
   LogOut,
   ChevronDown,
-  Bell
+  Bell,
+  Star
 } from 'lucide-react';
 import {
   DropdownMenu,
