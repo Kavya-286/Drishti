@@ -422,26 +422,79 @@ export default function Auth() {
                     ) : (
                       <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
                         <h4 className="font-semibold text-sm flex items-center">
-                          <Building2 className="w-4 h-4 mr-2" />
-                          Startup Details
+                          <DollarSign className="w-4 h-4 mr-2" />
+                          Investor Details
                         </h4>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="companyName">Company Name *</Label>
-                            <Input
-                              id="companyName"
-                              placeholder="Your startup name"
-                              value={formData.companyName}
-                              onChange={(e) => handleInputChange('companyName', e.target.value)}
-                              required
-                            />
+                            <Label htmlFor="investorType">Investor Type *</Label>
+                            <Select onValueChange={(value) => handleInputChange('investorType', value)}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select investor type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="angel">Angel Investor</SelectItem>
+                                <SelectItem value="vc">Venture Capitalist</SelectItem>
+                                <SelectItem value="corporate">Corporate Investor</SelectItem>
+                                <SelectItem value="family-office">Family Office</SelectItem>
+                                <SelectItem value="fund">Investment Fund</SelectItem>
+                                <SelectItem value="individual">Individual Investor</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="industry">Industry *</Label>
-                            <Select onValueChange={(value) => handleInputChange('industry', value)}>
+                            <Label htmlFor="fundName">Fund/Organization Name</Label>
+                            <Input
+                              id="fundName"
+                              placeholder="Your fund or organization name"
+                              value={formData.fundName}
+                              onChange={(e) => handleInputChange('fundName', e.target.value)}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="investmentStage">Investment Stage Focus</Label>
+                            <Select onValueChange={(value) => handleInputChange('investmentStage', value)}>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select industry" />
+                                <SelectValue placeholder="Select stage focus" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pre-seed">Pre-Seed</SelectItem>
+                                <SelectItem value="seed">Seed</SelectItem>
+                                <SelectItem value="series-a">Series A</SelectItem>
+                                <SelectItem value="series-b">Series B</SelectItem>
+                                <SelectItem value="growth">Growth Stage</SelectItem>
+                                <SelectItem value="all-stages">All Stages</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="checkSize">Check Size Range</Label>
+                            <Select onValueChange={(value) => handleInputChange('checkSize', value)}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select check size" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="under-25k">Under $25K</SelectItem>
+                                <SelectItem value="25k-100k">$25K - $100K</SelectItem>
+                                <SelectItem value="100k-500k">$100K - $500K</SelectItem>
+                                <SelectItem value="500k-1m">$500K - $1M</SelectItem>
+                                <SelectItem value="1m-5m">$1M - $5M</SelectItem>
+                                <SelectItem value="over-5m">Over $5M</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="industryFocus">Industry Focus</Label>
+                            <Select onValueChange={(value) => handleInputChange('industryFocus', value)}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select industry focus" />
                               </SelectTrigger>
                               <SelectContent>
                                 {industries.map((industry) => (
@@ -449,67 +502,35 @@ export default function Auth() {
                                     {industry}
                                   </SelectItem>
                                 ))}
+                                <SelectItem value="sector-agnostic">Sector Agnostic</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="portfolioSize">Portfolio Size</Label>
+                            <Select onValueChange={(value) => handleInputChange('portfolioSize', value)}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Portfolio size" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="1-5">1-5 investments</SelectItem>
+                                <SelectItem value="6-15">6-15 investments</SelectItem>
+                                <SelectItem value="16-30">16-30 investments</SelectItem>
+                                <SelectItem value="31-50">31-50 investments</SelectItem>
+                                <SelectItem value="over-50">Over 50 investments</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="companyStage">Company Stage</Label>
-                            <Select onValueChange={(value) => handleInputChange('companyStage', value)}>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select stage" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {companyStages.map((stage) => (
-                                  <SelectItem key={stage} value={stage}>
-                                    {stage}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="teamSize">Team Size</Label>
-                            <Select onValueChange={(value) => handleInputChange('teamSize', value)}>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select team size" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {teamSizes.map((size) => (
-                                  <SelectItem key={size} value={size}>
-                                    {size}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="foundedYear">Founded Year</Label>
-                            <div className="relative">
-                              <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                              <Input
-                                id="foundedYear"
-                                placeholder="2024"
-                                className="pl-10"
-                                value={formData.foundedYear}
-                                onChange={(e) => handleInputChange('foundedYear', e.target.value)}
-                              />
-                            </div>
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="website">Website</Label>
-                            <Input
-                              id="website"
-                              placeholder="https://yourcompany.com"
-                              value={formData.website}
-                              onChange={(e) => handleInputChange('website', e.target.value)}
-                            />
-                          </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="website">Website</Label>
+                          <Input
+                            id="website"
+                            placeholder="https://yourfund.com"
+                            value={formData.website}
+                            onChange={(e) => handleInputChange('website', e.target.value)}
+                          />
                         </div>
                       </div>
                     )}
