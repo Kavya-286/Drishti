@@ -746,6 +746,198 @@ ${assessment.recommendations.map(rec => `• ${rec}`).join('\n')}
               </div>
             </div>
 
+            {/* Post-Validation Options */}
+            {showPostValidationOptions && (
+              <Card className="mb-8 border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-blue-50">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Sparkles className="w-5 h-5 text-primary" />
+                      <span>What's Next for Your Startup?</span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowPostValidationOptions(false)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </CardTitle>
+                  <CardDescription>
+                    Choose your next steps to accelerate your startup journey
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Generate AI Pitch */}
+                    <div className="p-6 border rounded-lg bg-white">
+                      <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                          <FileText className="w-6 h-6 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold mb-2">Generate AI Pitch Deck</h3>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            Create a professional, investor-ready pitch deck based on your validation results
+                          </p>
+                          <Button
+                            onClick={handleGenerateAIPitch}
+                            disabled={isGenerating === 'ai-pitch'}
+                            className="w-full"
+                          >
+                            {isGenerating === 'ai-pitch' ? (
+                              <>
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                Generating...
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-4 h-4 mr-2" />
+                                Generate Pitch
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Visibility Settings */}
+                    <div className="p-6 border rounded-lg bg-white">
+                      <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Globe className="w-6 h-6 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold mb-2">Startup Visibility</h3>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            Make your startup visible to investors or keep it private
+                          </p>
+                          <div className="flex items-center justify-between p-3 border rounded-lg">
+                            <div className="flex items-center space-x-3">
+                              {isPublic ? (
+                                <Globe className="w-4 h-4 text-green-600" />
+                              ) : (
+                                <Lock className="w-4 h-4 text-gray-500" />
+                              )}
+                              <Label htmlFor="visibility-toggle" className="text-sm font-medium">
+                                {isPublic ? 'Public - Visible to investors' : 'Private - Hidden from public'}
+                              </Label>
+                            </div>
+                            <Switch
+                              id="visibility-toggle"
+                              checked={isPublic}
+                              onCheckedChange={handleVisibilityChange}
+                            />
+                          </div>
+                          {isPublic && (
+                            <p className="text-xs text-green-600 mt-2 flex items-center">
+                              <CheckCircle className="w-3 h-3 mr-1" />
+                              Your idea is now visible to investors on Drishti
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-4 border-t">
+                    <Button onClick={handlePostValidationSubmit}>
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Save Preferences
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* AI Pitch Modal */}
+            <Dialog open={showPitchModal} onOpenChange={setShowPitchModal}>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center space-x-2">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    <span>AI-Generated Pitch Deck</span>
+                  </DialogTitle>
+                  <DialogDescription>
+                    Professional pitch content generated from your validation data
+                  </DialogDescription>
+                </DialogHeader>
+
+                {generatedPitch && (
+                  <div className="space-y-6">
+                    <div className="grid gap-6">
+                      <div className="p-4 border rounded-lg">
+                        <h3 className="font-semibold text-primary mb-3 flex items-center">
+                          <Target className="w-4 h-4 mr-2" />
+                          Executive Summary
+                        </h3>
+                        <p className="text-sm leading-relaxed">{generatedPitch.executiveSummary}</p>
+                      </div>
+
+                      <div className="p-4 border rounded-lg">
+                        <h3 className="font-semibold text-primary mb-3 flex items-center">
+                          <AlertTriangle className="w-4 h-4 mr-2" />
+                          Problem Statement
+                        </h3>
+                        <p className="text-sm leading-relaxed">{generatedPitch.problemStatement}</p>
+                      </div>
+
+                      <div className="p-4 border rounded-lg">
+                        <h3 className="font-semibold text-primary mb-3 flex items-center">
+                          <Lightbulb className="w-4 h-4 mr-2" />
+                          Solution Overview
+                        </h3>
+                        <p className="text-sm leading-relaxed">{generatedPitch.solutionOverview}</p>
+                      </div>
+
+                      <div className="p-4 border rounded-lg">
+                        <h3 className="font-semibold text-primary mb-3 flex items-center">
+                          <TrendingUp className="w-4 h-4 mr-2" />
+                          Market Opportunity
+                        </h3>
+                        <p className="text-sm leading-relaxed">{generatedPitch.marketOpportunity}</p>
+                      </div>
+
+                      <div className="p-4 border rounded-lg">
+                        <h3 className="font-semibold text-primary mb-3 flex items-center">
+                          <DollarSign className="w-4 h-4 mr-2" />
+                          Business Model
+                        </h3>
+                        <p className="text-sm leading-relaxed">{generatedPitch.businessModel}</p>
+                      </div>
+
+                      <div className="p-4 border rounded-lg">
+                        <h3 className="font-semibold text-primary mb-3 flex items-center">
+                          <Trophy className="w-4 h-4 mr-2" />
+                          Competitive Advantage
+                        </h3>
+                        <p className="text-sm leading-relaxed">{generatedPitch.competitiveAdvantage}</p>
+                      </div>
+
+                      <div className="p-4 border rounded-lg">
+                        <h3 className="font-semibold text-primary mb-3 flex items-center">
+                          <Users className="w-4 h-4 mr-2" />
+                          Funding Requirements
+                        </h3>
+                        <p className="text-sm leading-relaxed">{generatedPitch.fundingRequirements}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between pt-4 border-t">
+                      <Button variant="outline" onClick={copyPitchToClipboard}>
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy to Clipboard
+                      </Button>
+                      <Button onClick={() => setShowPitchModal(false)}>
+                        <Eye className="w-4 h-4 mr-2" />
+                        Close
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
+
             {/* Overall Score Visualization */}
             <Card className="mb-8">
               <CardHeader>
