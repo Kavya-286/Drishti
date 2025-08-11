@@ -326,7 +326,7 @@ export default function InvestorDashboard() {
                             </p>
                           </div>
                           <Badge variant="default">
-                            {startup.validationScore}/100 score
+                            {typeof startup.validationScore === 'number' && !isNaN(startup.validationScore) ? startup.validationScore : 0}/100 score
                           </Badge>
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
