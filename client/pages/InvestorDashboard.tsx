@@ -136,6 +136,14 @@ export default function InvestorDashboard() {
     }
   ];
 
+  const handleInvestmentInterest = (startup: any) => {
+    alert(`🎯 Investment interest registered for "${startup.ideaName}"!\n\nNext steps:\n• Review full business details\n• Contact founder: ${startup.founder?.firstName || 'Founder'}\n• Schedule investor meeting\n• Conduct due diligence`);
+  };
+
+  const handleViewDetails = (startup: any) => {
+    alert(`📋 Startup Details:\n\n${startup.description}\n\nProblem: ${startup.problemStatement?.substring(0, 100)}...\n\nValidation Score: ${startup.validationScore}/100\nViability: ${startup.viabilityLevel}`);
+  };
+
   if (!currentUser) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
