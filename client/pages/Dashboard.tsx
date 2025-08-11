@@ -399,7 +399,7 @@ export default function Dashboard() {
                                     <div className="flex items-center space-x-2">
                                       <span className="text-sm font-medium">Overall Score:</span>
                                       <Badge variant="outline" className={getScoreColor(validation.overallScore)}>
-                                        {validation.overallScore}/100
+                                        {typeof validation.overallScore === 'number' && !isNaN(validation.overallScore) ? validation.overallScore : '—'}/100
                                       </Badge>
                                     </div>
                                   </div>
