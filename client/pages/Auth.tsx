@@ -139,6 +139,81 @@ export default function Auth() {
     }
   };
 
+  const handleSocialLogin = async (provider: 'google' | 'linkedin') => {
+    setIsLoading(true);
+
+    try {
+      // In a real application, this would redirect to the actual OAuth providers
+      // For demo purposes, we'll simulate the OAuth flow
+
+      if (provider === 'google') {
+        // Simulate opening Google OAuth
+        const confirmed = confirm(`🔗 This would redirect you to Google for authentication.\n\nFor demo purposes, would you like to simulate a successful Google login?`);
+        if (!confirmed) {
+          setIsLoading(false);
+          return;
+        }
+
+        // Simulate successful Google login
+        const userData = {
+          email: 'user@gmail.com',
+          firstName: 'Google',
+          lastName: 'User',
+          userType,
+          id: `google_${Date.now()}`,
+          joinDate: new Date().toISOString(),
+          planType: 'Free',
+          isAuthenticated: true,
+          authProvider: 'google'
+        };
+
+        localStorage.setItem('currentUser', JSON.stringify(userData));
+        localStorage.setItem('isAuthenticated', 'true');
+
+        alert('✅ Successfully signed in with Google!');
+
+      } else if (provider === 'linkedin') {
+        // Simulate opening LinkedIn OAuth
+        const confirmed = confirm(`🔗 This would redirect you to LinkedIn for authentication.\n\nFor demo purposes, would you like to simulate a successful LinkedIn login?`);
+        if (!confirmed) {
+          setIsLoading(false);
+          return;
+        }
+
+        // Simulate successful LinkedIn login
+        const userData = {
+          email: 'user@linkedin.com',
+          firstName: 'LinkedIn',
+          lastName: 'Professional',
+          userType,
+          id: `linkedin_${Date.now()}`,
+          joinDate: new Date().toISOString(),
+          planType: 'Free',
+          isAuthenticated: true,
+          authProvider: 'linkedin'
+        };
+
+        localStorage.setItem('currentUser', JSON.stringify(userData));
+        localStorage.setItem('isAuthenticated', 'true');
+
+        alert('✅ Successfully signed in with LinkedIn!');
+      }
+
+      // Redirect based on user type
+      if (userType === 'investor') {
+        navigate('/investor-dashboard');
+      } else {
+        navigate('/dashboard');
+      }
+
+    } catch (error) {
+      console.error('Social login error:', error);
+      alert('Social login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const industries = [
     'Technology', 'Healthcare', 'Finance', 'Education', 'E-commerce', 
     'Food & Beverage', 'Travel & Tourism', 'Real Estate', 'Manufacturing',
