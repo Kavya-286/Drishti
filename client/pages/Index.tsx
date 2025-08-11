@@ -140,22 +140,17 @@ export default function Index() {
         currentStage: "Early revenue stage"
       };
 
-      console.log('Starting pitch generation with data:', sampleData);
-
       // Generate pitch using API (with fallback built into the API service)
       const pitchResult = await generateAIPitch(sampleData);
-
-      console.log('Pitch generation result:', pitchResult);
 
       if (pitchResult.success && pitchResult.pitch_content) {
         setGeneratedPitch(pitchResult.pitch_content);
         setPitchVisible(true);
       } else {
-        console.error('Pitch generation returned unsuccessful result:', pitchResult);
         throw new Error(pitchResult.error || 'Failed to generate pitch content');
       }
     } catch (error) {
-      console.error('Pitch generation failed with error:', error);
+      console.error('Pitch generation failed:', error);
       alert('Failed to generate AI pitch. Please try again.');
     } finally {
       setIsGeneratingPitch(false);
@@ -222,7 +217,7 @@ export default function Index() {
       <section className="py-20 px-4 bg-gradient-to-br from-primary/5 via-blue-50 to-purple-50">
         <div className="container mx-auto text-center max-w-4xl">
           <Badge variant="secondary" className="mb-4">
-            �� AI-Powered Startup Intelligence Platform
+            ✨ AI-Powered Startup Intelligence Platform
           </Badge>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent">
             Transform Your Vision Into Market Reality
