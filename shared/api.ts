@@ -4,27 +4,39 @@ export interface ValidationData {
   problemStatement: string;
   solutionDescription: string;
   uniqueValueProposition: string;
-  
+  problemFrequency?: string;
+  problemImpact?: string;
+  solutionType?: string;
+  developmentStage?: string;
+
   // Market
   targetMarket: string;
   marketSize: string;
   customerSegments: string;
-  
+  customerPersona?: string;
+  marketValidation?: string;
+  customerAcquisition?: string;
+
   // Business Model
   revenueModel: string;
   pricingStrategy: string;
   keyMetrics: string;
-  
+  unitEconomics?: string;
+  revenueStreams?: string;
+  salesCycle?: string;
+
   // Competition
   directCompetitors: string;
   indirectCompetitors: string;
   competitiveAdvantage: string;
-  
+  competitiveAnalysis?: string;
+  marketPosition?: string;
+
   // Team
   teamSize: string;
   foundersExperience: string;
   keySkills: string;
-  
+
   // Traction
   currentStage: string;
   existingTraction: string;
