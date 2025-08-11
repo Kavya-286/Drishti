@@ -234,7 +234,7 @@ export default function Index() {
       <section className="py-20 px-4 bg-gradient-to-br from-primary/5 via-blue-50 to-purple-50">
         <div className="container mx-auto text-center max-w-4xl">
           <Badge variant="secondary" className="mb-4">
-            ✨ Validate Your Startup Idea in Minutes
+            ✨ AI-Powered Startup Intelligence Platform
           </Badge>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent">
             Turn Your Idea Into a Validated Business Plan
