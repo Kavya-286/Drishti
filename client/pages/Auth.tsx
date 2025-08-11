@@ -28,7 +28,7 @@ import {
 export default function Auth() {
   const navigate = useNavigate();
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
-  const [userType, setUserType] = useState<'entrepreneur' | 'founder'>('entrepreneur');
+  const [userType, setUserType] = useState<'entrepreneur' | 'investor'>('entrepreneur');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,12 +44,13 @@ export default function Auth() {
     // Entrepreneur specific
     experience: '',
     interests: '',
-    // Startup founder specific
-    companyName: '',
-    companyStage: '',
-    industry: '',
-    teamSize: '',
-    foundedYear: '',
+    // Investor specific
+    investorType: '',
+    fundName: '',
+    investmentStage: '',
+    industryFocus: '',
+    checkSize: '',
+    portfolioSize: '',
     website: '',
     linkedIn: ''
   });
@@ -163,20 +164,20 @@ export default function Auth() {
                 </div>
               </div>
 
-              <div 
+              <div
                 className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                  userType === 'founder' 
-                    ? 'border-primary bg-primary/5 ring-2 ring-primary/20' 
+                  userType === 'investor'
+                    ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
                     : 'border-border hover:border-primary/50'
                 }`}
-                onClick={() => setUserType('founder')}
+                onClick={() => setUserType('investor')}
               >
                 <div className="flex items-center space-x-3">
-                  <Building2 className="w-8 h-8 text-primary" />
+                  <DollarSign className="w-8 h-8 text-primary" />
                   <div>
-                    <h3 className="font-semibold">Startup Founder</h3>
+                    <h3 className="font-semibold">Investor</h3>
                     <p className="text-sm text-muted-foreground">
-                      Already have a startup and need strategic insights
+                      Evaluate startup opportunities and market trends
                     </p>
                   </div>
                 </div>
@@ -193,11 +194,11 @@ export default function Auth() {
                     {userType === 'entrepreneur' ? (
                       <User className="w-5 h-5" />
                     ) : (
-                      <Building2 className="w-5 h-5" />
+                      <DollarSign className="w-5 h-5" />
                     )}
                     <span>
                       {authMode === 'signin' ? 'Sign In' : 'Create Account'} as {' '}
-                      {userType === 'entrepreneur' ? 'Aspiring Entrepreneur' : 'Startup Founder'}
+                      {userType === 'entrepreneur' ? 'Aspiring Entrepreneur' : 'Investor'}
                     </span>
                   </CardTitle>
                   <CardDescription>
@@ -208,7 +209,7 @@ export default function Auth() {
                   </CardDescription>
                 </div>
                 <Badge variant="secondary">
-                  {userType === 'entrepreneur' ? 'Entrepreneur' : 'Founder'}
+                  {userType === 'entrepreneur' ? 'Entrepreneur' : 'Investor'}
                 </Badge>
               </div>
             </CardHeader>
