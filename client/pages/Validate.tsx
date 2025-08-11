@@ -32,8 +32,22 @@ export default function Validate() {
   const [isGeneratingSuggestion, setIsGeneratingSuggestion] = useState(false);
   const [backendStatus, setBackendStatus] = useState<'checking' | 'available' | 'fallback'>('checking');
 
-  // Load saved progress on component mount
+  // Check backend status and load saved progress on component mount
   useEffect(() => {
+    const checkBackendStatus = async () => {
+      try {
+        const response = await fetch('/api/health');
+        const data = await response.json();
+        if (data.ml_validator === 'unavailable') {
+          setBackendStatus('fallback');
+        } else {
+          setBackendStatus('available');
+        }
+      } catch (error) {
+        setBackendStatus('fallback');
+      }
+    };
+
     const savedProgress = localStorage.getItem('validationProgress');
     if (savedProgress) {
       try {
@@ -44,6 +58,8 @@ export default function Validate() {
         console.warn('Failed to load saved progress:', error);
       }
     }
+
+    checkBackendStatus();
   }, []);
 
   const [validationData, setValidationData] = useState<ValidationData>({
