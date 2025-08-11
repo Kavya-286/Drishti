@@ -207,11 +207,11 @@ export default function StartupDetails() {
               <div className="space-y-4">
                 <Card>
                   <CardContent className="p-6 text-center">
-                    <div className="text-4xl font-bold text-primary mb-2">{startup.validationScore}/100</div>
+                    <div className="text-4xl font-bold text-primary mb-2">{typeof startup.validationScore === 'number' && !isNaN(startup.validationScore) ? startup.validationScore : 0}/100</div>
                     <Badge className={getViabilityBadge(startup.viabilityLevel)}>
                       {startup.viabilityLevel} Viability
                     </Badge>
-                    <Progress value={startup.validationScore} className="mt-4" />
+                    <Progress value={typeof startup.validationScore === 'number' && !isNaN(startup.validationScore) ? startup.validationScore : 0} className="mt-4" />
                   </CardContent>
                 </Card>
 
