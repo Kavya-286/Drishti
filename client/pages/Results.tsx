@@ -34,6 +34,12 @@ export default function Results() {
   const [validationData, setValidationData] = useState<ValidationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showComparison, setShowComparison] = useState(false);
+
+  // New state for post-validation options
+  const [showPostValidationOptions, setShowPostValidationOptions] = useState(true);
+  const [isPublic, setIsPublic] = useState(false);
+  const [generatedPitch, setGeneratedPitch] = useState<any>(null);
+  const [showPitchModal, setShowPitchModal] = useState(false);
   
   // Load validation results and data on component mount
   useEffect(() => {
