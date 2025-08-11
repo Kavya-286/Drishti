@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,44 +22,28 @@ import {
   Briefcase,
   Zap
 } from 'lucide-react';
+import { ValidationData, validateStartupIdea, generateMockValidationResult } from '@shared/api';
 
-interface ValidationData {
-  // Problem & Solution
-  problemStatement: string;
-  solutionDescription: string;
-  uniqueValueProposition: string;
-  
-  // Market
-  targetMarket: string;
-  marketSize: string;
-  customerSegments: string;
-  
-  // Business Model
-  revenueModel: string;
-  pricingStrategy: string;
-  keyMetrics: string;
-  
-  // Competition
-  directCompetitors: string;
-  indirectCompetitors: string;
-  competitiveAdvantage: string;
-  
-  // Team
-  teamSize: string;
-  foundersExperience: string;
-  keySkills: string;
-  
-  // Traction
-  currentStage: string;
-  existingTraction: string;
-  fundingNeeds: string;
-}
 
 export default function Validate() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isValidating, setIsValidating] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isGeneratingSuggestion, setIsGeneratingSuggestion] = useState(false);
+
+  // Load saved progress on component mount
+  useEffect(() => {
+    const savedProgress = localStorage.getItem('validationProgress');
+    if (savedProgress) {
+      try {
+        const { currentStep: savedStep, validationData: savedData } = JSON.parse(savedProgress);
+        setCurrentStep(savedStep || 1);
+        setValidationData(savedData || {});
+      } catch (error) {
+        console.warn('Failed to load saved progress:', error);
+      }
+    }
+  }, []);
 
   const [validationData, setValidationData] = useState<ValidationData>({
     problemStatement: '',
@@ -143,22 +127,82 @@ export default function Validate() {
   const nextStep = () => {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
+      // Save progress to localStorage
+      localStorage.setItem('validationProgress', JSON.stringify({
+        currentStep: currentStep + 1,
+        validationData
+      }));
     }
   };
 
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+      // Save progress to localStorage
+      localStorage.setItem('validationProgress', JSON.stringify({
+        currentStep: currentStep - 1,
+        validationData
+      }));
     }
   };
 
   const handleValidate = async () => {
     setIsValidating(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsValidating(false);
-    // Navigate to results page
-    window.location.href = '/results';
+
+    try {
+      // Validate required fields
+      const requiredFields = [
+        'problemStatement',
+        'solutionDescription',
+        'uniqueValueProposition',
+        'targetMarket',
+        'customerSegments',
+        'revenueModel',
+        'competitiveAdvantage',
+        'foundersExperience',
+        'currentStage'
+      ];
+
+      const missingFields = requiredFields.filter(field =>
+        !validationData[field as keyof ValidationData] ||
+        validationData[field as keyof ValidationData].trim() === ''
+      );
+
+      if (missingFields.length > 0) {
+        alert(`Please fill in the following required fields: ${missingFields.join(', ')}`);
+        setIsValidating(false);
+        return;
+      }
+
+      // Store validation data for results page
+      localStorage.setItem('validationData', JSON.stringify(validationData));
+
+      // Try to validate with real API, fallback to mock if needed
+      let result;
+      try {
+        result = await validateStartupIdea(validationData);
+        if (!result.success) {
+          throw new Error(result.error || 'Validation failed');
+        }
+      } catch (apiError) {
+        console.warn('API validation failed, using mock data:', apiError);
+        // Generate mock result for development
+        result = generateMockValidationResult(validationData);
+      }
+
+      // Store results for the results page
+      localStorage.setItem('validationResults', JSON.stringify(result));
+
+      setIsValidating(false);
+
+      // Navigate to results page
+      window.location.href = '/results';
+
+    } catch (error) {
+      console.error('Validation error:', error);
+      alert('Validation failed. Please try again.');
+      setIsValidating(false);
+    }
   };
 
   const stepIcons = [
