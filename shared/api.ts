@@ -153,6 +153,12 @@ class StartupValidatorAPI {
         } catch (parseError) {
           // If we can't parse the error response, use the default message
         }
+
+        // Special handling for pitch generation - always use fallback on errors
+        if (endpoint === '/generate-pitch') {
+          console.warn(`Pitch generation API error (${response.status}), will use fallback`);
+        }
+
         throw new Error(errorMessage);
       }
 
@@ -160,6 +166,12 @@ class StartupValidatorAPI {
       return data;
     } catch (error) {
       console.error(`API request failed for ${endpoint}:`, error);
+
+      // Additional context for pitch generation errors
+      if (endpoint === '/generate-pitch') {
+        console.log('⚠️ Pitch generation API unavailable - fallback system will handle this gracefully');
+      }
+
       throw error;
     }
   }
