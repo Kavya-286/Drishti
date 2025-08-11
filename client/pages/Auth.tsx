@@ -24,7 +24,9 @@ import {
   Star,
   Eye,
   EyeOff,
-  DollarSign
+  DollarSign,
+  Chrome,
+  Linkedin
 } from 'lucide-react';
 
 export default function Auth() {
