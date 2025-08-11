@@ -280,9 +280,23 @@ export default function Validate() {
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <h1 className="text-2xl font-bold">Startup Idea Validation</h1>
-              <span className="text-sm text-muted-foreground">
-                Step {currentStep} of {totalSteps}
-              </span>
+              <div className="flex items-center space-x-4">
+                {backendStatus === 'fallback' && (
+                  <div className="flex items-center space-x-2 text-sm text-amber-600 bg-amber-50 px-3 py-1 rounded-full">
+                    <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                    <span>Demo Mode</span>
+                  </div>
+                )}
+                {backendStatus === 'available' && (
+                  <div className="flex items-center space-x-2 text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>AI Ready</span>
+                  </div>
+                )}
+                <span className="text-sm text-muted-foreground">
+                  Step {currentStep} of {totalSteps}
+                </span>
+              </div>
             </div>
             <Progress value={progress} className="h-2" />
             
