@@ -135,7 +135,7 @@ interface ValidationHistory {
 export default function Dashboard() {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [validationHistory, setValidationHistory] = useState<ValidationHistory[]>(mockValidationHistory);
+  const [validationHistory, setValidationHistory] = useState<ValidationHistory[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
 
