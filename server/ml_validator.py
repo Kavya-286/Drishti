@@ -292,7 +292,103 @@ class StartupMLValidator:
             })
         
         return recommendations
-    
+
+    def get_feedback(self, category, score):
+        """Generate feedback based on category and score"""
+
+        feedback_templates = {
+            'problem_solution': {
+                'high': 'Strong problem identification with clear solution approach. The value proposition is well-defined.',
+                'medium': 'Good foundation, but needs more specific problem definition and solution clarity.',
+                'low': 'Problem-solution fit needs significant improvement. Consider customer interviews to validate assumptions.'
+            },
+            'market': {
+                'high': 'Good market understanding with clear target segments and sizing.',
+                'medium': 'Market opportunity is identified but needs more detailed analysis and validation.',
+                'low': 'Market analysis needs substantial improvement. Focus on defining specific customer segments.'
+            },
+            'business_model': {
+                'high': 'Solid revenue model with clear monetization strategy. Pricing approach is reasonable.',
+                'medium': 'Business model has potential but needs refinement in pricing and revenue streams.',
+                'low': 'Business model requires significant development. Consider multiple revenue streams and validate pricing.'
+            },
+            'competition': {
+                'high': 'Good competitive analysis with clear differentiation and sustainable advantages.',
+                'medium': 'Competitive landscape is understood but differentiation could be stronger.',
+                'low': 'Competitive analysis needs improvement. Focus on unique value proposition and defensibility.'
+            },
+            'team': {
+                'high': 'Strong team with relevant experience and complementary skills.',
+                'medium': 'Good foundational team but some skill gaps may need to be addressed.',
+                'low': 'Team needs strengthening. Consider adding expertise or advisory support.'
+            },
+            'traction': {
+                'high': 'Strong execution plan with realistic milestones and good progress indicators.',
+                'medium': 'Execution plan is developing but needs more specific milestones and validation.',
+                'low': 'Execution readiness needs improvement. Focus on MVP development and early validation.'
+            }
+        }
+
+        if score >= 75:
+            level = 'high'
+        elif score >= 55:
+            level = 'medium'
+        else:
+            level = 'low'
+
+        return feedback_templates.get(category, {}).get(level, 'Analysis complete.')
+
+    def get_suggestions(self, category, score):
+        """Generate suggestions based on category and score"""
+
+        suggestion_templates = {
+            'problem_solution': [
+                'Conduct customer interviews to validate problem severity',
+                'Test solution assumptions with early prototypes',
+                'Quantify the problem impact with market research',
+                'Refine value proposition based on customer feedback'
+            ],
+            'market': [
+                'Define specific customer personas with demographics',
+                'Research total addressable market (TAM) size',
+                'Analyze market growth trends and dynamics',
+                'Validate market demand through surveys or interviews'
+            ],
+            'business_model': [
+                'Test pricing strategy with potential customers',
+                'Consider multiple revenue streams for diversification',
+                'Plan customer acquisition costs and channels',
+                'Develop unit economics and profitability models'
+            ],
+            'competition': [
+                'Strengthen unique value proposition and differentiators',
+                'Identify sustainable competitive moats',
+                'Monitor competitor strategies and positioning',
+                'Develop defensive strategies against competition'
+            ],
+            'team': [
+                'Consider bringing in technical co-founder or CTO',
+                'Build advisory board with industry experts',
+                'Plan key hiring priorities and skill development',
+                'Assess team gaps and recruitment needs'
+            ],
+            'traction': [
+                'Create detailed development roadmap with milestones',
+                'Establish key performance indicators (KPIs)',
+                'Plan for regulatory and compliance requirements',
+                'Develop MVP and gather early user feedback'
+            ]
+        }
+
+        # Return 3-4 relevant suggestions based on score
+        suggestions = suggestion_templates.get(category, [])
+        if score >= 75:
+            return suggestions[:2]  # Fewer suggestions for high scores
+        elif score >= 55:
+            return suggestions[:3]  # Medium number for medium scores
+        else:
+            return suggestions  # All suggestions for low scores
+
     def validate_startup_idea(self, data):
         """Main validation function using ML analysis"""
         
