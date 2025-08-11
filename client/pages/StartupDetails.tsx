@@ -27,7 +27,7 @@ import {
   Eye,
   Mail,
   Phone,
-  LinkedinIcon
+  Linkedin
 } from 'lucide-react';
 
 export default function StartupDetails() {
