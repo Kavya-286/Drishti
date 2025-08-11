@@ -184,33 +184,30 @@ export default function Index() {
           <p className="text-xl mb-8 max-w-2xl mx-auto" style={{ opacity: 0.9 }}>
             Get a professional, investor-ready pitch for your startup idea in seconds with our advanced AI technology.
           </p>
-          <Button
-            size="lg"
-            className="text-lg px-8 py-6"
-            style={{
-              background: 'rgba(255, 255, 255, 0.2)',
-              color: 'white',
-              border: '2px solid white',
-              borderRadius: '50px',
-              backdropFilter: 'blur(10px)'
-            }}
-            onClick={generateAIPitchDemo}
-            disabled={isGeneratingPitch}
-          >
-            {isGeneratingPitch ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                Generating AI Pitch...
-              </>
-            ) : (
-              <>
-                <Zap className="mr-2 w-5 h-5" />
-                Generate My AI Pitch
-              </>
-            )}
-          </Button>
+          <Link to="/validate">
+            <Button
+              size="lg"
+              className="text-lg px-8 py-6"
+              style={{
+                background: 'rgba(255, 255, 255, 0.2)',
+                color: 'white',
+                border: '2px solid white',
+                borderRadius: '50px',
+                backdropFilter: 'blur(10px)'
+              }}
+            >
+              <Zap className="mr-2 w-5 h-5" />
+              Start Validating Ideas
+            </Button>
+          </Link>
 
-          {pitchVisible && generatedPitch && (
+          <div className="mt-8 text-center">
+            <p className="text-white/80">
+              Complete your idea validation to generate AI-powered pitch content
+            </p>
+          </div>
+
+          {false && (
             <div className="mt-12 p-8 rounded-lg text-left" style={{
               background: 'rgba(255, 255, 255, 0.1)',
               backdropFilter: 'blur(10px)'
