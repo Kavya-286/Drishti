@@ -64,28 +64,75 @@ export default function Auth() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate authentication
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // Basic validation
+      if (authMode === 'signup') {
+        if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
+          alert('Please fill in all required fields');
+          setIsLoading(false);
+          return;
+        }
 
-    // Store user data in localStorage (in a real app, this would be handled by your auth system)
-    const userData = {
-      ...formData,
-      userType,
-      id: `user_${Date.now()}`,
-      joinDate: new Date().toISOString(),
-      planType: 'Free'
-    };
+        if (formData.password !== formData.confirmPassword) {
+          alert('Passwords do not match');
+          setIsLoading(false);
+          return;
+        }
 
-    localStorage.setItem('currentUser', JSON.stringify(userData));
-    localStorage.setItem('isAuthenticated', 'true');
+        if (formData.password.length < 6) {
+          alert('Password must be at least 6 characters long');
+          setIsLoading(false);
+          return;
+        }
 
-    setIsLoading(false);
+        // Additional validation for investor type
+        if (userType === 'investor' && !formData.investorType) {
+          alert('Please select your investor type');
+          setIsLoading(false);
+          return;
+        }
+      }
 
-    // Redirect based on user type
-    if (userType === 'investor') {
-      navigate('/investor-dashboard');
-    } else {
-      navigate('/dashboard');
+      if (!formData.email || !formData.password) {
+        alert('Please enter your email and password');
+        setIsLoading(false);
+        return;
+      }
+
+      // Simulate authentication
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Store user data in localStorage (in a real app, this would be handled by your auth system)
+      const userData = {
+        ...formData,
+        userType,
+        id: `user_${Date.now()}`,
+        joinDate: new Date().toISOString(),
+        planType: 'Free',
+        isAuthenticated: true
+      };
+
+      localStorage.setItem('currentUser', JSON.stringify(userData));
+      localStorage.setItem('isAuthenticated', 'true');
+
+      // Show success message
+      if (authMode === 'signup') {
+        alert('Account created successfully! Welcome to Drishti.');
+      } else {
+        alert('Welcome back!');
+      }
+
+      // Redirect based on user type
+      if (userType === 'investor') {
+        navigate('/investor-dashboard');
+      } else {
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      console.error('Authentication error:', error);
+      alert('Authentication failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
