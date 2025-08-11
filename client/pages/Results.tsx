@@ -64,6 +64,9 @@ export default function Results() {
           setValidationResults(results);
           setValidationData(data);
 
+          // Save to user's validation history
+          saveValidationToHistory(results, data);
+
           // Show fallback notice if needed
           if (usedFallback) {
             console.log('ℹ️ Validation used offline analysis - results are based on proven validation frameworks');
@@ -79,9 +82,61 @@ export default function Results() {
         setLoading(false);
       }
     };
-    
+
     loadResults();
   }, []);
+
+  const saveValidationToHistory = (results: ValidationResult, data: ValidationData) => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      if (!currentUser.id) return;
+
+      const historyItem = {
+        id: `val_${Date.now()}`,
+        ideaName: data.problemStatement?.substring(0, 50) + '...' || 'Unnamed Idea',
+        validatedAt: new Date().toISOString(),
+        overallScore: results.overall_score,
+        viabilityLevel: results.viability_level,
+        status: 'completed',
+        category: extractCategory(data),
+        stage: data.currentStage || 'idea',
+        keyMetrics: {
+          problemSolutionFit: results.scores?.find(s => s.category.includes('Problem'))?.score || 0,
+          marketOpportunity: results.scores?.find(s => s.category.includes('Market'))?.score || 0,
+          businessModel: results.scores?.find(s => s.category.includes('Business'))?.score || 0,
+          competition: results.scores?.find(s => s.category.includes('Competitive'))?.score || 0,
+          teamStrength: results.scores?.find(s => s.category.includes('Team'))?.score || 0,
+          executionReadiness: results.scores?.find(s => s.category.includes('Execution'))?.score || 0
+        },
+        validationData: data,
+        validationResults: results
+      };
+
+      const existingHistory = JSON.parse(localStorage.getItem(`validationHistory_${currentUser.id}`) || '[]');
+      existingHistory.unshift(historyItem); // Add to beginning of array
+
+      // Keep only last 10 validations
+      if (existingHistory.length > 10) {
+        existingHistory.splice(10);
+      }
+
+      localStorage.setItem(`validationHistory_${currentUser.id}`, JSON.stringify(existingHistory));
+    } catch (error) {
+      console.error('Failed to save validation to history:', error);
+    }
+  };
+
+  const extractCategory = (data: ValidationData): string => {
+    const text = (data.problemStatement + ' ' + data.solutionDescription + ' ' + data.targetMarket).toLowerCase();
+
+    if (text.includes('healthcare') || text.includes('medical')) return 'HealthTech';
+    if (text.includes('education') || text.includes('learning')) return 'EdTech';
+    if (text.includes('finance') || text.includes('payment')) return 'FinTech';
+    if (text.includes('food') || text.includes('restaurant')) return 'FoodTech';
+    if (text.includes('ai') || text.includes('machine learning')) return 'AI/ML';
+    if (text.includes('environment') || text.includes('sustainable')) return 'ClimaTech';
+    return 'Technology';
+  };
   
   if (loading || !validationResults || !validationData) {
     return (
