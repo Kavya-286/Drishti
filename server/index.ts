@@ -25,13 +25,20 @@ export function createServer() {
   // Validation endpoint
   app.post('/api/validate', async (req, res) => {
     try {
+      // Check if we can reach the Python backend with a timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+
       const response = await fetch(`${PYTHON_BACKEND_URL}/api/validate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(req.body),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -84,13 +91,20 @@ export function createServer() {
   // SWOT analysis endpoint
   app.post('/api/generate-swot', async (req, res) => {
     try {
+      // Check if we can reach the Python backend with a timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+
       const response = await fetch(`${PYTHON_BACKEND_URL}/api/generate-swot`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(req.body),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -110,13 +124,20 @@ export function createServer() {
   // Founder readiness endpoint
   app.post('/api/founder-readiness', async (req, res) => {
     try {
+      // Check if we can reach the Python backend with a timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+
       const response = await fetch(`${PYTHON_BACKEND_URL}/api/founder-readiness`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(req.body),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -136,13 +157,20 @@ export function createServer() {
   // Market research endpoint
   app.post('/api/market-research', async (req, res) => {
     try {
+      // Check if we can reach the Python backend with a timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+
       const response = await fetch(`${PYTHON_BACKEND_URL}/api/market-research`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(req.body),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -162,7 +190,15 @@ export function createServer() {
   // Health check endpoint
   app.get('/api/health', async (req, res) => {
     try {
-      const response = await fetch(`${PYTHON_BACKEND_URL}/api/health`);
+      // Check if we can reach the Python backend with a timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+
+      const response = await fetch(`${PYTHON_BACKEND_URL}/api/health`, {
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
