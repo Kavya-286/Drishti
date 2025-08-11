@@ -358,7 +358,7 @@ export default function InvestorDashboard() {
                               <Eye className="w-4 h-4 mr-2" />
                               View Details
                             </Button>
-                            <Button size="sm" onClick={() => handleInvestmentInterest(startup)}>
+                            <Button size="sm" onClick={() => handleInvest(startup)}>
                               <DollarSign className="w-4 h-4 mr-2" />
                               Invest
                             </Button>
