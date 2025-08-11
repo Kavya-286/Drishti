@@ -267,7 +267,21 @@ export default function Validate() {
       // Store results for the results page
       localStorage.setItem('validationResults', JSON.stringify(result));
 
+      // Store fallback status for user info
+      if (usingFallback) {
+        localStorage.setItem('validationUsedFallback', 'true');
+      } else {
+        localStorage.removeItem('validationUsedFallback');
+      }
+
       setIsValidating(false);
+
+      // Show success message
+      if (usingFallback) {
+        alert('✅ Validation completed using offline analysis. Your results are ready!');
+      } else {
+        alert('✅ Validation completed successfully! Your results are ready.');
+      }
 
       // Navigate to results page
       window.location.href = '/results';
