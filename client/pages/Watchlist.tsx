@@ -176,7 +176,7 @@ export default function Watchlist() {
                       </div>
                       <div className="flex items-center space-x-2">
                         <Badge className={getViabilityBadge(startup.viabilityLevel || 'Moderate')}>
-                          {startup.validationScore}/100
+                          {typeof startup.validationScore === 'number' && !isNaN(startup.validationScore) ? startup.validationScore : 0}/100
                         </Badge>
                         <Button
                           variant="ghost"
@@ -193,7 +193,7 @@ export default function Watchlist() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                       <div>
                         <div className="text-sm text-muted-foreground">Validation Score</div>
-                        <div className="font-semibold text-primary">{startup.validationScore}/100</div>
+                        <div className="font-semibold text-primary">{typeof startup.validationScore === 'number' && !isNaN(startup.validationScore) ? startup.validationScore : 0}/100</div>
                       </div>
                       <div>
                         <div className="text-sm text-muted-foreground">Viability</div>
@@ -257,7 +257,7 @@ export default function Watchlist() {
                   </div>
                   <div className="text-center p-4 bg-muted/30 rounded-lg">
                     <div className="text-2xl font-bold text-primary mb-1">
-                      {Math.round(watchlist.reduce((sum, startup) => sum + (startup.validationScore || 0), 0) / watchlist.length)}
+                      {watchlist.length > 0 ? Math.round(watchlist.reduce((sum, startup) => sum + (typeof startup.validationScore === 'number' && !isNaN(startup.validationScore) ? startup.validationScore : 0), 0) / watchlist.length) : 0}
                     </div>
                     <div className="text-sm text-muted-foreground">Avg Validation Score</div>
                   </div>
