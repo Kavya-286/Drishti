@@ -216,6 +216,10 @@ export default function Dashboard() {
     });
   };
 
+  const safeScore = (score: number, fallback: string | number = 0) => {
+    return typeof score === 'number' && !isNaN(score) ? score : fallback;
+  };
+
   const filteredHistory = validationHistory.filter(item => {
     const matchesSearch = item.ideaName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          item.category.toLowerCase().includes(searchTerm.toLowerCase());
