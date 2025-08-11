@@ -299,6 +299,23 @@ export default function Validate() {
               </div>
             </div>
             <Progress value={progress} className="h-2" />
+
+            {/* Demo Mode Banner */}
+            {backendStatus === 'fallback' && (
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-start space-x-2">
+                  <div className="w-5 h-5 text-blue-500 mt-0.5">
+                    ℹ️
+                  </div>
+                  <div className="text-sm">
+                    <p className="font-medium text-blue-900">Demo Mode Active</p>
+                    <p className="text-blue-700">
+                      The ML backend is not connected. You'll receive realistic demo validation results that simulate our AI analysis.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
             
             {/* Step Navigation */}
             <div className="flex justify-between mt-6">
