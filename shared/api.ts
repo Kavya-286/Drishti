@@ -489,11 +489,11 @@ class StartupValidatorAPI {
       const result = await this.request<any>('/health');
       return result;
     } catch (error) {
-      console.error('Health check API error:', error);
+      console.warn('Health check API error (using fallback):', error);
       return {
-        status: 'error',
+        status: 'fallback',
         timestamp: new Date().toISOString(),
-        ml_validator: 'unavailable'
+        ml_validator: 'unavailable - using client-side fallbacks'
       };
     }
   }
