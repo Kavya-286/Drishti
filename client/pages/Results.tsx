@@ -937,85 +937,143 @@ ${assessment.recommendations.map(rec => `• ${rec}`).join('\n')}
 
             {/* AI Pitch Modal */}
             <Dialog open={showPitchModal} onOpenChange={setShowPitchModal}>
-              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+              <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle className="flex items-center space-x-2">
-                    <Sparkles className="w-5 h-5 text-primary" />
-                    <span>AI-Generated Pitch Deck</span>
+                    <Sparkles className="w-6 h-6 text-primary" />
+                    <span className="text-2xl">AI-Generated Investor Pitch</span>
                   </DialogTitle>
-                  <DialogDescription>
-                    Professional pitch content generated from your validation data
+                  <DialogDescription className="text-base">
+                    Professional, data-driven pitch content powered by advanced AI analysis of your validation results
                   </DialogDescription>
                 </DialogHeader>
 
                 {generatedPitch && (
-                  <div className="space-y-6">
-                    <div className="grid gap-6">
-                      <div className="p-4 border rounded-lg">
-                        <h3 className="font-semibold text-primary mb-3 flex items-center">
-                          <Target className="w-4 h-4 mr-2" />
+                  <div className="space-y-8">
+                    {/* Pitch Quality Indicator */}
+                    <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg border border-green-200">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="w-5 h-5 text-green-600" />
+                          <span className="font-semibold text-green-800">High-Quality AI Pitch Generated</span>
+                        </div>
+                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                          Investor-Ready
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-green-700 mt-1">
+                        Based on {validationResults.overall_score}/100 validation score • {validationResults.scores?.length || 6} categories analyzed
+                      </p>
+                    </div>
+
+                    <div className="grid gap-8">
+                      {/* Executive Summary - Featured */}
+                      <div className="bg-gradient-to-r from-primary/5 to-blue-50 p-6 border-2 border-primary/20 rounded-lg">
+                        <h3 className="font-bold text-xl text-primary mb-4 flex items-center">
+                          <Target className="w-6 h-6 mr-3" />
                           Executive Summary
                         </h3>
-                        <p className="text-sm leading-relaxed">{generatedPitch.executiveSummary}</p>
+                        <p className="text-base leading-relaxed font-medium">{generatedPitch.executiveSummary}</p>
                       </div>
 
-                      <div className="p-4 border rounded-lg">
-                        <h3 className="font-semibold text-primary mb-3 flex items-center">
-                          <AlertTriangle className="w-4 h-4 mr-2" />
-                          Problem Statement
-                        </h3>
-                        <p className="text-sm leading-relaxed">{generatedPitch.problemStatement}</p>
-                      </div>
+                      {/* Two-column layout for remaining sections */}
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="p-6 border rounded-lg bg-orange-50 border-orange-200">
+                          <h3 className="font-semibold text-lg text-orange-800 mb-4 flex items-center">
+                            <AlertTriangle className="w-5 h-5 mr-2" />
+                            Problem Statement
+                          </h3>
+                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.problemStatement}</p>
+                        </div>
 
-                      <div className="p-4 border rounded-lg">
-                        <h3 className="font-semibold text-primary mb-3 flex items-center">
-                          <Lightbulb className="w-4 h-4 mr-2" />
-                          Solution Overview
-                        </h3>
-                        <p className="text-sm leading-relaxed">{generatedPitch.solutionOverview}</p>
-                      </div>
+                        <div className="p-6 border rounded-lg bg-green-50 border-green-200">
+                          <h3 className="font-semibold text-lg text-green-800 mb-4 flex items-center">
+                            <Lightbulb className="w-5 h-5 mr-2" />
+                            Solution Overview
+                          </h3>
+                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.solutionOverview}</p>
+                        </div>
 
-                      <div className="p-4 border rounded-lg">
-                        <h3 className="font-semibold text-primary mb-3 flex items-center">
-                          <TrendingUp className="w-4 h-4 mr-2" />
-                          Market Opportunity
-                        </h3>
-                        <p className="text-sm leading-relaxed">{generatedPitch.marketOpportunity}</p>
-                      </div>
+                        <div className="p-6 border rounded-lg bg-blue-50 border-blue-200">
+                          <h3 className="font-semibold text-lg text-blue-800 mb-4 flex items-center">
+                            <TrendingUp className="w-5 h-5 mr-2" />
+                            Market Opportunity
+                          </h3>
+                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.marketOpportunity}</p>
+                        </div>
 
-                      <div className="p-4 border rounded-lg">
-                        <h3 className="font-semibold text-primary mb-3 flex items-center">
-                          <DollarSign className="w-4 h-4 mr-2" />
-                          Business Model
-                        </h3>
-                        <p className="text-sm leading-relaxed">{generatedPitch.businessModel}</p>
-                      </div>
+                        <div className="p-6 border rounded-lg bg-green-50 border-green-200">
+                          <h3 className="font-semibold text-lg text-green-800 mb-4 flex items-center">
+                            <DollarSign className="w-5 h-5 mr-2" />
+                            Business Model
+                          </h3>
+                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.businessModel}</p>
+                        </div>
 
-                      <div className="p-4 border rounded-lg">
-                        <h3 className="font-semibold text-primary mb-3 flex items-center">
-                          <Trophy className="w-4 h-4 mr-2" />
-                          Competitive Advantage
-                        </h3>
-                        <p className="text-sm leading-relaxed">{generatedPitch.competitiveAdvantage}</p>
-                      </div>
+                        <div className="p-6 border rounded-lg bg-purple-50 border-purple-200">
+                          <h3 className="font-semibold text-lg text-purple-800 mb-4 flex items-center">
+                            <Trophy className="w-5 h-5 mr-2" />
+                            Competitive Advantage
+                          </h3>
+                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.competitiveAdvantage}</p>
+                        </div>
 
-                      <div className="p-4 border rounded-lg">
-                        <h3 className="font-semibold text-primary mb-3 flex items-center">
-                          <Users className="w-4 h-4 mr-2" />
-                          Funding Requirements
-                        </h3>
-                        <p className="text-sm leading-relaxed">{generatedPitch.fundingRequirements}</p>
+                        <div className="p-6 border rounded-lg bg-yellow-50 border-yellow-200">
+                          <h3 className="font-semibold text-lg text-yellow-800 mb-4 flex items-center">
+                            <Users className="w-5 h-5 mr-2" />
+                            Funding Requirements
+                          </h3>
+                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.fundingRequirements}</p>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex justify-between pt-4 border-t">
-                      <Button variant="outline" onClick={copyPitchToClipboard}>
-                        <Copy className="w-4 h-4 mr-2" />
-                        Copy to Clipboard
-                      </Button>
-                      <Button onClick={() => setShowPitchModal(false)}>
+                    {/* Action Buttons */}
+                    <div className="flex justify-between items-center pt-6 border-t bg-muted/30 p-4 rounded-lg">
+                      <div className="flex space-x-3">
+                        <Button variant="outline" onClick={copyPitchToClipboard}>
+                          <Copy className="w-4 h-4 mr-2" />
+                          Copy Full Pitch
+                        </Button>
+                        <Button variant="outline" onClick={() => {
+                          const pitchWindow = window.open('', '_blank');
+                          if (pitchWindow) {
+                            const html = `
+                              <html>
+                                <head><title>AI Generated Pitch - ${validationData?.problemStatement?.substring(0, 30) || 'Startup Pitch'}</title></head>
+                                <body style="font-family: Arial; padding: 40px; line-height: 1.6;">
+                                  <h1>AI-Generated Investor Pitch</h1>
+                                  <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                                    <h2>Executive Summary</h2>
+                                    <p>${generatedPitch.executiveSummary}</p>
+                                  </div>
+                                  <h2>Problem Statement</h2>
+                                  <p>${generatedPitch.problemStatement}</p>
+                                  <h2>Solution Overview</h2>
+                                  <p>${generatedPitch.solutionOverview}</p>
+                                  <h2>Market Opportunity</h2>
+                                  <p>${generatedPitch.marketOpportunity}</p>
+                                  <h2>Business Model</h2>
+                                  <p>${generatedPitch.businessModel}</p>
+                                  <h2>Competitive Advantage</h2>
+                                  <p>${generatedPitch.competitiveAdvantage}</p>
+                                  <h2>Funding Requirements</h2>
+                                  <p>${generatedPitch.fundingRequirements}</p>
+                                </body>
+                              </html>
+                            `;
+                            pitchWindow.document.write(html);
+                            pitchWindow.document.close();
+                          }
+                        }}>
+                          <Download className="w-4 h-4 mr-2" />
+                          Export as HTML
+                        </Button>
+                      </div>
+
+                      <Button onClick={() => setShowPitchModal(false)} size="lg">
                         <Eye className="w-4 h-4 mr-2" />
-                        Close
+                        Close Pitch
                       </Button>
                     </div>
                   </div>
