@@ -377,54 +377,62 @@ export default function InvestorDashboard() {
                     <div key={startup.id} className="p-6 border rounded-lg hover:shadow-md transition-shadow">
                       <div className="flex items-start justify-between mb-4">
                         <div>
-                          <h3 className="text-lg font-semibold">{startup.name}</h3>
+                          <h3 className="text-lg font-semibold">{startup.ideaName}</h3>
                           <p className="text-muted-foreground mb-2">{startup.description}</p>
-                          <p className="text-sm text-muted-foreground">Founded by {startup.founders}</p>
+                          <p className="text-sm text-muted-foreground">
+                            by {startup.founder?.firstName} {startup.founder?.lastName} •
+                            Created {new Date(startup.createdAt).toLocaleDateString()}
+                          </p>
                         </div>
                         <div className="text-right">
                           <Badge variant="default" className="mb-2">
-                            {startup.matchScore}% match
+                            {startup.validationScore}/100 validated
                           </Badge>
                           <p className="text-sm text-muted-foreground">{startup.industry}</p>
                         </div>
                       </div>
-                      
+
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                         <div>
                           <p className="text-xs text-muted-foreground">Stage</p>
                           <p className="text-sm font-medium">{startup.stage}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Seeking</p>
-                          <p className="text-sm font-medium text-green-600">{startup.fundingNeeded}</p>
+                          <p className="text-xs text-muted-foreground">Funding Needs</p>
+                          <p className="text-sm font-medium text-green-600">{startup.fundingNeeds}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Valuation</p>
-                          <p className="text-sm font-medium">{startup.valuation}</p>
+                          <p className="text-xs text-muted-foreground">Revenue Model</p>
+                          <p className="text-sm font-medium">{startup.revenueModel}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Traction</p>
-                          <p className="text-sm font-medium">Growing</p>
+                          <p className="text-xs text-muted-foreground">Viability</p>
+                          <Badge variant={startup.viabilityLevel === 'High' ? 'default' : startup.viabilityLevel === 'Moderate' ? 'secondary' : 'destructive'}>
+                            {startup.viabilityLevel}
+                          </Badge>
                         </div>
                       </div>
 
                       <div className="bg-muted/30 p-3 rounded-lg mb-4">
-                        <p className="text-sm">{startup.traction}</p>
+                        <p className="text-sm">
+                          <strong>Problem:</strong> {startup.problemStatement?.substring(0, 200)}...
+                        </p>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">
+                          <Button size="sm" variant="outline" onClick={() => handleViewDetails(startup)}>
                             <Eye className="w-4 h-4 mr-2" />
-                            View Details
+                            View Full Details
                           </Button>
                           <Button size="sm" variant="outline">
                             <Star className="w-4 h-4 mr-2" />
                             Add to Watchlist
                           </Button>
                         </div>
-                        <Button size="sm">
-                          Request Information
+                        <Button size="sm" onClick={() => handleInvestmentInterest(startup)}>
+                          <DollarSign className="w-4 h-4 mr-2" />
+                          Express Interest
                         </Button>
                       </div>
                     </div>
