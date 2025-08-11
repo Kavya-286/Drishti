@@ -271,6 +271,8 @@ class StartupValidatorAPI {
 
       const fallbackPitch = generateSmartPitchContent(data);
 
+      console.log('Generated fallback pitch content:', fallbackPitch);
+
       return {
         success: true,
         pitch_content: fallbackPitch
