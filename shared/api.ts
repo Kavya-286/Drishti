@@ -561,6 +561,26 @@ class StartupValidatorAPI {
 // Create a singleton instance
 export const apiService = new StartupValidatorAPI();
 
+// Utility function to enable fallback mode temporarily when API is problematic
+export const enableTemporaryFallback = (endpoint: string, duration: number = 300000) => { // 5 minutes default
+  console.log(`🔄 Enabling temporary fallback for ${endpoint} due to API issues`);
+  const fallbackKey = `fallback_${endpoint.replace('/', '_')}`;
+  localStorage.setItem(fallbackKey, 'true');
+
+  // Auto-disable after duration
+  setTimeout(() => {
+    localStorage.removeItem(fallbackKey);
+    console.log(`✅ Temporary fallback for ${endpoint} disabled`);
+  }, duration);
+};
+
+// Check if fallback is enabled for specific endpoint
+export const isFallbackEnabled = (endpoint: string): boolean => {
+  const globalFallback = localStorage.getItem('forceFallback') === 'true';
+  const endpointFallback = localStorage.getItem(`fallback_${endpoint.replace('/', '_')}`) === 'true';
+  return globalFallback || endpointFallback;
+};
+
 // Helper functions for common operations with guaranteed fallback
 export const validateStartupIdea = async (data: ValidationData): Promise<ValidationResult> => {
   try {
