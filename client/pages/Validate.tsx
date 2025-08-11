@@ -208,6 +208,8 @@ export default function Validate() {
 
       // Try to validate with real API, fallback to mock if needed
       let result;
+      let usingFallback = false;
+
       try {
         console.log('Starting validation with API...');
         result = await validateStartupIdea(validationData);
