@@ -240,12 +240,129 @@ export default function StartupComparison({ validationData, onBack }: Comparison
       setIsAnalyzing(true);
       await new Promise(resolve => setTimeout(resolve, 3000));
       
-      // Filter and score startups based on validation data
-      const relevant = mockSimilarStartups.filter(startup => 
-        startup.category.toLowerCase().includes('inventory') ||
-        startup.description.toLowerCase().includes('inventory') ||
-        startup.description.toLowerCase().includes('retail')
-      );
+      // Intelligent filtering based on user's startup idea
+      const userText = (
+        validationData.problemStatement + ' ' +
+        validationData.solutionDescription + ' ' +
+        validationData.targetMarket + ' ' +
+        validationData.revenueModel + ' ' +
+        validationData.customerSegments
+      ).toLowerCase();
+
+      // Industry detection
+      const detectIndustry = (text: string): string => {
+        if (text.includes('healthcare') || text.includes('medical') || text.includes('health')) return 'healthcare';
+        if (text.includes('education') || text.includes('learning') || text.includes('student') || text.includes('teach')) return 'education';
+        if (text.includes('finance') || text.includes('payment') || text.includes('banking') || text.includes('fintech')) return 'finance';
+        if (text.includes('food') || text.includes('restaurant') || text.includes('delivery') || text.includes('meal')) return 'food';
+        if (text.includes('real estate') || text.includes('property') || text.includes('housing')) return 'realestate';
+        if (text.includes('transport') || text.includes('logistics') || text.includes('delivery') || text.includes('shipping')) return 'logistics';
+        if (text.includes('ai') || text.includes('machine learning') || text.includes('artificial intelligence')) return 'ai';
+        if (text.includes('blockchain') || text.includes('crypto') || text.includes('web3')) return 'blockchain';
+        if (text.includes('environment') || text.includes('sustainable') || text.includes('green') || text.includes('climate')) return 'environment';
+        if (text.includes('retail') || text.includes('ecommerce') || text.includes('shopping') || text.includes('inventory')) return 'retail';
+        if (text.includes('saas') || text.includes('software') || text.includes('platform') || text.includes('tool')) return 'software';
+        return 'technology';
+      };
+
+      const userIndustry = detectIndustry(userText);
+
+      // Enhanced industry-specific startups
+      const industryStartups = {
+        healthcare: [
+          {
+            id: "health_001", name: "Teladoc Health", description: "Virtual healthcare platform connecting patients with doctors",
+            category: "Telehealth", stage: "Public", founded: "2002", location: "New York, USA",
+            funding: { total: "$1.2B", lastRound: "IPO", investors: ["Public"] }, teamSize: "3,000+", similarityScore: 95,
+            similarityReasons: ["Healthcare technology platform", "Digital patient care", "Subscription model", "Scalable solution"],
+            successMetrics: { revenue: "$2.4B", users: "54M+", growth: "85% YoY", valuation: "$13B" },
+            strengths: ["Market leader", "Regulatory compliance", "Global reach"], weaknesses: ["High competition", "Regulatory dependencies"],
+            keyDifferentiators: ["Integrated platform", "AI diagnostics", "Global network"], outcome: "successful",
+            outcomeDetails: "IPO 2015, market cap $13B+", lessonsLearned: ["Regulatory compliance critical", "Network effects drive growth"]
+          },
+          {
+            id: "health_002", name: "Oscar Health", description: "Technology-driven health insurance company",
+            category: "Health Insurance", stage: "Public", founded: "2012", location: "New York, USA",
+            funding: { total: "$1.6B", lastRound: "IPO", investors: ["Public"] }, teamSize: "1,500+", similarityScore: 88,
+            similarityReasons: ["Healthcare innovation", "Consumer-focused", "Data-driven", "Digital-first"],
+            successMetrics: { revenue: "$2.7B", users: "1M+", growth: "42% YoY", valuation: "$4.5B" },
+            strengths: ["Technology integration", "User experience", "Data analytics"], weaknesses: ["Complex regulations", "High CAC"],
+            keyDifferentiators: ["Virtual primary care", "Personalized guidance", "Transparent pricing"], outcome: "successful",
+            outcomeDetails: "IPO 2021, transforming health insurance", lessonsLearned: ["Customer experience drives retention"]
+          }
+        ],
+        education: [
+          {
+            id: "ed_001", name: "Coursera", description: "Online learning platform with university courses",
+            category: "Online Education", stage: "Public", founded: "2012", location: "California, USA",
+            funding: { total: "$464M", lastRound: "IPO", investors: ["Public"] }, teamSize: "1,000+", similarityScore: 92,
+            similarityReasons: ["Educational platform", "Scalable learning", "Content marketplace", "Global reach"],
+            successMetrics: { revenue: "$524M", users: "100M+", growth: "60% YoY", valuation: "$5.2B" },
+            strengths: ["University partnerships", "Quality content", "Global brand"], weaknesses: ["Completion rates", "Competition"],
+            keyDifferentiators: ["University content", "Professional certificates", "Degree programs"], outcome: "successful",
+            outcomeDetails: "IPO 2021, leading online education", lessonsLearned: ["Content quality drives engagement"]
+          }
+        ],
+        finance: [
+          {
+            id: "fin_001", name: "Stripe", description: "Online payment processing platform",
+            category: "Payment Processing", stage: "Private", founded: "2010", location: "California, USA",
+            funding: { total: "$2.2B", lastRound: "Series H", investors: ["Sequoia", "General Catalyst"] }, teamSize: "4,000+", similarityScore: 94,
+            similarityReasons: ["Financial platform", "Developer-focused API", "Global infrastructure", "B2B SaaS"],
+            successMetrics: { revenue: "$12B+", users: "4M+", growth: "70% YoY", valuation: "$95B" },
+            strengths: ["Developer experience", "Global reach", "Innovation"], weaknesses: ["Regulatory complexity", "Competition"],
+            keyDifferentiators: ["Simple integration", "Global compliance", "Developer tools"], outcome: "successful",
+            outcomeDetails: "Valued at $95B, leading payment processor", lessonsLearned: ["Developer experience drives adoption"]
+          }
+        ],
+        food: [
+          {
+            id: "food_001", name: "DoorDash", description: "Food delivery platform connecting restaurants with customers",
+            category: "Food Delivery", stage: "Public", founded: "2013", location: "California, USA",
+            funding: { total: "$2.5B", lastRound: "IPO", investors: ["Public"] }, teamSize: "8,000+", similarityScore: 91,
+            similarityReasons: ["Food platform", "On-demand delivery", "Marketplace model", "Local focus"],
+            successMetrics: { revenue: "$6.6B", users: "25M+", growth: "35% YoY", valuation: "$45B" },
+            strengths: ["Market leader", "Strong logistics", "Restaurant partnerships"], weaknesses: ["Low margins", "Driver dependency"],
+            keyDifferentiators: ["Fastest delivery", "Restaurant tools", "DashPass subscription"], outcome: "successful",
+            outcomeDetails: "IPO 2020, leading food delivery", lessonsLearned: ["Local dominance matters"]
+          }
+        ],
+        retail: [
+          {
+            id: "retail_001", name: "Shopify", description: "E-commerce platform for online stores",
+            category: "E-commerce Platform", stage: "Public", founded: "2006", location: "Ontario, Canada",
+            funding: { total: "$122M", lastRound: "IPO", investors: ["Public"] }, teamSize: "10,000+", similarityScore: 93,
+            similarityReasons: ["Retail platform", "E-commerce enablement", "SaaS model", "SMB focus"],
+            successMetrics: { revenue: "$5.6B", users: "2M+", growth: "57% YoY", valuation: "$60B" },
+            strengths: ["Platform ecosystem", "Developer community", "Global reach"], weaknesses: ["Platform dependency", "Amazon competition"],
+            keyDifferentiators: ["Ease of use", "App ecosystem", "Payment integration"], outcome: "successful",
+            outcomeDetails: "IPO 2015, leading e-commerce platform", lessonsLearned: ["Platform approach scales"]
+          }
+        ],
+        software: [
+          {
+            id: "soft_001", name: "Slack", description: "Business communication platform",
+            category: "Communication Software", stage: "Acquired", founded: "2009", location: "California, USA",
+            funding: { total: "$1.4B", lastRound: "Acquisition", investors: ["Salesforce"] }, teamSize: "2,500+", similarityScore: 89,
+            similarityReasons: ["Business software", "Team collaboration", "SaaS subscription", "Enterprise market"],
+            successMetrics: { revenue: "$1.5B", users: "18M+", growth: "43% YoY", valuation: "$27.7B" },
+            strengths: ["User experience", "Integration ecosystem", "Strong brand"], weaknesses: ["Microsoft competition", "Feature complexity"],
+            keyDifferentiators: ["Intuitive interface", "Third-party integrations", "Channel organization"], outcome: "successful",
+            outcomeDetails: "Acquired by Salesforce for $27.7B", lessonsLearned: ["User experience drives adoption"]
+          }
+        ]
+      };
+
+      // Get industry-specific startups or fall back to general ones
+      let relevant = industryStartups[userIndustry] || industryStartups['software'] || [];
+
+      // If we have fewer than 3 industry-specific startups, add some from the mock data
+      if (relevant.length < 3) {
+        const additionalStartups = mockSimilarStartups.filter(startup =>
+          !relevant.find(r => r.name === startup.name)
+        ).slice(0, 3 - relevant.length);
+        relevant = [...relevant, ...additionalStartups];
+      }
       
       setSimilarStartups(relevant);
       setIsAnalyzing(false);
