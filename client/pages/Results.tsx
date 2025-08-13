@@ -31,7 +31,9 @@ import {
   X,
   Copy,
   Eye,
-  Sparkles
+  Sparkles,
+  ExternalLink,
+  Building2
 } from 'lucide-react';
 import { ValidationData, ValidationResult, ValidationScore, generateAIPitch, generateSWOTAnalysis, checkFounderReadiness, generateMarketResearch, getViabilityLevel, getInvestorReadinessLevel, getScoreColor } from '@shared/api';
 import StartupComparison from './StartupComparison';
