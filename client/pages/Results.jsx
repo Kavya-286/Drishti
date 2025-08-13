@@ -37,6 +37,7 @@ import {
 } from 'lucide-react';
 import { generateAIPitch, generateSWOTAnalysis, checkFounderReadiness, generateMarketResearch, getViabilityLevel, getInvestorReadinessLevel, getScoreColor } from '@shared/api';
 import StartupComparison from './StartupComparison';
+import ContactDetailsModal from '@/components/ContactDetailsModal';
 
 export default function Results() {
   const navigate = useNavigate();
@@ -52,6 +53,8 @@ export default function Results() {
   const [isPublic, setIsPublic] = useState(false);
   const [generatedPitch, setGeneratedPitch] = useState(null);
   const [showPitchModal, setShowPitchModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactDetails, setContactDetails] = useState(null);
   
   // Load validation results and data on component mount
   useEffect(() => {
@@ -1779,38 +1782,74 @@ export default function Results() {
   };
 
   const handleVisibilityChange = (isPublicValue) => {
-    setIsPublic(isPublicValue);
-
     if (isPublicValue && validationData && validationResults) {
-      // Save to public startup ideas
-      const publicIdea = {
-        id: `idea_${Date.now()}`,
-        ideaName: validationData.startupTitle || validationData.problemStatement?.substring(0, 50) + '...' || 'Unnamed Startup Idea',
-        description: validationData.solutionDescription || 'No description provided',
-        problemStatement: validationData.problemStatement || '',
-        solutionDescription: validationData.solutionDescription || '',
-        targetMarket: validationData.targetMarket || '',
-        revenueModel: validationData.revenueModel || '',
-        fundingNeeds: validationData.fundingNeeds || 'Not specified',
-        industry: validationData.customerSegments || 'General',
-        stage: validationData.currentStage || 'Idea',
-        validationScore: validationResults.overall_score,
-        viabilityLevel: validationResults.viability_level,
-        createdAt: new Date().toISOString(),
-        founder: JSON.parse(localStorage.getItem('currentUser') || '{}'),
-        validationData: validationData,
-        validationResults: validationResults
-      };
+      // Check if contact details are already saved
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const savedContactDetails = localStorage.getItem(`contactDetails_${currentUser.id}`);
 
-      // Store in localStorage for demo (in real app would be database)
-      const existingIdeas = JSON.parse(localStorage.getItem('publicStartupIdeas') || '[]');
-      existingIdeas.push(publicIdea);
-      localStorage.setItem('publicStartupIdeas', JSON.stringify(existingIdeas));
-
-      alert('✅ Your startup idea is now public and visible to investors!');
+      if (!savedContactDetails) {
+        // Show contact details modal first
+        setShowContactModal(true);
+        return;
+      } else {
+        // Use saved contact details
+        const contactData = JSON.parse(savedContactDetails);
+        makeStartupPublic(contactData);
+      }
     } else if (!isPublicValue) {
+      setIsPublic(false);
+      // Remove from public ideas
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const existingIdeas = JSON.parse(localStorage.getItem('publicStartupIdeas') || '[]');
+      const filteredIdeas = existingIdeas.filter(idea =>
+        !(idea.founder?.id === currentUser.id &&
+          idea.validationData?.startupTitle === validationData?.startupTitle)
+      );
+      localStorage.setItem('publicStartupIdeas', JSON.stringify(filteredIdeas));
       alert('✅ Your startup idea is now private and hidden from public view.');
     }
+  };
+
+  const handleContactDetailsSubmit = (contactData) => {
+    // Save contact details
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    localStorage.setItem(`contactDetails_${currentUser.id}`, JSON.stringify(contactData));
+    setContactDetails(contactData);
+
+    // Now make startup public
+    makeStartupPublic(contactData);
+  };
+
+  const makeStartupPublic = (contactData) => {
+    const publicIdea = {
+      id: `idea_${Date.now()}`,
+      ideaName: validationData.startupTitle || validationData.problemStatement?.substring(0, 50) + '...' || 'Unnamed Startup Idea',
+      description: validationData.solutionDescription || 'No description provided',
+      problemStatement: validationData.problemStatement || '',
+      solutionDescription: validationData.solutionDescription || '',
+      targetMarket: validationData.targetMarket || '',
+      revenueModel: validationData.revenueModel || '',
+      fundingNeeds: validationData.fundingNeeds || 'Not specified',
+      industry: validationData.customerSegments || 'General',
+      stage: validationData.currentStage || 'Idea',
+      validationScore: validationResults.overall_score,
+      viabilityLevel: validationResults.viability_level,
+      createdAt: new Date().toISOString(),
+      founder: {
+        ...JSON.parse(localStorage.getItem('currentUser') || '{}'),
+        contactDetails: contactData
+      },
+      validationData: validationData,
+      validationResults: validationResults
+    };
+
+    // Store in localStorage for demo (in real app would be database)
+    const existingIdeas = JSON.parse(localStorage.getItem('publicStartupIdeas') || '[]');
+    existingIdeas.push(publicIdea);
+    localStorage.setItem('publicStartupIdeas', JSON.stringify(existingIdeas));
+
+    setIsPublic(true);
+    alert('✅ Your startup idea is now public and visible to investors with your contact details!');
   };
 
   const handlePostValidationSubmit = () => {
