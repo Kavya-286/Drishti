@@ -1,452 +1,664 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drishti - Startup Validation Platform</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="auth.css">
-    <link rel="stylesheet" href="validate.css">
-    <link rel="stylesheet" href="results.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="auth.css" />
+    <link rel="stylesheet" href="validate.css" />
+    <link rel="stylesheet" href="results.css" />
+  </head>
+  <body>
     <!-- Loading screen -->
-    <div id="loading-screen" class="loading-screen" style="display: none;">
-        <div class="loading-spinner"></div>
-        <p>Loading...</p>
+    <div id="loading-screen" class="loading-screen" style="display: none">
+      <div class="loading-spinner"></div>
+      <p>Loading...</p>
     </div>
 
     <!-- Header -->
     <header id="header" class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1>💡 Drishti</h1>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">
+            <h1>💡 Drishti</h1>
+          </div>
+          <nav class="nav">
+            <a href="#" onclick="showPage('dashboard')" class="nav-link"
+              >Dashboard</a
+            >
+            <a href="#" onclick="showPage('validate')" class="nav-link"
+              >Validate</a
+            >
+            <a href="#" onclick="showPage('features')" class="nav-link"
+              >Features</a
+            >
+            <a href="#" onclick="showPage('pricing')" class="nav-link"
+              >Pricing</a
+            >
+            <a href="#" onclick="showPage('about')" class="nav-link">About</a>
+          </nav>
+          <div class="header-actions">
+            <div
+              id="notification-bell"
+              class="notification-bell"
+              style="display: none"
+            >
+              <div class="bell-icon" onclick="toggleNotifications()">
+                🔔
+                <span
+                  id="notification-count"
+                  class="notification-count"
+                  style="display: none"
+                  >0</span
+                >
+              </div>
+              <div
+                id="notification-dropdown"
+                class="notification-dropdown"
+                style="display: none"
+              >
+                <div class="notification-header">
+                  <h3>Notifications</h3>
+                  <button onclick="markAllAsRead()" class="mark-all-read">
+                    Mark all read
+                  </button>
                 </div>
-                <nav class="nav">
-                    <a href="#" onclick="showPage('dashboard')" class="nav-link">Dashboard</a>
-                    <a href="#" onclick="showPage('validate')" class="nav-link">Validate</a>
-                    <a href="#" onclick="showPage('features')" class="nav-link">Features</a>
-                    <a href="#" onclick="showPage('pricing')" class="nav-link">Pricing</a>
-                    <a href="#" onclick="showPage('about')" class="nav-link">About</a>
-                </nav>
-                <div class="header-actions">
-                    <div id="notification-bell" class="notification-bell" style="display: none;">
-                        <div class="bell-icon" onclick="toggleNotifications()">
-                            🔔
-                            <span id="notification-count" class="notification-count" style="display: none;">0</span>
-                        </div>
-                        <div id="notification-dropdown" class="notification-dropdown" style="display: none;">
-                            <div class="notification-header">
-                                <h3>Notifications</h3>
-                                <button onclick="markAllAsRead()" class="mark-all-read">Mark all read</button>
-                            </div>
-                            <div id="notification-list" class="notification-list">
-                                <div class="no-notifications">
-                                    <p>No notifications yet</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button id="auth-button" onclick="showPage('auth')" class="btn btn-primary">Sign In</button>
-                    <button id="logout-button" onclick="logout()" class="btn btn-outline" style="display: none;">Logout</button>
+                <div id="notification-list" class="notification-list">
+                  <div class="no-notifications">
+                    <p>No notifications yet</p>
+                  </div>
                 </div>
+              </div>
             </div>
+            <button
+              id="auth-button"
+              onclick="showPage('auth')"
+              class="btn btn-primary"
+            >
+              Sign In
+            </button>
+            <button
+              id="logout-button"
+              onclick="logout()"
+              class="btn btn-outline"
+              style="display: none"
+            >
+              Logout
+            </button>
+          </div>
         </div>
+      </div>
     </header>
 
     <!-- Main Content Area -->
     <main id="main-content" class="main-content">
-        
-        <!-- Landing Page -->
-        <div id="page-landing" class="page active">
-            <section class="hero">
-                <div class="container">
-                    <div class="hero-content">
-                        <div class="badge">🚀 AI-Powered Startup Intelligence</div>
-                        <h1 class="hero-title">Validate Your Startup Ideas with Confidence</h1>
-                        <p class="hero-description">
-                            Harness the power of AI and machine learning to assess market potential, 
-                            analyze competition, and get actionable insights for your startup journey.
-                        </p>
-                        <div class="hero-actions">
-                            <button onclick="showPage('validate')" class="btn btn-primary btn-large">
-                                Start Validation
-                            </button>
-                            <button onclick="showPage('auth')" class="btn btn-outline btn-large">
-                                Get Started Free
-                            </button>
-                        </div>
-                        <div class="stats">
-                            <div class="stat">
-                                <div class="stat-value">500+</div>
-                                <div class="stat-label">Startups Validated</div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-value">95%</div>
-                                <div class="stat-label">Accuracy Rate</div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-value">$2M+</div>
-                                <div class="stat-label">Funding Secured</div>
-                            </div>
-                        </div>
-                    </div>
+      <!-- Landing Page -->
+      <div id="page-landing" class="page active">
+        <section class="hero">
+          <div class="container">
+            <div class="hero-content">
+              <div class="badge">🚀 AI-Powered Startup Intelligence</div>
+              <h1 class="hero-title">
+                Validate Your Startup Ideas with Confidence
+              </h1>
+              <p class="hero-description">
+                Harness the power of AI and machine learning to assess market
+                potential, analyze competition, and get actionable insights for
+                your startup journey.
+              </p>
+              <div class="hero-actions">
+                <button
+                  onclick="showPage('validate')"
+                  class="btn btn-primary btn-large"
+                >
+                  Start Validation
+                </button>
+                <button
+                  onclick="showPage('auth')"
+                  class="btn btn-outline btn-large"
+                >
+                  Get Started Free
+                </button>
+              </div>
+              <div class="stats">
+                <div class="stat">
+                  <div class="stat-value">500+</div>
+                  <div class="stat-label">Startups Validated</div>
                 </div>
-            </section>
-
-            <section class="features-section">
-                <div class="container">
-                    <div class="section-header">
-                        <h2>Comprehensive Startup Analysis</h2>
-                        <p>Everything you need to validate and launch your startup successfully</p>
-                    </div>
-                    <div class="features-grid">
-                        <div class="feature-card">
-                            <div class="feature-icon">📊</div>
-                            <h3>Market Analysis</h3>
-                            <p>Deep market research and opportunity assessment using AI-powered analytics</p>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">🎯</div>
-                            <h3>Competitive Intelligence</h3>
-                            <p>Comprehensive competitor analysis and positioning strategies</p>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">💰</div>
-                            <h3>Financial Modeling</h3>
-                            <p>Revenue projections and business model validation</p>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">👥</div>
-                            <h3>Team Assessment</h3>
-                            <p>Founder readiness and team capability evaluation</p>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">🚀</div>
-                            <h3>Go-to-Market Strategy</h3>
-                            <p>Tailored launch strategies and market entry recommendations</p>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">📈</div>
-                            <h3>Growth Potential</h3>
-                            <p>Scalability analysis and growth trajectory forecasting</p>
-                        </div>
-                    </div>
+                <div class="stat">
+                  <div class="stat-value">95%</div>
+                  <div class="stat-label">Accuracy Rate</div>
                 </div>
-            </section>
-        </div>
-
-        <!-- Authentication Page -->
-        <div id="page-auth" class="page">
-            <div class="auth-container">
-                <div class="auth-content">
-                    <div class="auth-header">
-                        <h1>Welcome to Drishti</h1>
-                        <p>Sign in to access your startup validation dashboard</p>
-                    </div>
-                    
-                    <div class="user-type-selection">
-                        <div class="user-type-grid">
-                            <div class="user-type-card active" onclick="selectUserType('entrepreneur')">
-                                <div class="user-type-icon">👨‍💼</div>
-                                <h3>Aspiring Entrepreneur</h3>
-                                <p>Validate your startup ideas and get insights</p>
-                            </div>
-                            <div class="user-type-card" onclick="selectUserType('investor')">
-                                <div class="user-type-icon">💰</div>
-                                <h3>Investor</h3>
-                                <p>Evaluate startup opportunities and market trends</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="auth-form">
-                        <div class="tab-nav">
-                            <button class="tab-button active" onclick="switchTab('signin')">Sign In</button>
-                            <button class="tab-button" onclick="switchTab('signup')">Sign Up</button>
-                        </div>
-
-                        <form id="auth-form" onsubmit="handleAuth(event)">
-                            <!-- Sign In Form -->
-                            <div id="signin-form" class="tab-content active">
-                                <div class="form-group">
-                                    <label for="signin-email">Email</label>
-                                    <input type="email" id="signin-email" name="email" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signin-password">Password</label>
-                                    <input type="password" id="signin-password" name="password" required>
-                                </div>
-                                <div class="form-options">
-                                    <label class="checkbox">
-                                        <input type="checkbox"> Remember me
-                                    </label>
-                                    <a href="#" class="forgot-password">Forgot password?</a>
-                                </div>
-                                <button type="submit" class="btn btn-primary full-width">Sign In</button>
-                            </div>
-
-                            <!-- Sign Up Form -->
-                            <div id="signup-form" class="tab-content">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="firstName">First Name *</label>
-                                        <input type="text" id="firstName" name="firstName" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="lastName">Last Name *</label>
-                                        <input type="text" id="lastName" name="lastName" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signup-email">Email *</label>
-                                    <input type="email" id="signup-email" name="email" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone">Phone Number *</label>
-                                    <div class="phone-input">
-                                        <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required>
-                                        <button type="button" id="send-otp" onclick="sendOTP()" class="btn btn-outline">Send OTP</button>
-                                    </div>
-                                </div>
-                                <div id="otp-section" class="form-group" style="display: none;">
-                                    <label for="otp">Enter OTP</label>
-                                    <input type="text" id="otp" name="otp" maxlength="6" placeholder="123456">
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="signup-password">Password *</label>
-                                        <input type="password" id="signup-password" name="password" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="confirmPassword">Confirm Password *</label>
-                                        <input type="password" id="confirmPassword" name="confirmPassword" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="location">Location</label>
-                                    <input type="text" id="location" name="location" placeholder="City, Country">
-                                </div>
-                                
-                                <!-- User Type Specific Fields -->
-                                <div id="entrepreneur-fields" class="user-specific-fields">
-                                    <h4>Entrepreneur Details</h4>
-                                    <div class="form-group">
-                                        <label for="experience">Experience Level</label>
-                                        <select id="experience" name="experience">
-                                            <option value="">Select experience level</option>
-                                            <option value="first-time">First-time entrepreneur</option>
-                                            <option value="1-2-years">1-2 years experience</option>
-                                            <option value="3-5-years">3-5 years experience</option>
-                                            <option value="5-10-years">5-10 years experience</option>
-                                            <option value="10-plus">10+ years experience</option>
-                                            <option value="serial">Serial entrepreneur</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="interests">Industry Interests</label>
-                                        <input type="text" id="interests" name="interests" placeholder="e.g., Technology, Healthcare, Finance">
-                                    </div>
-                                </div>
-
-                                <div id="investor-fields" class="user-specific-fields" style="display: none;">
-                                    <h4>Investor Details</h4>
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="investorType">Investor Type *</label>
-                                            <select id="investorType" name="investorType">
-                                                <option value="">Select investor type</option>
-                                                <option value="angel">Angel Investor</option>
-                                                <option value="vc">Venture Capitalist</option>
-                                                <option value="corporate">Corporate Investor</option>
-                                                <option value="family-office">Family Office</option>
-                                                <option value="fund">Investment Fund</option>
-                                                <option value="individual">Individual Investor</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="fundName">Fund/Organization Name</label>
-                                            <input type="text" id="fundName" name="fundName" placeholder="Your fund or organization name">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="checkbox">
-                                        <input type="checkbox" id="terms" required> 
-                                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-                                    </label>
-                                </div>
-                                <button type="submit" class="btn btn-primary full-width">Create Account</button>
-                            </div>
-                        </form>
-
-                        <div class="social-auth">
-                            <div class="divider">
-                                <span>Or continue with</span>
-                            </div>
-                            <div class="social-buttons">
-                                <button onclick="handleSocialLogin('google')" class="btn btn-outline social-btn">
-                                    🌐 Google
-                                </button>
-                                <button onclick="handleSocialLogin('linkedin')" class="btn btn-outline social-btn">
-                                    💼 LinkedIn
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="stat">
+                  <div class="stat-value">$2M+</div>
+                  <div class="stat-label">Funding Secured</div>
                 </div>
+              </div>
             </div>
-        </div>
+          </div>
+        </section>
 
-        <!-- Dashboard Page -->
-        <div id="page-dashboard" class="page">
-            <div class="dashboard-container">
-                <div class="dashboard-header">
-                    <h1>Welcome to Your Dashboard</h1>
-                    <p id="user-welcome">Ready to validate your next startup idea?</p>
-                </div>
-                
-                <div class="dashboard-actions">
-                    <button onclick="showPage('validate')" class="btn btn-primary btn-large">
-                        🚀 Start New Validation
-                    </button>
-                    <button onclick="showPage('results')" class="btn btn-outline btn-large">
-                        📊 View Previous Results
-                    </button>
-                </div>
-
-                <div class="dashboard-stats">
-                    <div class="stat-card">
-                        <div class="stat-icon">📈</div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="total-validations">0</div>
-                            <div class="stat-label">Total Validations</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">⭐</div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="avg-score">0</div>
-                            <div class="stat-label">Average Score</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🎯</div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="success-rate">0%</div>
-                            <div class="stat-label">Success Rate</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="recent-validations">
-                    <h2>Recent Validations</h2>
-                    <div id="validation-history" class="validation-list">
-                        <div class="no-data">
-                            <p>No validations yet. <a href="#" onclick="showPage('validate')">Start your first validation</a></p>
-                        </div>
-                    </div>
-                </div>
+        <section class="features-section">
+          <div class="container">
+            <div class="section-header">
+              <h2>Comprehensive Startup Analysis</h2>
+              <p>
+                Everything you need to validate and launch your startup
+                successfully
+              </p>
             </div>
-        </div>
-
-        <!-- Investor Dashboard Page -->
-        <div id="page-investor-dashboard" class="page">
-            <div class="dashboard-container">
-                <div class="dashboard-header">
-                    <h1>Investor Dashboard</h1>
-                    <p>Discover and evaluate promising startup opportunities</p>
-                </div>
-                
-                <div class="startup-opportunities">
-                    <h2>Available Startup Opportunities</h2>
-                    <div id="public-startups" class="startup-grid">
-                        <div class="no-data">
-                            <p>No public startup opportunities available at this time.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="features-grid">
+              <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Market Analysis</h3>
+                <p>
+                  Deep market research and opportunity assessment using
+                  AI-powered analytics
+                </p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Competitive Intelligence</h3>
+                <p>
+                  Comprehensive competitor analysis and positioning strategies
+                </p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Financial Modeling</h3>
+                <p>Revenue projections and business model validation</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Team Assessment</h3>
+                <p>Founder readiness and team capability evaluation</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>Go-to-Market Strategy</h3>
+                <p>
+                  Tailored launch strategies and market entry recommendations
+                </p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Growth Potential</h3>
+                <p>Scalability analysis and growth trajectory forecasting</p>
+              </div>
             </div>
-        </div>
+          </div>
+        </section>
+      </div>
 
-        <!-- Other pages will be dynamically loaded here -->
-        <div id="page-validate" class="page"></div>
-        <div id="page-results" class="page"></div>
-        <div id="page-founder-readiness" class="page"></div>
-        <div id="page-investor-acknowledgment" class="page"></div>
-        <div id="page-features" class="page"></div>
-        <div id="page-pricing" class="page"></div>
-        <div id="page-about" class="page"></div>
+      <!-- Authentication Page -->
+      <div id="page-auth" class="page">
+        <div class="auth-container">
+          <div class="auth-content">
+            <div class="auth-header">
+              <h1>Welcome to Drishti</h1>
+              <p>Sign in to access your startup validation dashboard</p>
+            </div>
+
+            <div class="user-type-selection">
+              <div class="user-type-grid">
+                <div
+                  class="user-type-card active"
+                  onclick="selectUserType('entrepreneur')"
+                >
+                  <div class="user-type-icon">👨‍💼</div>
+                  <h3>Aspiring Entrepreneur</h3>
+                  <p>Validate your startup ideas and get insights</p>
+                </div>
+                <div
+                  class="user-type-card"
+                  onclick="selectUserType('investor')"
+                >
+                  <div class="user-type-icon">💰</div>
+                  <h3>Investor</h3>
+                  <p>Evaluate startup opportunities and market trends</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="auth-form">
+              <div class="tab-nav">
+                <button class="tab-button active" onclick="switchTab('signin')">
+                  Sign In
+                </button>
+                <button class="tab-button" onclick="switchTab('signup')">
+                  Sign Up
+                </button>
+              </div>
+
+              <form id="auth-form" onsubmit="handleAuth(event)">
+                <!-- Sign In Form -->
+                <div id="signin-form" class="tab-content active">
+                  <div class="form-group">
+                    <label for="signin-email">Email</label>
+                    <input
+                      type="email"
+                      id="signin-email"
+                      name="email"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="signin-password">Password</label>
+                    <input
+                      type="password"
+                      id="signin-password"
+                      name="password"
+                      required
+                    />
+                  </div>
+                  <div class="form-options">
+                    <label class="checkbox">
+                      <input type="checkbox" /> Remember me
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                  </div>
+                  <button type="submit" class="btn btn-primary full-width">
+                    Sign In
+                  </button>
+                </div>
+
+                <!-- Sign Up Form -->
+                <div id="signup-form" class="tab-content">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="firstName">First Name *</label>
+                      <input
+                        type="text"
+                        id="firstName"
+                        name="firstName"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="lastName">Last Name *</label>
+                      <input
+                        type="text"
+                        id="lastName"
+                        name="lastName"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="signup-email">Email *</label>
+                    <input
+                      type="email"
+                      id="signup-email"
+                      name="email"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <div class="phone-input">
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="+91 98765 43210"
+                        required
+                      />
+                      <button
+                        type="button"
+                        id="send-otp"
+                        onclick="sendOTP()"
+                        class="btn btn-outline"
+                      >
+                        Send OTP
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    id="otp-section"
+                    class="form-group"
+                    style="display: none"
+                  >
+                    <label for="otp">Enter OTP</label>
+                    <input
+                      type="text"
+                      id="otp"
+                      name="otp"
+                      maxlength="6"
+                      placeholder="123456"
+                    />
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="signup-password">Password *</label>
+                      <input
+                        type="password"
+                        id="signup-password"
+                        name="password"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="confirmPassword">Confirm Password *</label>
+                      <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="location">Location</label>
+                    <input
+                      type="text"
+                      id="location"
+                      name="location"
+                      placeholder="City, Country"
+                    />
+                  </div>
+
+                  <!-- User Type Specific Fields -->
+                  <div id="entrepreneur-fields" class="user-specific-fields">
+                    <h4>Entrepreneur Details</h4>
+                    <div class="form-group">
+                      <label for="experience">Experience Level</label>
+                      <select id="experience" name="experience">
+                        <option value="">Select experience level</option>
+                        <option value="first-time">
+                          First-time entrepreneur
+                        </option>
+                        <option value="1-2-years">1-2 years experience</option>
+                        <option value="3-5-years">3-5 years experience</option>
+                        <option value="5-10-years">
+                          5-10 years experience
+                        </option>
+                        <option value="10-plus">10+ years experience</option>
+                        <option value="serial">Serial entrepreneur</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="interests">Industry Interests</label>
+                      <input
+                        type="text"
+                        id="interests"
+                        name="interests"
+                        placeholder="e.g., Technology, Healthcare, Finance"
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    id="investor-fields"
+                    class="user-specific-fields"
+                    style="display: none"
+                  >
+                    <h4>Investor Details</h4>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="investorType">Investor Type *</label>
+                        <select id="investorType" name="investorType">
+                          <option value="">Select investor type</option>
+                          <option value="angel">Angel Investor</option>
+                          <option value="vc">Venture Capitalist</option>
+                          <option value="corporate">Corporate Investor</option>
+                          <option value="family-office">Family Office</option>
+                          <option value="fund">Investment Fund</option>
+                          <option value="individual">
+                            Individual Investor
+                          </option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="fundName">Fund/Organization Name</label>
+                        <input
+                          type="text"
+                          id="fundName"
+                          name="fundName"
+                          placeholder="Your fund or organization name"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="checkbox">
+                      <input type="checkbox" id="terms" required />
+                      I agree to the <a href="#">Terms of Service</a> and
+                      <a href="#">Privacy Policy</a>
+                    </label>
+                  </div>
+                  <button type="submit" class="btn btn-primary full-width">
+                    Create Account
+                  </button>
+                </div>
+              </form>
+
+              <div class="social-auth">
+                <div class="divider">
+                  <span>Or continue with</span>
+                </div>
+                <div class="social-buttons">
+                  <button
+                    onclick="handleSocialLogin('google')"
+                    class="btn btn-outline social-btn"
+                  >
+                    🌐 Google
+                  </button>
+                  <button
+                    onclick="handleSocialLogin('linkedin')"
+                    class="btn btn-outline social-btn"
+                  >
+                    💼 LinkedIn
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Page -->
+      <div id="page-dashboard" class="page">
+        <div class="dashboard-container">
+          <div class="dashboard-header">
+            <h1>Welcome to Your Dashboard</h1>
+            <p id="user-welcome">Ready to validate your next startup idea?</p>
+          </div>
+
+          <div class="dashboard-actions">
+            <button
+              onclick="showPage('validate')"
+              class="btn btn-primary btn-large"
+            >
+              🚀 Start New Validation
+            </button>
+            <button
+              onclick="showPage('results')"
+              class="btn btn-outline btn-large"
+            >
+              📊 View Previous Results
+            </button>
+          </div>
+
+          <div class="dashboard-stats">
+            <div class="stat-card">
+              <div class="stat-icon">📈</div>
+              <div class="stat-info">
+                <div class="stat-value" id="total-validations">0</div>
+                <div class="stat-label">Total Validations</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">⭐</div>
+              <div class="stat-info">
+                <div class="stat-value" id="avg-score">0</div>
+                <div class="stat-label">Average Score</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🎯</div>
+              <div class="stat-info">
+                <div class="stat-value" id="success-rate">0%</div>
+                <div class="stat-label">Success Rate</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="recent-validations">
+            <h2>Recent Validations</h2>
+            <div id="validation-history" class="validation-list">
+              <div class="no-data">
+                <p>
+                  No validations yet.
+                  <a href="#" onclick="showPage('validate')"
+                    >Start your first validation</a
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Investor Dashboard Page -->
+      <div id="page-investor-dashboard" class="page">
+        <div class="dashboard-container">
+          <div class="dashboard-header">
+            <h1>Investor Dashboard</h1>
+            <p>Discover and evaluate promising startup opportunities</p>
+          </div>
+
+          <div class="startup-opportunities">
+            <h2>Available Startup Opportunities</h2>
+            <div id="public-startups" class="startup-grid">
+              <div class="no-data">
+                <p>No public startup opportunities available at this time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other pages will be dynamically loaded here -->
+      <div id="page-validate" class="page"></div>
+      <div id="page-results" class="page"></div>
+      <div id="page-founder-readiness" class="page"></div>
+      <div id="page-investor-acknowledgment" class="page"></div>
+      <div id="page-features" class="page"></div>
+      <div id="page-pricing" class="page"></div>
+      <div id="page-about" class="page"></div>
     </main>
 
     <!-- Modals -->
-    <div id="contact-details-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Contact Details for Investors</h2>
-                <button onclick="closeModal('contact-details-modal')" class="close-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="contact-details-form" onsubmit="saveContactDetails(event)">
-                    <div class="form-section">
-                        <h3>Personal Information</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="contact-fullName">Full Name *</label>
-                                <input type="text" id="contact-fullName" name="fullName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="contact-title">Professional Title</label>
-                                <input type="text" id="contact-title" name="title" placeholder="e.g., Founder & CEO">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="contact-email">Email Address *</label>
-                                <input type="email" id="contact-email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="contact-phone">Phone Number *</label>
-                                <input type="tel" id="contact-phone" name="phone" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-section">
-                        <h3>Professional Information</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="contact-company">Company/Startup Name</label>
-                                <input type="text" id="contact-company" name="company">
-                            </div>
-                            <div class="form-group">
-                                <label for="contact-website">Website</label>
-                                <input type="url" id="contact-website" name="website" placeholder="https://yourwebsite.com">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>Privacy & Consent</h3>
-                        <label class="checkbox">
-                            <input type="checkbox" id="contact-shareDetails" name="shareDetails" checked required>
-                            Share contact details with interested investors *
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" id="contact-marketingConsent" name="marketingConsent">
-                            Receive updates about investment opportunities
-                        </label>
-                    </div>
-                    
-                    <div class="modal-actions">
-                        <button type="button" onclick="closeModal('contact-details-modal')" class="btn btn-outline">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save Details</button>
-                    </div>
-                </form>
-            </div>
+    <div id="contact-details-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Contact Details for Investors</h2>
+          <button
+            onclick="closeModal('contact-details-modal')"
+            class="close-btn"
+          >
+            &times;
+          </button>
         </div>
+        <div class="modal-body">
+          <form id="contact-details-form" onsubmit="saveContactDetails(event)">
+            <div class="form-section">
+              <h3>Personal Information</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="contact-fullName">Full Name *</label>
+                  <input
+                    type="text"
+                    id="contact-fullName"
+                    name="fullName"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="contact-title">Professional Title</label>
+                  <input
+                    type="text"
+                    id="contact-title"
+                    name="title"
+                    placeholder="e.g., Founder & CEO"
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="contact-email">Email Address *</label>
+                  <input
+                    type="email"
+                    id="contact-email"
+                    name="email"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="contact-phone">Phone Number *</label>
+                  <input type="tel" id="contact-phone" name="phone" required />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3>Professional Information</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="contact-company">Company/Startup Name</label>
+                  <input type="text" id="contact-company" name="company" />
+                </div>
+                <div class="form-group">
+                  <label for="contact-website">Website</label>
+                  <input
+                    type="url"
+                    id="contact-website"
+                    name="website"
+                    placeholder="https://yourwebsite.com"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3>Privacy & Consent</h3>
+              <label class="checkbox">
+                <input
+                  type="checkbox"
+                  id="contact-shareDetails"
+                  name="shareDetails"
+                  checked
+                  required
+                />
+                Share contact details with interested investors *
+              </label>
+              <label class="checkbox">
+                <input
+                  type="checkbox"
+                  id="contact-marketingConsent"
+                  name="marketingConsent"
+                />
+                Receive updates about investment opportunities
+              </label>
+            </div>
+
+            <div class="modal-actions">
+              <button
+                type="button"
+                onclick="closeModal('contact-details-modal')"
+                class="btn btn-outline"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Save Details
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
     <!-- Scripts -->
@@ -454,5 +666,5 @@
     <script src="auth.js"></script>
     <script src="validate.js"></script>
     <script src="results.js"></script>
-</body>
+  </body>
 </html>

@@ -1,577 +1,647 @@
 // Global application state
 let currentUser = null;
-let currentUserType = 'entrepreneur';
-let authMode = 'signin';
+let currentUserType = "entrepreneur";
+let authMode = "signin";
 let validationResults = null;
 let validationData = null;
 let notifications = [];
 
 // Initialize application when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    initializeApp();
+document.addEventListener("DOMContentLoaded", function () {
+  initializeApp();
 });
 
 // Initialize the application
 function initializeApp() {
-    loadUserFromStorage();
-    updateAuthUI();
-    loadNotifications();
-    showPage('landing');
-    
-    // Check if user is returning from a previous session
-    const urlPath = window.location.hash.substring(1);
-    if (urlPath) {
-        showPage(urlPath);
-    }
+  loadUserFromStorage();
+  updateAuthUI();
+  loadNotifications();
+  showPage("landing");
+
+  // Check if user is returning from a previous session
+  const urlPath = window.location.hash.substring(1);
+  if (urlPath) {
+    showPage(urlPath);
+  }
 }
 
 // Navigation function to show different pages
 function showPage(pageName) {
-    // Hide all pages
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(page => {
-        page.classList.remove('active');
-    });
-    
-    // Show the requested page
-    const targetPage = document.getElementById(`page-${pageName}`);
-    if (targetPage) {
-        targetPage.classList.add('active');
-        
-        // Update URL hash
-        window.location.hash = pageName;
-        
-        // Load page-specific content
-        loadPageContent(pageName);
-    }
+  // Hide all pages
+  const pages = document.querySelectorAll(".page");
+  pages.forEach((page) => {
+    page.classList.remove("active");
+  });
+
+  // Show the requested page
+  const targetPage = document.getElementById(`page-${pageName}`);
+  if (targetPage) {
+    targetPage.classList.add("active");
+
+    // Update URL hash
+    window.location.hash = pageName;
+
+    // Load page-specific content
+    loadPageContent(pageName);
+  }
 }
 
 // Load page-specific content
 function loadPageContent(pageName) {
-    switch(pageName) {
-        case 'dashboard':
-            loadDashboard();
-            break;
-        case 'investor-dashboard':
-            loadInvestorDashboard();
-            break;
-        case 'validate':
-            loadValidationPage();
-            break;
-        case 'results':
-            loadResultsPage();
-            break;
-        case 'founder-readiness':
-            loadFounderReadinessPage();
-            break;
-        case 'features':
-            loadFeaturesPage();
-            break;
-        case 'pricing':
-            loadPricingPage();
-            break;
-        case 'about':
-            loadAboutPage();
-            break;
-    }
+  switch (pageName) {
+    case "dashboard":
+      loadDashboard();
+      break;
+    case "investor-dashboard":
+      loadInvestorDashboard();
+      break;
+    case "validate":
+      loadValidationPage();
+      break;
+    case "results":
+      loadResultsPage();
+      break;
+    case "founder-readiness":
+      loadFounderReadinessPage();
+      break;
+    case "features":
+      loadFeaturesPage();
+      break;
+    case "pricing":
+      loadPricingPage();
+      break;
+    case "about":
+      loadAboutPage();
+      break;
+  }
 }
 
 // User Management Functions
 function loadUserFromStorage() {
-    const userData = localStorage.getItem('currentUser');
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    
-    if (userData && isAuthenticated === 'true') {
-        try {
-            currentUser = JSON.parse(userData);
-            console.log('User loaded from storage:', currentUser);
-        } catch (error) {
-            console.error('Error loading user data:', error);
-            clearUserSession();
-        }
+  const userData = localStorage.getItem("currentUser");
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
+
+  if (userData && isAuthenticated === "true") {
+    try {
+      currentUser = JSON.parse(userData);
+      console.log("User loaded from storage:", currentUser);
+    } catch (error) {
+      console.error("Error loading user data:", error);
+      clearUserSession();
     }
+  }
 }
 
 function saveUserToStorage(user) {
-    currentUser = user;
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    localStorage.setItem('isAuthenticated', 'true');
+  currentUser = user;
+  localStorage.setItem("currentUser", JSON.stringify(user));
+  localStorage.setItem("isAuthenticated", "true");
 }
 
 function clearUserSession() {
-    currentUser = null;
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('isAuthenticated');
-    updateAuthUI();
+  currentUser = null;
+  localStorage.removeItem("currentUser");
+  localStorage.removeItem("isAuthenticated");
+  updateAuthUI();
 }
 
 function updateAuthUI() {
-    const authButton = document.getElementById('auth-button');
-    const logoutButton = document.getElementById('logout-button');
-    const notificationBell = document.getElementById('notification-bell');
-    const userWelcome = document.getElementById('user-welcome');
-    
-    if (currentUser) {
-        authButton.style.display = 'none';
-        logoutButton.style.display = 'inline-flex';
-        
-        if (currentUser.userType !== 'investor') {
-            notificationBell.style.display = 'block';
-        }
-        
-        if (userWelcome) {
-            const userName = currentUser.firstName || currentUser.email.split('@')[0];
-            userWelcome.textContent = `Welcome back, ${userName}!`;
-        }
-    } else {
-        authButton.style.display = 'inline-flex';
-        logoutButton.style.display = 'none';
-        notificationBell.style.display = 'none';
-        
-        if (userWelcome) {
-            userWelcome.textContent = 'Ready to validate your next startup idea?';
-        }
+  const authButton = document.getElementById("auth-button");
+  const logoutButton = document.getElementById("logout-button");
+  const notificationBell = document.getElementById("notification-bell");
+  const userWelcome = document.getElementById("user-welcome");
+
+  if (currentUser) {
+    authButton.style.display = "none";
+    logoutButton.style.display = "inline-flex";
+
+    if (currentUser.userType !== "investor") {
+      notificationBell.style.display = "block";
     }
+
+    if (userWelcome) {
+      const userName = currentUser.firstName || currentUser.email.split("@")[0];
+      userWelcome.textContent = `Welcome back, ${userName}!`;
+    }
+  } else {
+    authButton.style.display = "inline-flex";
+    logoutButton.style.display = "none";
+    notificationBell.style.display = "none";
+
+    if (userWelcome) {
+      userWelcome.textContent = "Ready to validate your next startup idea?";
+    }
+  }
 }
 
 function logout() {
-    if (confirm('Are you sure you want to logout?')) {
-        clearUserSession();
-        showPage('landing');
-        showAlert('Logged out successfully!', 'success');
-    }
+  if (confirm("Are you sure you want to logout?")) {
+    clearUserSession();
+    showPage("landing");
+    showAlert("Logged out successfully!", "success");
+  }
 }
 
 // Authentication Functions
 function selectUserType(type) {
-    currentUserType = type;
-    
-    // Update UI
-    const cards = document.querySelectorAll('.user-type-card');
-    cards.forEach(card => card.classList.remove('active'));
-    
-    event.target.closest('.user-type-card').classList.add('active');
-    
-    // Show/hide relevant form fields
-    const entrepreneurFields = document.getElementById('entrepreneur-fields');
-    const investorFields = document.getElementById('investor-fields');
-    
-    if (type === 'entrepreneur') {
-        entrepreneurFields.style.display = 'block';
-        investorFields.style.display = 'none';
-    } else {
-        entrepreneurFields.style.display = 'none';
-        investorFields.style.display = 'block';
-    }
+  currentUserType = type;
+
+  // Update UI
+  const cards = document.querySelectorAll(".user-type-card");
+  cards.forEach((card) => card.classList.remove("active"));
+
+  event.target.closest(".user-type-card").classList.add("active");
+
+  // Show/hide relevant form fields
+  const entrepreneurFields = document.getElementById("entrepreneur-fields");
+  const investorFields = document.getElementById("investor-fields");
+
+  if (type === "entrepreneur") {
+    entrepreneurFields.style.display = "block";
+    investorFields.style.display = "none";
+  } else {
+    entrepreneurFields.style.display = "none";
+    investorFields.style.display = "block";
+  }
 }
 
 function switchTab(tab) {
-    authMode = tab;
-    
-    // Update tab buttons
-    const tabButtons = document.querySelectorAll('.tab-button');
-    tabButtons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
-    
-    // Update form content
-    const signinForm = document.getElementById('signin-form');
-    const signupForm = document.getElementById('signup-form');
-    
-    if (tab === 'signin') {
-        signinForm.classList.add('active');
-        signupForm.classList.remove('active');
-    } else {
-        signinForm.classList.remove('active');
-        signupForm.classList.add('active');
-    }
+  authMode = tab;
+
+  // Update tab buttons
+  const tabButtons = document.querySelectorAll(".tab-button");
+  tabButtons.forEach((btn) => btn.classList.remove("active"));
+  event.target.classList.add("active");
+
+  // Update form content
+  const signinForm = document.getElementById("signin-form");
+  const signupForm = document.getElementById("signup-form");
+
+  if (tab === "signin") {
+    signinForm.classList.add("active");
+    signupForm.classList.remove("active");
+  } else {
+    signinForm.classList.remove("active");
+    signupForm.classList.add("active");
+  }
 }
 
 function sendOTP() {
-    const phoneInput = document.getElementById('phone');
-    const phone = phoneInput.value.trim();
-    
-    if (!phone) {
-        showAlert('Please enter your phone number', 'error');
-        return;
-    }
-    
-    // Basic phone validation
-    const phoneRegex = /^[+]?[\d\s\-\(\)]{10,}$/;
-    if (!phoneRegex.test(phone)) {
-        showAlert('Please enter a valid phone number', 'error');
-        return;
-    }
-    
-    // Generate OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    
-    // Store OTP temporarily
-    sessionStorage.setItem('generatedOTP', otp);
-    
-    // Show OTP section
-    const otpSection = document.getElementById('otp-section');
-    otpSection.style.display = 'block';
-    
-    // Update button
-    const sendButton = document.getElementById('send-otp');
-    sendButton.textContent = 'OTP Sent';
-    sendButton.disabled = true;
-    
-    // Show OTP in alert (in production, this would be sent via SMS)
-    showAlert(`📱 OTP sent to ${phone}\n🔐 Your OTP: ${otp}\n\n(In production, this would be sent via SMS)`, 'info');
+  const phoneInput = document.getElementById("phone");
+  const phone = phoneInput.value.trim();
+
+  if (!phone) {
+    showAlert("Please enter your phone number", "error");
+    return;
+  }
+
+  // Basic phone validation
+  const phoneRegex = /^[+]?[\d\s\-\(\)]{10,}$/;
+  if (!phoneRegex.test(phone)) {
+    showAlert("Please enter a valid phone number", "error");
+    return;
+  }
+
+  // Generate OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  // Store OTP temporarily
+  sessionStorage.setItem("generatedOTP", otp);
+
+  // Show OTP section
+  const otpSection = document.getElementById("otp-section");
+  otpSection.style.display = "block";
+
+  // Update button
+  const sendButton = document.getElementById("send-otp");
+  sendButton.textContent = "OTP Sent";
+  sendButton.disabled = true;
+
+  // Show OTP in alert (in production, this would be sent via SMS)
+  showAlert(
+    `📱 OTP sent to ${phone}\n🔐 Your OTP: ${otp}\n\n(In production, this would be sent via SMS)`,
+    "info",
+  );
 }
 
 function handleAuth(event) {
-    event.preventDefault();
-    showLoading();
-    
-    const form = event.target;
-    const formData = new FormData(form);
-    
-    setTimeout(() => {
-        try {
-            if (authMode === 'signup') {
-                handleSignup(formData);
-            } else {
-                handleSignin(formData);
-            }
-        } catch (error) {
-            console.error('Authentication error:', error);
-            showAlert('Authentication failed. Please try again.', 'error');
-        } finally {
-            hideLoading();
-        }
-    }, 1500); // Simulate API call delay
+  event.preventDefault();
+  showLoading();
+
+  const form = event.target;
+  const formData = new FormData(form);
+
+  setTimeout(() => {
+    try {
+      if (authMode === "signup") {
+        handleSignup(formData);
+      } else {
+        handleSignin(formData);
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+      showAlert("Authentication failed. Please try again.", "error");
+    } finally {
+      hideLoading();
+    }
+  }, 1500); // Simulate API call delay
 }
 
 function handleSignup(formData) {
-    const email = formData.get('email');
-    const password = formData.get('password');
-    const confirmPassword = formData.get('confirmPassword');
-    const firstName = formData.get('firstName');
-    const lastName = formData.get('lastName');
-    const phone = formData.get('phone');
-    const otp = formData.get('otp');
-    
-    // Validation
-    if (!email || !password || !firstName || !lastName) {
-        showAlert('Please fill in all required fields', 'error');
-        return;
+  const email = formData.get("email");
+  const password = formData.get("password");
+  const confirmPassword = formData.get("confirmPassword");
+  const firstName = formData.get("firstName");
+  const lastName = formData.get("lastName");
+  const phone = formData.get("phone");
+  const otp = formData.get("otp");
+
+  // Validation
+  if (!email || !password || !firstName || !lastName) {
+    showAlert("Please fill in all required fields", "error");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showAlert("Passwords do not match", "error");
+    return;
+  }
+
+  if (password.length < 6) {
+    showAlert("Password must be at least 6 characters long", "error");
+    return;
+  }
+
+  // OTP verification if phone provided
+  if (phone && otp) {
+    const generatedOTP = sessionStorage.getItem("generatedOTP");
+    if (otp !== generatedOTP) {
+      showAlert("Invalid OTP. Please check and try again.", "error");
+      return;
     }
-    
-    if (password !== confirmPassword) {
-        showAlert('Passwords do not match', 'error');
-        return;
+  }
+
+  // Additional validation for investor type
+  if (currentUserType === "investor") {
+    const investorType = formData.get("investorType");
+    if (!investorType) {
+      showAlert("Please select your investor type", "error");
+      return;
     }
-    
-    if (password.length < 6) {
-        showAlert('Password must be at least 6 characters long', 'error');
-        return;
-    }
-    
-    // OTP verification if phone provided
-    if (phone && otp) {
-        const generatedOTP = sessionStorage.getItem('generatedOTP');
-        if (otp !== generatedOTP) {
-            showAlert('Invalid OTP. Please check and try again.', 'error');
-            return;
+  }
+
+  // Create user object
+  const user = {
+    id: `user_${Date.now()}`,
+    email,
+    firstName,
+    lastName,
+    phone,
+    userType: currentUserType,
+    joinDate: new Date().toISOString(),
+    planType: "Free",
+    isAuthenticated: true,
+    authProvider: "email",
+    phoneVerified: phone && otp ? true : false,
+    // Add additional fields based on user type
+    ...(currentUserType === "entrepreneur"
+      ? {
+          experience: formData.get("experience"),
+          interests: formData.get("interests"),
         }
-    }
-    
-    // Additional validation for investor type
-    if (currentUserType === 'investor') {
-        const investorType = formData.get('investorType');
-        if (!investorType) {
-            showAlert('Please select your investor type', 'error');
-            return;
-        }
-    }
-    
-    // Create user object
-    const user = {
-        id: `user_${Date.now()}`,
-        email,
-        firstName,
-        lastName,
-        phone,
-        userType: currentUserType,
-        joinDate: new Date().toISOString(),
-        planType: 'Free',
-        isAuthenticated: true,
-        authProvider: 'email',
-        phoneVerified: phone && otp ? true : false,
-        // Add additional fields based on user type
-        ...(currentUserType === 'entrepreneur' ? {
-            experience: formData.get('experience'),
-            interests: formData.get('interests')
-        } : {
-            investorType: formData.get('investorType'),
-            fundName: formData.get('fundName')
-        })
-    };
-    
-    saveUserToStorage(user);
-    updateAuthUI();
-    
-    const verificationStatus = phone && otp ? ' Your phone number has been verified!' : '';
-    showAlert(`Account created successfully!${verificationStatus} Welcome to Drishti.`, 'success');
-    
-    // Redirect based on user type
-    if (currentUserType === 'investor') {
-        showPage('investor-dashboard');
-    } else {
-        showPage('dashboard');
-    }
+      : {
+          investorType: formData.get("investorType"),
+          fundName: formData.get("fundName"),
+        }),
+  };
+
+  saveUserToStorage(user);
+  updateAuthUI();
+
+  const verificationStatus =
+    phone && otp ? " Your phone number has been verified!" : "";
+  showAlert(
+    `Account created successfully!${verificationStatus} Welcome to Drishti.`,
+    "success",
+  );
+
+  // Redirect based on user type
+  if (currentUserType === "investor") {
+    showPage("investor-dashboard");
+  } else {
+    showPage("dashboard");
+  }
 }
 
 function handleSignin(formData) {
-    const email = formData.get('email');
-    const password = formData.get('password');
-    
-    if (!email || !password) {
-        showAlert('Please enter your email and password', 'error');
-        return;
-    }
-    
-    // Simulate authentication (in real app, this would be an API call)
-    const user = {
-        id: `user_${Date.now()}`,
-        email,
-        firstName: email.split('@')[0],
-        lastName: 'User',
-        userType: currentUserType,
-        joinDate: new Date().toISOString(),
-        planType: 'Free',
-        isAuthenticated: true,
-        authProvider: 'email',
-        phoneVerified: false
-    };
-    
-    saveUserToStorage(user);
-    updateAuthUI();
-    
-    showAlert('Welcome back!', 'success');
-    
-    // Redirect based on user type
-    if (currentUserType === 'investor') {
-        showPage('investor-dashboard');
-    } else {
-        showPage('dashboard');
-    }
+  const email = formData.get("email");
+  const password = formData.get("password");
+
+  if (!email || !password) {
+    showAlert("Please enter your email and password", "error");
+    return;
+  }
+
+  // Simulate authentication (in real app, this would be an API call)
+  const user = {
+    id: `user_${Date.now()}`,
+    email,
+    firstName: email.split("@")[0],
+    lastName: "User",
+    userType: currentUserType,
+    joinDate: new Date().toISOString(),
+    planType: "Free",
+    isAuthenticated: true,
+    authProvider: "email",
+    phoneVerified: false,
+  };
+
+  saveUserToStorage(user);
+  updateAuthUI();
+
+  showAlert("Welcome back!", "success");
+
+  // Redirect based on user type
+  if (currentUserType === "investor") {
+    showPage("investor-dashboard");
+  } else {
+    showPage("dashboard");
+  }
 }
 
 function handleSocialLogin(provider) {
-    showLoading();
-    
-    setTimeout(() => {
-        try {
-            let userData = {};
-            
-            if (provider === 'google') {
-                const email = prompt(`🔗 Connecting to Google...\n\nFor demo purposes, enter your email:`) || `user${Date.now()}@gmail.com`;
-                const firstName = prompt('Enter your first name:') || 'Google';
-                const lastName = prompt('Enter your last name:') || 'User';
-                
-                userData = {
-                    email,
-                    firstName,
-                    lastName,
-                    authProvider: 'google'
-                };
-            } else if (provider === 'linkedin') {
-                const email = prompt(`🔗 Connecting to LinkedIn...\n\nFor demo purposes, enter your professional email:`) || `user${Date.now()}@company.com`;
-                const firstName = prompt('Enter your first name:') || 'LinkedIn';
-                const lastName = prompt('Enter your last name:') || 'Professional';
-                const company = prompt('Enter your company/organization:') || 'Tech Company';
-                
-                userData = {
-                    email,
-                    firstName,
-                    lastName,
-                    company,
-                    authProvider: 'linkedin'
-                };
-            }
-            
-            if (!userData.email || !userData.firstName || !userData.lastName) {
-                return;
-            }
-            
-            const user = {
-                id: `${provider}_${Date.now()}`,
-                ...userData,
-                userType: currentUserType,
-                joinDate: new Date().toISOString(),
-                planType: 'Free',
-                isAuthenticated: true,
-                phoneVerified: false
-            };
-            
-            saveUserToStorage(user);
-            updateAuthUI();
-            
-            showAlert(`✅ Successfully signed in with ${provider}!\nWelcome ${user.firstName} ${user.lastName}!`, 'success');
-            
-            // Redirect based on user type
-            if (currentUserType === 'investor') {
-                showPage('investor-dashboard');
-            } else {
-                showPage('dashboard');
-            }
-        } catch (error) {
-            console.error('Social login error:', error);
-            showAlert('Social login failed. Please try again.', 'error');
-        } finally {
-            hideLoading();
-        }
-    }, 2000);
+  showLoading();
+
+  setTimeout(() => {
+    try {
+      let userData = {};
+
+      if (provider === "google") {
+        const email =
+          prompt(
+            `🔗 Connecting to Google...\n\nFor demo purposes, enter your email:`,
+          ) || `user${Date.now()}@gmail.com`;
+        const firstName = prompt("Enter your first name:") || "Google";
+        const lastName = prompt("Enter your last name:") || "User";
+
+        userData = {
+          email,
+          firstName,
+          lastName,
+          authProvider: "google",
+        };
+      } else if (provider === "linkedin") {
+        const email =
+          prompt(
+            `🔗 Connecting to LinkedIn...\n\nFor demo purposes, enter your professional email:`,
+          ) || `user${Date.now()}@company.com`;
+        const firstName = prompt("Enter your first name:") || "LinkedIn";
+        const lastName = prompt("Enter your last name:") || "Professional";
+        const company =
+          prompt("Enter your company/organization:") || "Tech Company";
+
+        userData = {
+          email,
+          firstName,
+          lastName,
+          company,
+          authProvider: "linkedin",
+        };
+      }
+
+      if (!userData.email || !userData.firstName || !userData.lastName) {
+        return;
+      }
+
+      const user = {
+        id: `${provider}_${Date.now()}`,
+        ...userData,
+        userType: currentUserType,
+        joinDate: new Date().toISOString(),
+        planType: "Free",
+        isAuthenticated: true,
+        phoneVerified: false,
+      };
+
+      saveUserToStorage(user);
+      updateAuthUI();
+
+      showAlert(
+        `✅ Successfully signed in with ${provider}!\nWelcome ${user.firstName} ${user.lastName}!`,
+        "success",
+      );
+
+      // Redirect based on user type
+      if (currentUserType === "investor") {
+        showPage("investor-dashboard");
+      } else {
+        showPage("dashboard");
+      }
+    } catch (error) {
+      console.error("Social login error:", error);
+      showAlert("Social login failed. Please try again.", "error");
+    } finally {
+      hideLoading();
+    }
+  }, 2000);
 }
 
 // Notification Functions
 function loadNotifications() {
-    if (!currentUser) return;
-    
-    try {
-        const allNotifications = JSON.parse(localStorage.getItem('userNotifications') || '[]');
-        notifications = allNotifications.filter(notif => 
-            notif.recipientId === currentUser.id || notif.recipientId === currentUser.email
-        );
-        
-        updateNotificationUI();
-    } catch (error) {
-        console.error('Error loading notifications:', error);
-    }
+  if (!currentUser) return;
+
+  try {
+    const allNotifications = JSON.parse(
+      localStorage.getItem("userNotifications") || "[]",
+    );
+    notifications = allNotifications.filter(
+      (notif) =>
+        notif.recipientId === currentUser.id ||
+        notif.recipientId === currentUser.email,
+    );
+
+    updateNotificationUI();
+  } catch (error) {
+    console.error("Error loading notifications:", error);
+  }
 }
 
 function updateNotificationUI() {
-    const notificationCount = document.getElementById('notification-count');
-    const notificationList = document.getElementById('notification-list');
-    
-    const unreadCount = notifications.filter(n => !n.read).length;
-    
-    if (unreadCount > 0) {
-        notificationCount.textContent = unreadCount > 99 ? '99+' : unreadCount;
-        notificationCount.style.display = 'block';
-    } else {
-        notificationCount.style.display = 'none';
-    }
-    
-    // Update notification list
-    if (notifications.length === 0) {
-        notificationList.innerHTML = '<div class="no-notifications"><p>No notifications yet</p></div>';
-    } else {
-        notificationList.innerHTML = notifications.slice(0, 10).map(notification => `
-            <div class="notification-item ${!notification.read ? 'unread' : ''}" data-id="${notification.id}">
+  const notificationCount = document.getElementById("notification-count");
+  const notificationList = document.getElementById("notification-list");
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
+  if (unreadCount > 0) {
+    notificationCount.textContent = unreadCount > 99 ? "99+" : unreadCount;
+    notificationCount.style.display = "block";
+  } else {
+    notificationCount.style.display = "none";
+  }
+
+  // Update notification list
+  if (notifications.length === 0) {
+    notificationList.innerHTML =
+      '<div class="no-notifications"><p>No notifications yet</p></div>';
+  } else {
+    notificationList.innerHTML = notifications
+      .slice(0, 10)
+      .map(
+        (notification) => `
+            <div class="notification-item ${!notification.read ? "unread" : ""}" data-id="${notification.id}">
                 <div class="notification-content">
                     <div class="notification-title">${notification.title}</div>
                     <div class="notification-message">${notification.message}</div>
-                    ${notification.type === 'investment_interest' && notification.data ? `
+                    ${
+                      notification.type === "investment_interest" &&
+                      notification.data
+                        ? `
                         <div class="investment-details">
                             <div><strong>Amount:</strong> $${notification.data.investmentAmount}</div>
                             <div><strong>Investor:</strong> ${notification.data.investorName}</div>
-                            ${notification.data.investorEmail ? `<div><strong>Email:</strong> <a href="mailto:${notification.data.investorEmail}">${notification.data.investorEmail}</a></div>` : ''}
+                            ${notification.data.investorEmail ? `<div><strong>Email:</strong> <a href="mailto:${notification.data.investorEmail}">${notification.data.investorEmail}</a></div>` : ""}
                         </div>
-                    ` : ''}
+                    `
+                        : ""
+                    }
                     <div class="notification-time">${formatTime(notification.createdAt)}</div>
                 </div>
                 <div class="notification-actions">
-                    ${!notification.read ? `<button onclick="markAsRead('${notification.id}')" class="btn-small">Mark read</button>` : ''}
+                    ${!notification.read ? `<button onclick="markAsRead('${notification.id}')" class="btn-small">Mark read</button>` : ""}
                     <button onclick="deleteNotification('${notification.id}')" class="btn-small delete">×</button>
                 </div>
             </div>
-        `).join('');
-    }
+        `,
+      )
+      .join("");
+  }
 }
 
 function toggleNotifications() {
-    const dropdown = document.getElementById('notification-dropdown');
-    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+  const dropdown = document.getElementById("notification-dropdown");
+  dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
 }
 
 function markAsRead(notificationId) {
-    try {
-        const allNotifications = JSON.parse(localStorage.getItem('userNotifications') || '[]');
-        const updatedNotifications = allNotifications.map(notif =>
-            notif.id === notificationId ? { ...notif, read: true } : notif
-        );
-        
-        localStorage.setItem('userNotifications', JSON.stringify(updatedNotifications));
-        loadNotifications();
-    } catch (error) {
-        console.error('Error marking notification as read:', error);
-    }
+  try {
+    const allNotifications = JSON.parse(
+      localStorage.getItem("userNotifications") || "[]",
+    );
+    const updatedNotifications = allNotifications.map((notif) =>
+      notif.id === notificationId ? { ...notif, read: true } : notif,
+    );
+
+    localStorage.setItem(
+      "userNotifications",
+      JSON.stringify(updatedNotifications),
+    );
+    loadNotifications();
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
+  }
 }
 
 function markAllAsRead() {
-    try {
-        const allNotifications = JSON.parse(localStorage.getItem('userNotifications') || '[]');
-        const updatedNotifications = allNotifications.map(notif =>
-            (notif.recipientId === currentUser?.id || notif.recipientId === currentUser?.email)
-                ? { ...notif, read: true } : notif
-        );
-        
-        localStorage.setItem('userNotifications', JSON.stringify(updatedNotifications));
-        loadNotifications();
-    } catch (error) {
-        console.error('Error marking all notifications as read:', error);
-    }
+  try {
+    const allNotifications = JSON.parse(
+      localStorage.getItem("userNotifications") || "[]",
+    );
+    const updatedNotifications = allNotifications.map((notif) =>
+      notif.recipientId === currentUser?.id ||
+      notif.recipientId === currentUser?.email
+        ? { ...notif, read: true }
+        : notif,
+    );
+
+    localStorage.setItem(
+      "userNotifications",
+      JSON.stringify(updatedNotifications),
+    );
+    loadNotifications();
+  } catch (error) {
+    console.error("Error marking all notifications as read:", error);
+  }
 }
 
 function deleteNotification(notificationId) {
-    try {
-        const allNotifications = JSON.parse(localStorage.getItem('userNotifications') || '[]');
-        const updatedNotifications = allNotifications.filter(notif => notif.id !== notificationId);
-        
-        localStorage.setItem('userNotifications', JSON.stringify(updatedNotifications));
-        loadNotifications();
-    } catch (error) {
-        console.error('Error deleting notification:', error);
-    }
+  try {
+    const allNotifications = JSON.parse(
+      localStorage.getItem("userNotifications") || "[]",
+    );
+    const updatedNotifications = allNotifications.filter(
+      (notif) => notif.id !== notificationId,
+    );
+
+    localStorage.setItem(
+      "userNotifications",
+      JSON.stringify(updatedNotifications),
+    );
+    loadNotifications();
+  } catch (error) {
+    console.error("Error deleting notification:", error);
+  }
 }
 
 // Dashboard Functions
 function loadDashboard() {
-    if (!currentUser) {
-        showPage('auth');
-        return;
-    }
-    
-    // Load user statistics
-    loadDashboardStats();
-    loadValidationHistory();
+  if (!currentUser) {
+    showPage("auth");
+    return;
+  }
+
+  // Load user statistics
+  loadDashboardStats();
+  loadValidationHistory();
 }
 
 function loadDashboardStats() {
-    try {
-        const history = JSON.parse(localStorage.getItem(`validationHistory_${currentUser.id}`) || '[]');
-        
-        const totalValidations = history.length;
-        const avgScore = totalValidations > 0 
-            ? Math.round(history.reduce((sum, val) => sum + val.overallScore, 0) / totalValidations)
-            : 0;
-        const successRate = totalValidations > 0 
-            ? Math.round((history.filter(val => val.overallScore >= 70).length / totalValidations) * 100)
-            : 0;
-        
-        document.getElementById('total-validations').textContent = totalValidations;
-        document.getElementById('avg-score').textContent = avgScore;
-        document.getElementById('success-rate').textContent = `${successRate}%`;
-    } catch (error) {
-        console.error('Error loading dashboard stats:', error);
-    }
+  try {
+    const history = JSON.parse(
+      localStorage.getItem(`validationHistory_${currentUser.id}`) || "[]",
+    );
+
+    const totalValidations = history.length;
+    const avgScore =
+      totalValidations > 0
+        ? Math.round(
+            history.reduce((sum, val) => sum + val.overallScore, 0) /
+              totalValidations,
+          )
+        : 0;
+    const successRate =
+      totalValidations > 0
+        ? Math.round(
+            (history.filter((val) => val.overallScore >= 70).length /
+              totalValidations) *
+              100,
+          )
+        : 0;
+
+    document.getElementById("total-validations").textContent = totalValidations;
+    document.getElementById("avg-score").textContent = avgScore;
+    document.getElementById("success-rate").textContent = `${successRate}%`;
+  } catch (error) {
+    console.error("Error loading dashboard stats:", error);
+  }
 }
 
 function loadValidationHistory() {
-    try {
-        const history = JSON.parse(localStorage.getItem(`validationHistory_${currentUser.id}`) || '[]');
-        const historyContainer = document.getElementById('validation-history');
-        
-        if (history.length === 0) {
-            historyContainer.innerHTML = '<div class="no-data"><p>No validations yet. <a href="#" onclick="showPage(\'validate\')">Start your first validation</a></p></div>';
-            return;
-        }
-        
-        historyContainer.innerHTML = history.slice(0, 5).map(item => `
+  try {
+    const history = JSON.parse(
+      localStorage.getItem(`validationHistory_${currentUser.id}`) || "[]",
+    );
+    const historyContainer = document.getElementById("validation-history");
+
+    if (history.length === 0) {
+      historyContainer.innerHTML =
+        '<div class="no-data"><p>No validations yet. <a href="#" onclick="showPage(\'validate\')">Start your first validation</a></p></div>';
+      return;
+    }
+
+    historyContainer.innerHTML = history
+      .slice(0, 5)
+      .map(
+        (item) => `
             <div class="validation-item">
                 <div class="validation-info">
                     <h4>${item.ideaName}</h4>
@@ -582,32 +652,39 @@ function loadValidationHistory() {
                     <button onclick="viewValidation('${item.id}')" class="btn btn-outline btn-small">View</button>
                 </div>
             </div>
-        `).join('');
-    } catch (error) {
-        console.error('Error loading validation history:', error);
-    }
+        `,
+      )
+      .join("");
+  } catch (error) {
+    console.error("Error loading validation history:", error);
+  }
 }
 
 function loadInvestorDashboard() {
-    if (!currentUser || currentUser.userType !== 'investor') {
-        showPage('auth');
-        return;
-    }
-    
-    loadPublicStartups();
+  if (!currentUser || currentUser.userType !== "investor") {
+    showPage("auth");
+    return;
+  }
+
+  loadPublicStartups();
 }
 
 function loadPublicStartups() {
-    try {
-        const publicStartups = JSON.parse(localStorage.getItem('publicStartupIdeas') || '[]');
-        const startupsContainer = document.getElementById('public-startups');
-        
-        if (publicStartups.length === 0) {
-            startupsContainer.innerHTML = '<div class="no-data"><p>No public startup opportunities available at this time.</p></div>';
-            return;
-        }
-        
-        startupsContainer.innerHTML = publicStartups.map(startup => `
+  try {
+    const publicStartups = JSON.parse(
+      localStorage.getItem("publicStartupIdeas") || "[]",
+    );
+    const startupsContainer = document.getElementById("public-startups");
+
+    if (publicStartups.length === 0) {
+      startupsContainer.innerHTML =
+        '<div class="no-data"><p>No public startup opportunities available at this time.</p></div>';
+      return;
+    }
+
+    startupsContainer.innerHTML = publicStartups
+      .map(
+        (startup) => `
             <div class="startup-card">
                 <div class="startup-header">
                     <h3>${startup.ideaName}</h3>
@@ -623,127 +700,130 @@ function loadPublicStartups() {
                     <button onclick="showInvestmentAction('${startup.id}')" class="btn btn-primary">Invest</button>
                 </div>
             </div>
-        `).join('');
-    } catch (error) {
-        console.error('Error loading public startups:', error);
-    }
+        `,
+      )
+      .join("");
+  } catch (error) {
+    console.error("Error loading public startups:", error);
+  }
 }
 
 // Contact Details Modal Functions
 function showContactModal() {
-    const modal = document.getElementById('contact-details-modal');
-    modal.style.display = 'flex';
-    
-    // Pre-fill form if user data exists
-    if (currentUser) {
-        document.getElementById('contact-fullName').value = `${currentUser.firstName} ${currentUser.lastName}`;
-        document.getElementById('contact-email').value = currentUser.email;
-        if (currentUser.phone) {
-            document.getElementById('contact-phone').value = currentUser.phone;
-        }
+  const modal = document.getElementById("contact-details-modal");
+  modal.style.display = "flex";
+
+  // Pre-fill form if user data exists
+  if (currentUser) {
+    document.getElementById("contact-fullName").value =
+      `${currentUser.firstName} ${currentUser.lastName}`;
+    document.getElementById("contact-email").value = currentUser.email;
+    if (currentUser.phone) {
+      document.getElementById("contact-phone").value = currentUser.phone;
     }
+  }
 }
 
 function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    modal.style.display = 'none';
+  const modal = document.getElementById(modalId);
+  modal.style.display = "none";
 }
 
 function saveContactDetails(event) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const formData = new FormData(form);
-    
-    const contactDetails = {
-        fullName: formData.get('fullName'),
-        title: formData.get('title'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        company: formData.get('company'),
-        website: formData.get('website'),
-        shareDetails: formData.get('shareDetails') === 'on',
-        marketingConsent: formData.get('marketingConsent') === 'on'
-    };
-    
-    // Save to user profile
-    if (currentUser) {
-        currentUser.contactDetails = contactDetails;
-        saveUserToStorage(currentUser);
-    }
-    
-    closeModal('contact-details-modal');
-    showAlert('Contact details saved successfully!', 'success');
-    
-    // Handle making startup public if this was triggered by visibility change
-    makeStartupPublic();
+  event.preventDefault();
+
+  const form = event.target;
+  const formData = new FormData(form);
+
+  const contactDetails = {
+    fullName: formData.get("fullName"),
+    title: formData.get("title"),
+    email: formData.get("email"),
+    phone: formData.get("phone"),
+    company: formData.get("company"),
+    website: formData.get("website"),
+    shareDetails: formData.get("shareDetails") === "on",
+    marketingConsent: formData.get("marketingConsent") === "on",
+  };
+
+  // Save to user profile
+  if (currentUser) {
+    currentUser.contactDetails = contactDetails;
+    saveUserToStorage(currentUser);
+  }
+
+  closeModal("contact-details-modal");
+  showAlert("Contact details saved successfully!", "success");
+
+  // Handle making startup public if this was triggered by visibility change
+  makeStartupPublic();
 }
 
 function makeStartupPublic() {
-    // This would be called when user wants to make their startup visible to investors
-    // Implementation would depend on the validation results being available
-    showAlert('Your startup is now visible to investors!', 'success');
+  // This would be called when user wants to make their startup visible to investors
+  // Implementation would depend on the validation results being available
+  showAlert("Your startup is now visible to investors!", "success");
 }
 
 // Utility Functions
 function showLoading() {
-    const loadingScreen = document.getElementById('loading-screen');
-    loadingScreen.style.display = 'flex';
+  const loadingScreen = document.getElementById("loading-screen");
+  loadingScreen.style.display = "flex";
 }
 
 function hideLoading() {
-    const loadingScreen = document.getElementById('loading-screen');
-    loadingScreen.style.display = 'none';
+  const loadingScreen = document.getElementById("loading-screen");
+  loadingScreen.style.display = "none";
 }
 
-function showAlert(message, type = 'info') {
-    // Create alert element
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type}`;
-    alert.textContent = message;
-    
-    // Add to page
-    const main = document.getElementById('main-content');
-    main.insertBefore(alert, main.firstChild);
-    
-    // Remove after 5 seconds
-    setTimeout(() => {
-        if (alert.parentNode) {
-            alert.parentNode.removeChild(alert);
-        }
-    }, 5000);
+function showAlert(message, type = "info") {
+  // Create alert element
+  const alert = document.createElement("div");
+  alert.className = `alert alert-${type}`;
+  alert.textContent = message;
+
+  // Add to page
+  const main = document.getElementById("main-content");
+  main.insertBefore(alert, main.firstChild);
+
+  // Remove after 5 seconds
+  setTimeout(() => {
+    if (alert.parentNode) {
+      alert.parentNode.removeChild(alert);
+    }
+  }, 5000);
 }
 
 function formatTime(dateString) {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
+  const now = new Date();
+  const date = new Date(dateString);
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return date.toLocaleDateString();
 }
 
 function formatDate(dateString) {
-    return new Date(dateString).toLocaleDateString();
+  return new Date(dateString).toLocaleDateString();
 }
 
 // Page Loading Functions
 function loadValidationPage() {
-    // This will be implemented in validate.js
-    if (!document.getElementById('validation-form')) {
-        loadValidationContent();
-    }
+  // This will be implemented in validate.js
+  if (!document.getElementById("validation-form")) {
+    loadValidationContent();
+  }
 }
 
 function loadValidationContent() {
-    const validatePage = document.getElementById('page-validate');
-    validatePage.innerHTML = `
+  const validatePage = document.getElementById("page-validate");
+  validatePage.innerHTML = `
         <div class="container">
             <div class="validation-header">
                 <h1>Validate Your Startup Idea</h1>
@@ -833,24 +913,27 @@ function loadValidationContent() {
 }
 
 function loadResultsPage() {
-    const resultsStr = localStorage.getItem('validationResults');
-    const dataStr = localStorage.getItem('validationData');
-    
-    if (!resultsStr || !dataStr) {
-        showAlert('No validation results found. Please run a validation first.', 'warning');
-        showPage('validate');
-        return;
-    }
-    
-    validationResults = JSON.parse(resultsStr);
-    validationData = JSON.parse(dataStr);
-    
-    loadResultsContent();
+  const resultsStr = localStorage.getItem("validationResults");
+  const dataStr = localStorage.getItem("validationData");
+
+  if (!resultsStr || !dataStr) {
+    showAlert(
+      "No validation results found. Please run a validation first.",
+      "warning",
+    );
+    showPage("validate");
+    return;
+  }
+
+  validationResults = JSON.parse(resultsStr);
+  validationData = JSON.parse(dataStr);
+
+  loadResultsContent();
 }
 
 function loadResultsContent() {
-    const resultsPage = document.getElementById('page-results');
-    resultsPage.innerHTML = `
+  const resultsPage = document.getElementById("page-results");
+  resultsPage.innerHTML = `
         <div class="container">
             <div class="results-header">
                 <h1>Validation Results</h1>
@@ -879,7 +962,9 @@ function loadResultsContent() {
             <div class="results-details">
                 <h2>Detailed Breakdown</h2>
                 <div class="score-breakdown">
-                    ${validationResults.scores.map(score => `
+                    ${validationResults.scores
+                      .map(
+                        (score) => `
                         <div class="score-item">
                             <div class="score-category">${score.category}</div>
                             <div class="score-progress">
@@ -889,19 +974,25 @@ function loadResultsContent() {
                                 <div class="score-number">${score.score}/100</div>
                             </div>
                         </div>
-                    `).join('')}
+                    `,
+                      )
+                      .join("")}
                 </div>
             </div>
             
             <div class="results-recommendations">
                 <h2>Recommendations</h2>
                 <div class="recommendations-list">
-                    ${validationResults.recommendations.map(rec => `
+                    ${validationResults.recommendations
+                      .map(
+                        (rec) => `
                         <div class="recommendation-item">
                             <h4>${rec.category}</h4>
                             <p>${rec.recommendation}</p>
                         </div>
-                    `).join('')}
+                    `,
+                      )
+                      .join("")}
                 </div>
             </div>
         </div>
@@ -909,8 +1000,8 @@ function loadResultsContent() {
 }
 
 function loadFounderReadinessPage() {
-    const foundernessPage = document.getElementById('page-founder-readiness');
-    foundernessPage.innerHTML = `
+  const foundernessPage = document.getElementById("page-founder-readiness");
+  foundernessPage.innerHTML = `
         <div class="container">
             <div class="founder-readiness-header">
                 <h1>Founder Readiness Assessment</h1>
@@ -924,46 +1015,46 @@ function loadFounderReadinessPage() {
             </div>
         </div>
     `;
-    
-    // Simulate assessment generation
-    setTimeout(() => {
-        generateFounderReadinessContent();
-    }, 2000);
+
+  // Simulate assessment generation
+  setTimeout(() => {
+    generateFounderReadinessContent();
+  }, 2000);
 }
 
 function generateFounderReadinessContent() {
-    const assessment = {
-        overall_score: 78,
-        categories: {
-            entrepreneurial_mindset: 85,
-            technical_skills: 72,
-            business_acumen: 80,
-            leadership_ability: 75,
-            financial_management: 70,
-            network_connections: 68
-        },
-        strengths: [
-            "Strong entrepreneurial vision and passion",
-            "Good technical foundation",
-            "Effective communication skills",
-            "Market awareness and customer focus"
-        ],
-        improvement_areas: [
-            "Financial planning and management",
-            "Professional networking",
-            "Team building and delegation",
-            "Strategic partnerships"
-        ],
-        recommendations: [
-            "Enroll in financial management courses",
-            "Join entrepreneur networking groups",
-            "Seek mentorship from experienced founders",
-            "Develop strategic partnership skills"
-        ]
-    };
-    
-    const foundernessPage = document.getElementById('page-founder-readiness');
-    foundernessPage.innerHTML = `
+  const assessment = {
+    overall_score: 78,
+    categories: {
+      entrepreneurial_mindset: 85,
+      technical_skills: 72,
+      business_acumen: 80,
+      leadership_ability: 75,
+      financial_management: 70,
+      network_connections: 68,
+    },
+    strengths: [
+      "Strong entrepreneurial vision and passion",
+      "Good technical foundation",
+      "Effective communication skills",
+      "Market awareness and customer focus",
+    ],
+    improvement_areas: [
+      "Financial planning and management",
+      "Professional networking",
+      "Team building and delegation",
+      "Strategic partnerships",
+    ],
+    recommendations: [
+      "Enroll in financial management courses",
+      "Join entrepreneur networking groups",
+      "Seek mentorship from experienced founders",
+      "Develop strategic partnership skills",
+    ],
+  };
+
+  const foundernessPage = document.getElementById("page-founder-readiness");
+  foundernessPage.innerHTML = `
         <div class="container">
             <div class="founder-readiness-header">
                 <h1>Founder Readiness Assessment</h1>
@@ -980,14 +1071,15 @@ function generateFounderReadinessContent() {
             <div class="category-breakdown">
                 <h2>Category Assessment</h2>
                 <div class="categories-grid">
-                    ${Object.entries(assessment.categories).map(([key, score]) => {
+                    ${Object.entries(assessment.categories)
+                      .map(([key, score]) => {
                         const categoryNames = {
-                            entrepreneurial_mindset: "Entrepreneurial Mindset",
-                            technical_skills: "Technical Skills", 
-                            business_acumen: "Business Acumen",
-                            leadership_ability: "Leadership Ability",
-                            financial_management: "Financial Management",
-                            network_connections: "Network & Connections"
+                          entrepreneurial_mindset: "Entrepreneurial Mindset",
+                          technical_skills: "Technical Skills",
+                          business_acumen: "Business Acumen",
+                          leadership_ability: "Leadership Ability",
+                          financial_management: "Financial Management",
+                          network_connections: "Network & Connections",
                         };
                         return `
                             <div class="category-card">
@@ -1000,7 +1092,8 @@ function generateFounderReadinessContent() {
                                 </div>
                             </div>
                         `;
-                    }).join('')}
+                      })
+                      .join("")}
                 </div>
             </div>
             
@@ -1008,30 +1101,42 @@ function generateFounderReadinessContent() {
                 <div class="assessment-section">
                     <h3>Key Strengths</h3>
                     <div class="strengths-list">
-                        ${assessment.strengths.map(strength => `
+                        ${assessment.strengths
+                          .map(
+                            (strength) => `
                             <div class="strength-item">✅ ${strength}</div>
-                        `).join('')}
+                        `,
+                          )
+                          .join("")}
                     </div>
                 </div>
                 
                 <div class="assessment-section">
                     <h3>Areas for Improvement</h3>
                     <div class="improvements-list">
-                        ${assessment.improvement_areas.map(area => `
+                        ${assessment.improvement_areas
+                          .map(
+                            (area) => `
                             <div class="improvement-item">📈 ${area}</div>
-                        `).join('')}
+                        `,
+                          )
+                          .join("")}
                     </div>
                 </div>
                 
                 <div class="assessment-section">
                     <h3>Strategic Recommendations</h3>
                     <div class="recommendations-list">
-                        ${assessment.recommendations.map((rec, index) => `
+                        ${assessment.recommendations
+                          .map(
+                            (rec, index) => `
                             <div class="recommendation-item">
                                 <span class="rec-number">${index + 1}</span>
                                 <span class="rec-text">${rec}</span>
                             </div>
-                        `).join('')}
+                        `,
+                          )
+                          .join("")}
                     </div>
                 </div>
             </div>
@@ -1045,8 +1150,8 @@ function generateFounderReadinessContent() {
 }
 
 function loadFeaturesPage() {
-    const featuresPage = document.getElementById('page-features');
-    featuresPage.innerHTML = `
+  const featuresPage = document.getElementById("page-features");
+  featuresPage.innerHTML = `
         <div class="container">
             <div class="page-header">
                 <h1>Platform Features</h1>
@@ -1071,8 +1176,8 @@ function loadFeaturesPage() {
 }
 
 function loadPricingPage() {
-    const pricingPage = document.getElementById('page-pricing');
-    pricingPage.innerHTML = `
+  const pricingPage = document.getElementById("page-pricing");
+  pricingPage.innerHTML = `
         <div class="container">
             <div class="page-header">
                 <h1>Pricing Plans</h1>
@@ -1106,8 +1211,8 @@ function loadPricingPage() {
 }
 
 function loadAboutPage() {
-    const aboutPage = document.getElementById('page-about');
-    aboutPage.innerHTML = `
+  const aboutPage = document.getElementById("page-about");
+  aboutPage.innerHTML = `
         <div class="container">
             <div class="page-header">
                 <h1>About Drishti</h1>
@@ -1128,124 +1233,166 @@ function loadAboutPage() {
 }
 
 // Close dropdowns when clicking outside
-document.addEventListener('click', function(event) {
-    const notificationDropdown = document.getElementById('notification-dropdown');
-    const notificationBell = document.getElementById('notification-bell');
-    
-    if (!notificationBell.contains(event.target)) {
-        notificationDropdown.style.display = 'none';
-    }
+document.addEventListener("click", function (event) {
+  const notificationDropdown = document.getElementById("notification-dropdown");
+  const notificationBell = document.getElementById("notification-bell");
+
+  if (!notificationBell.contains(event.target)) {
+    notificationDropdown.style.display = "none";
+  }
 });
 
 // Handle validation form submission
 function handleValidation(event) {
-    event.preventDefault();
-    showLoading();
-    
-    const form = event.target;
-    const formData = new FormData(form);
-    
-    const data = {
-        startupTitle: formData.get('startupTitle'),
-        problemStatement: formData.get('problemStatement'),
-        solutionDescription: formData.get('solutionDescription'),
-        targetMarket: formData.get('targetMarket'),
-        marketSize: formData.get('marketSize'),
-        customerSegments: formData.get('customerSegments'),
-        revenueModel: formData.get('revenueModel'),
-        currentStage: formData.get('currentStage')
-    };
-    
-    // Simulate API call
-    setTimeout(() => {
-        const results = generateMockValidationResults(data);
-        
-        localStorage.setItem('validationData', JSON.stringify(data));
-        localStorage.setItem('validationResults', JSON.stringify(results));
-        
-        // Save to user history
-        saveValidationToHistory(results, data);
-        
-        hideLoading();
-        showAlert('Validation completed successfully!', 'success');
-        showPage('results');
-    }, 3000);
+  event.preventDefault();
+  showLoading();
+
+  const form = event.target;
+  const formData = new FormData(form);
+
+  const data = {
+    startupTitle: formData.get("startupTitle"),
+    problemStatement: formData.get("problemStatement"),
+    solutionDescription: formData.get("solutionDescription"),
+    targetMarket: formData.get("targetMarket"),
+    marketSize: formData.get("marketSize"),
+    customerSegments: formData.get("customerSegments"),
+    revenueModel: formData.get("revenueModel"),
+    currentStage: formData.get("currentStage"),
+  };
+
+  // Simulate API call
+  setTimeout(() => {
+    const results = generateMockValidationResults(data);
+
+    localStorage.setItem("validationData", JSON.stringify(data));
+    localStorage.setItem("validationResults", JSON.stringify(results));
+
+    // Save to user history
+    saveValidationToHistory(results, data);
+
+    hideLoading();
+    showAlert("Validation completed successfully!", "success");
+    showPage("results");
+  }, 3000);
 }
 
 function generateMockValidationResults(data) {
-    // Generate realistic validation results based on input
-    const baseScore = 60 + Math.random() * 30; // Random score between 60-90
-    
-    return {
-        overall_score: Math.round(baseScore),
-        viability_level: baseScore > 80 ? 'High' : baseScore > 65 ? 'Medium' : 'Low',
-        scores: [
-            { category: 'Problem-Solution Fit', score: Math.round(baseScore + (Math.random() - 0.5) * 20) },
-            { category: 'Market Opportunity', score: Math.round(baseScore + (Math.random() - 0.5) * 20) },
-            { category: 'Business Model', score: Math.round(baseScore + (Math.random() - 0.5) * 20) },
-            { category: 'Competitive Advantage', score: Math.round(baseScore + (Math.random() - 0.5) * 20) },
-            { category: 'Team Strength', score: Math.round(baseScore + (Math.random() - 0.5) * 20) },
-            { category: 'Execution Readiness', score: Math.round(baseScore + (Math.random() - 0.5) * 20) }
-        ],
-        recommendations: [
-            { category: 'Market Research', recommendation: 'Conduct deeper customer interviews to validate problem-solution fit' },
-            { category: 'Business Model', recommendation: 'Test different pricing models with early customers' },
-            { category: 'Competition', recommendation: 'Analyze competitor strategies and identify differentiation opportunities' },
-            { category: 'Team', recommendation: 'Consider adding expertise in marketing and business development' }
-        ]
-    };
+  // Generate realistic validation results based on input
+  const baseScore = 60 + Math.random() * 30; // Random score between 60-90
+
+  return {
+    overall_score: Math.round(baseScore),
+    viability_level:
+      baseScore > 80 ? "High" : baseScore > 65 ? "Medium" : "Low",
+    scores: [
+      {
+        category: "Problem-Solution Fit",
+        score: Math.round(baseScore + (Math.random() - 0.5) * 20),
+      },
+      {
+        category: "Market Opportunity",
+        score: Math.round(baseScore + (Math.random() - 0.5) * 20),
+      },
+      {
+        category: "Business Model",
+        score: Math.round(baseScore + (Math.random() - 0.5) * 20),
+      },
+      {
+        category: "Competitive Advantage",
+        score: Math.round(baseScore + (Math.random() - 0.5) * 20),
+      },
+      {
+        category: "Team Strength",
+        score: Math.round(baseScore + (Math.random() - 0.5) * 20),
+      },
+      {
+        category: "Execution Readiness",
+        score: Math.round(baseScore + (Math.random() - 0.5) * 20),
+      },
+    ],
+    recommendations: [
+      {
+        category: "Market Research",
+        recommendation:
+          "Conduct deeper customer interviews to validate problem-solution fit",
+      },
+      {
+        category: "Business Model",
+        recommendation: "Test different pricing models with early customers",
+      },
+      {
+        category: "Competition",
+        recommendation:
+          "Analyze competitor strategies and identify differentiation opportunities",
+      },
+      {
+        category: "Team",
+        recommendation:
+          "Consider adding expertise in marketing and business development",
+      },
+    ],
+  };
 }
 
 function saveValidationToHistory(results, data) {
-    if (!currentUser) return;
-    
-    try {
-        const historyItem = {
-            id: `val_${Date.now()}`,
-            ideaName: data.startupTitle || data.problemStatement?.substring(0, 50) + '...' || 'Unnamed Idea',
-            validatedAt: new Date().toISOString(),
-            overallScore: results.overall_score,
-            viabilityLevel: results.viability_level,
-            status: 'completed',
-            validationData: data,
-            validationResults: results
-        };
-        
-        const existingHistory = JSON.parse(localStorage.getItem(`validationHistory_${currentUser.id}`) || '[]');
-        existingHistory.unshift(historyItem); // Add to beginning
-        
-        // Keep only last 10 validations
-        if (existingHistory.length > 10) {
-            existingHistory.splice(10);
-        }
-        
-        localStorage.setItem(`validationHistory_${currentUser.id}`, JSON.stringify(existingHistory));
-    } catch (error) {
-        console.error('Error saving validation to history:', error);
+  if (!currentUser) return;
+
+  try {
+    const historyItem = {
+      id: `val_${Date.now()}`,
+      ideaName:
+        data.startupTitle ||
+        data.problemStatement?.substring(0, 50) + "..." ||
+        "Unnamed Idea",
+      validatedAt: new Date().toISOString(),
+      overallScore: results.overall_score,
+      viabilityLevel: results.viability_level,
+      status: "completed",
+      validationData: data,
+      validationResults: results,
+    };
+
+    const existingHistory = JSON.parse(
+      localStorage.getItem(`validationHistory_${currentUser.id}`) || "[]",
+    );
+    existingHistory.unshift(historyItem); // Add to beginning
+
+    // Keep only last 10 validations
+    if (existingHistory.length > 10) {
+      existingHistory.splice(10);
     }
+
+    localStorage.setItem(
+      `validationHistory_${currentUser.id}`,
+      JSON.stringify(existingHistory),
+    );
+  } catch (error) {
+    console.error("Error saving validation to history:", error);
+  }
 }
 
 // Export functions
 function generatePitchDeck() {
-    showAlert('Generating pitch deck...', 'info');
-    // Implementation would generate and download pitch deck
-    setTimeout(() => {
-        showAlert('Pitch deck generated successfully!', 'success');
-    }, 2000);
+  showAlert("Generating pitch deck...", "info");
+  // Implementation would generate and download pitch deck
+  setTimeout(() => {
+    showAlert("Pitch deck generated successfully!", "success");
+  }, 2000);
 }
 
 function generateSWOTAnalysis() {
-    showAlert('Generating SWOT analysis...', 'info');
-    // Implementation would generate and display SWOT analysis
-    setTimeout(() => {
-        showAlert('SWOT analysis generated successfully!', 'success');
-    }, 2000);
+  showAlert("Generating SWOT analysis...", "info");
+  // Implementation would generate and display SWOT analysis
+  setTimeout(() => {
+    showAlert("SWOT analysis generated successfully!", "success");
+  }, 2000);
 }
 
 function exportFounderReport() {
-    showAlert('Exporting founder readiness report...', 'info');
-    // Implementation would generate and download report
-    setTimeout(() => {
-        showAlert('Report exported successfully!', 'success');
-    }, 1500);
+  showAlert("Exporting founder readiness report...", "info");
+  // Implementation would generate and download report
+  setTimeout(() => {
+    showAlert("Report exported successfully!", "success");
+  }, 1500);
 }
