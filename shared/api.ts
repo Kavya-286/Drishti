@@ -154,9 +154,11 @@ class StartupValidatorAPI {
           // If we can't parse the error response, use the default message
         }
 
-        // Special handling for pitch generation - always use fallback on errors
+        // Special handling for known endpoints that have fallbacks
         if (endpoint === '/generate-pitch') {
           console.warn(`Pitch generation API error (${response.status}), will use fallback`);
+        } else if (endpoint === '/validate') {
+          console.warn(`Validation API error (${response.status}), fallback system will handle this`);
         }
 
         throw new Error(errorMessage);
