@@ -156,6 +156,7 @@ const Header = ({ showBreadcrumbs = true }: HeaderProps) => {
                         New Validation
                       </Link>
                     </Button>
+                    <NotificationBell />
                   </>
                 )}
 
