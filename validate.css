@@ -1,0 +1,484 @@
+/* Validation Page Styles */
+
+.validation-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+}
+
+.validation-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.validation-header p {
+    font-size: 1.125rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.validation-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+/* Form Sections */
+.form-section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.form-section h3 {
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-section h3::before {
+    content: '';
+    width: 4px;
+    height: 1.25rem;
+    background: var(--primary-color);
+    border-radius: 2px;
+}
+
+/* Form Groups */
+#validation-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#validation-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+#validation-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+#validation-form input,
+#validation-form select,
+#validation-form textarea {
+    width: 100%;
+    padding: 0.875rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    transition: var(--transition);
+    background: white;
+    font-family: inherit;
+}
+
+#validation-form input:focus,
+#validation-form select:focus,
+#validation-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+#validation-form textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
+}
+
+#validation-form select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    appearance: none;
+}
+
+/* Required field indicators */
+#validation-form label[for*="title"]::after,
+#validation-form label[for*="problem"]::after,
+#validation-form label[for*="solution"]::after,
+#validation-form label[for*="target-market"]::after {
+    content: ' *';
+    color: var(--error-color);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.form-actions .btn {
+    min-width: 120px;
+}
+
+/* Validation Progress */
+.validation-progress {
+    background: var(--background-light);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.progress-bar {
+    background: #e5e7eb;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Field Help Text */
+.field-help {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    line-height: 1.4;
+}
+
+/* Form Validation States */
+.form-group.has-error input,
+.form-group.has-error select,
+.form-group.has-error textarea {
+    border-color: var(--error-color);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-group.has-success input,
+.form-group.has-success select,
+.form-group.has-success textarea {
+    border-color: var(--success-color);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.field-error {
+    color: var(--error-color);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.field-error::before {
+    content: '⚠';
+    font-size: 0.875rem;
+}
+
+.field-success {
+    color: var(--success-color);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.field-success::before {
+    content: '✓';
+    font-weight: bold;
+}
+
+/* Character Count */
+.char-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: right;
+    margin-top: 0.25rem;
+}
+
+.char-count.warning {
+    color: var(--warning-color);
+}
+
+.char-count.error {
+    color: var(--error-color);
+}
+
+/* Validation Tips */
+.validation-tips {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(59, 130, 246, 0.05));
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.validation-tips h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.validation-tips h4::before {
+    content: '💡';
+    font-size: 1.25rem;
+}
+
+.validation-tips ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    list-style-type: disc;
+}
+
+.validation-tips li {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Auto-save indicator */
+.auto-save-status {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1rem;
+    box-shadow: var(--shadow-md);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: var(--transition);
+}
+
+.auto-save-status.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.auto-save-status.saving {
+    color: var(--warning-color);
+}
+
+.auto-save-status.saved {
+    color: var(--success-color);
+}
+
+.auto-save-status.error {
+    color: var(--error-color);
+}
+
+/* Loading overlay for form submission */
+.form-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-lg);
+    z-index: 10;
+}
+
+.form-loading-overlay .loading-spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+.form-loading-overlay p {
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .validation-header {
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .validation-header h1 {
+        font-size: 2rem;
+    }
+    
+    .validation-form-container {
+        padding: 1.5rem;
+        margin: 0 0.5rem;
+    }
+    
+    #validation-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+    
+    .auto-save-status {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .validation-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .validation-form-container {
+        padding: 1rem;
+        margin: 0;
+        border-radius: var(--border-radius);
+    }
+    
+    .form-section {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+    }
+    
+    .form-section h3 {
+        font-size: 1.125rem;
+    }
+    
+    .validation-tips {
+        padding: 1rem;
+    }
+}
+
+/* Print styles for validation form */
+@media print {
+    .validation-form-container {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    
+    .form-actions {
+        display: none;
+    }
+    
+    .auto-save-status {
+        display: none;
+    }
+    
+    .validation-tips {
+        break-inside: avoid;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .validation-form-container {
+        border: 2px solid var(--text-primary);
+    }
+    
+    .form-section {
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    #validation-form input:focus,
+    #validation-form select:focus,
+    #validation-form textarea:focus {
+        border: 2px solid var(--primary-color);
+        box-shadow: none;
+    }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    #validation-form input,
+    #validation-form select,
+    #validation-form textarea,
+    .progress-fill,
+    .auto-save-status {
+        transition: none;
+    }
+    
+    .form-loading-overlay .loading-spinner {
+        animation: none;
+        border: 3px solid var(--primary-color);
+    }
+}
+
+/* Dark mode considerations (if implemented later) */
+@media (prefers-color-scheme: dark) {
+    .validation-form-container {
+        background: #1a1a1a;
+        border-color: #404040;
+    }
+    
+    #validation-form input,
+    #validation-form select,
+    #validation-form textarea {
+        background: #2a2a2a;
+        color: #ffffff;
+        border-color: #404040;
+    }
+    
+    .validation-tips {
+        background: rgba(99, 102, 241, 0.1);
+    }
+}
