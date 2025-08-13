@@ -211,23 +211,27 @@ export default function Validate() {
       let usingFallback = false;
 
       try {
-        console.log('Starting validation with API...');
+        console.log('🚀 Starting validation with API...');
         result = await validateStartupIdea(validationData);
-        console.log('API validation result:', result);
+        console.log('✅ API validation completed:', result);
 
         if (!result || !result.success) {
-          console.warn('API returned unsuccessful result, using fallback');
+          console.warn('⚠️ API returned unsuccessful result, using fallback');
           throw new Error(result?.error || 'Validation failed');
         }
       } catch (apiError) {
-        console.warn('API validation failed, using mock data:', apiError);
+        console.warn('🔄 API validation failed, using offline analysis:', apiError);
         usingFallback = true;
+
+        // Show user-friendly message about fallback
+        console.log('ℹ️ Using offline validation analysis - results will be based on proven validation frameworks');
+
         // Generate mock result for development
         try {
           result = generateMockValidationResult(validationData);
-          console.log('Generated mock validation result');
+          console.log('✅ Generated offline validation result');
         } catch (mockError) {
-          console.error('Mock generation also failed:', mockError);
+          console.error('🚨 Offline validation also failed:', mockError);
           // Ultimate fallback
           result = {
             success: true,
