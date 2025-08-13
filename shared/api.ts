@@ -169,9 +169,11 @@ class StartupValidatorAPI {
     } catch (error) {
       console.error(`API request failed for ${endpoint}:`, error);
 
-      // Additional context for pitch generation errors
+      // Additional context for endpoints with fallback systems
       if (endpoint === '/generate-pitch') {
         console.log('⚠️ Pitch generation API unavailable - fallback system will handle this gracefully');
+      } else if (endpoint === '/validate') {
+        console.log('⚠️ Validation API unavailable - robust fallback system will provide results');
       }
 
       throw error;
@@ -714,7 +716,7 @@ export const validateStartupIdea = async (data: ValidationData): Promise<Validat
       throw new Error('Invalid validation result structure');
     }
 
-    console.log('✅ Validation completed successfully');
+    console.log('�� Validation completed successfully');
     return result;
   } catch (error) {
     console.error('🚨 validateStartupIdea: All validation methods failed, using emergency fallback:', error);
