@@ -99,21 +99,24 @@ export default function InvestmentAction() {
       action,
       ...formData,
       submittedAt: new Date().toISOString(),
-      status: action === 'invest' ? 'pending-review' : 'submitted'
+      status: action === 'invest' ? 'pending-acknowledgment' : 'submitted'
     };
 
     const existingRecords = JSON.parse(localStorage.getItem('investmentRecords') || '[]');
     existingRecords.push(investmentRecord);
     localStorage.setItem('investmentRecords', JSON.stringify(existingRecords));
 
-    // Show success message based on action
+    // Handle different actions
     if (action === 'invest') {
-      alert(`🎉 Investment proposal submitted successfully!\n\nNext steps:\n• Our team will review your proposal\n• Due diligence documentation will be prepared\n• Legal terms will be drafted\n• You'll be contacted within 2-3 business days\n\nThank you for your interest in ${startup.ideaName}!`);
+      // Redirect to acknowledgment page for investment
+      navigate(`/investor-acknowledgment/${startup.id}`, {
+        state: { investmentData: investmentRecord }
+      });
     } else {
+      // For express interest, show success message and redirect
       alert(`✅ Interest expressed successfully!\n\nNext steps:\n• Founder will be notified of your interest\n• You'll receive detailed business information\n• Direct contact with founder will be facilitated\n• Investment details can be discussed further\n\nThank you for showing interest in ${startup.ideaName}!`);
+      navigate('/investor-dashboard');
     }
-
-    navigate('/investor-dashboard');
   };
 
   const getViabilityBadge = (level: string) => {
