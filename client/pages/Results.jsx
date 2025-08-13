@@ -2476,6 +2476,19 @@ export default function Results() {
               </DialogContent>
             </Dialog>
 
+            {/* Contact Details Modal */}
+            <ContactDetailsModal
+              open={showContactModal}
+              onOpenChange={setShowContactModal}
+              onSubmit={handleContactDetailsSubmit}
+              initialData={{
+                fullName: JSON.parse(localStorage.getItem('currentUser') || '{}').firstName + ' ' + JSON.parse(localStorage.getItem('currentUser') || '{}').lastName,
+                email: JSON.parse(localStorage.getItem('currentUser') || '{}').email,
+                phone: JSON.parse(localStorage.getItem('currentUser') || '{}').phone || '',
+                company: validationData?.startupTitle || ''
+              }}
+            />
+
             {/* Overall Score Visualization */}
             <Card className="mb-8">
               <CardHeader>
