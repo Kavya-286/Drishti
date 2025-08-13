@@ -247,6 +247,74 @@ export default function Dashboard() {
             <p className="text-muted-foreground mb-6">
               Track your startup validation journey and discover new opportunities with AI-powered insights.
             </p>
+          </div>
+
+          {/* Investment Notifications Banner */}
+          {(() => {
+            const checkForInvestmentNotifications = () => {
+              try {
+                const allNotifications = JSON.parse(localStorage.getItem('userNotifications') || '[]');
+                const userNotifications = allNotifications.filter((notif: any) =>
+                  (notif.recipientId === currentUser.id || notif.recipientId === currentUser.email) &&
+                  notif.type === 'investment_interest' &&
+                  !notif.read
+                );
+                return userNotifications;
+              } catch {
+                return [];
+              }
+            };
+
+            const investmentNotifications = checkForInvestmentNotifications();
+
+            if (investmentNotifications.length > 0) {
+              return (
+                <div className="mb-8">
+                  <Card className="border-2 border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2 text-green-800">
+                        <DollarSign className="w-6 h-6" />
+                        <span>🎉 New Investment Interest!</span>
+                      </CardTitle>
+                      <CardDescription className="text-green-700">
+                        You have {investmentNotifications.length} new investment notification{investmentNotifications.length !== 1 ? 's' : ''}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {investmentNotifications.slice(0, 3).map((notif: any) => (
+                          <div key={notif.id} className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-200">
+                            <div>
+                              <p className="font-semibold text-green-800">{notif.title}</p>
+                              <p className="text-sm text-green-700">
+                                {notif.data?.investorName} wants to invest ${notif.data?.investmentAmount} in your startup
+                              </p>
+                            </div>
+                            <Badge variant="default" className="bg-green-600">
+                              ${notif.data?.investmentAmount}
+                            </Badge>
+                          </div>
+                        ))}
+                        {investmentNotifications.length > 3 && (
+                          <p className="text-sm text-green-600">
+                            +{investmentNotifications.length - 3} more investment notification{investmentNotifications.length - 3 !== 1 ? 's' : ''}
+                          </p>
+                        )}
+                      </div>
+                      <div className="mt-4 text-center">
+                        <p className="text-sm text-green-700 mb-2">
+                          Click the notification bell in the header to view all details and respond to investors.
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              );
+            }
+            return null;
+          })()}
+
+          <div className="mb-8">
 
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
