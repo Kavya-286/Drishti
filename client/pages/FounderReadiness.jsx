@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import Header from "@/components/Header";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import {
   ArrowLeft,
   Download,
@@ -17,9 +23,9 @@ import {
   DollarSign,
   Target,
   User,
-  Trophy
-} from 'lucide-react';
-import { checkFounderReadiness } from '@shared/api';
+  Trophy,
+} from "lucide-react";
+import { checkFounderReadiness } from "@shared/api";
 
 export default function FounderReadiness() {
   const navigate = useNavigate();
@@ -35,14 +41,14 @@ export default function FounderReadiness() {
         // Get validation data from location state or localStorage
         let data = location.state?.validationData;
         if (!data) {
-          const stored = localStorage.getItem('validationData');
+          const stored = localStorage.getItem("validationData");
           if (stored) {
             data = JSON.parse(stored);
           }
         }
 
         if (!data) {
-          navigate('/validate');
+          navigate("/validate");
           return;
         }
 
@@ -50,14 +56,14 @@ export default function FounderReadiness() {
 
         // Generate founder readiness assessment
         const result = await checkFounderReadiness(data);
-        
+
         if (result.success && result.assessment) {
           setAssessment(result.assessment);
         } else {
-          throw new Error(result.error || 'Failed to generate assessment');
+          throw new Error(result.error || "Failed to generate assessment");
         }
       } catch (err) {
-        console.error('Error loading founder readiness:', err);
+        console.error("Error loading founder readiness:", err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -74,7 +80,7 @@ export default function FounderReadiness() {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>${validationData.startupTitle || 'Startup'} - Founder Readiness Assessment</title>
+        <title>${validationData.startupTitle || "Startup"} - Founder Readiness Assessment</title>
         <style>
           body { 
             font-family: 'Segoe UI', system-ui, sans-serif; 
@@ -223,7 +229,7 @@ export default function FounderReadiness() {
       <body>
         <div class="header">
           <h1>👨‍💼 Founder Readiness Assessment</h1>
-          <h3>${validationData.startupTitle || 'Startup Leadership Analysis'}</h3>
+          <h3>${validationData.startupTitle || "Startup Leadership Analysis"}</h3>
           <p style="color: #64748b; margin: 20px 0;">Comprehensive evaluation of entrepreneurial capabilities and readiness</p>
           <p style="color: #64748b; font-size: 14px; margin: 0;">Generated on ${new Date().toLocaleDateString()} • Professional Assessment Report</p>
         </div>
@@ -292,19 +298,19 @@ export default function FounderReadiness() {
         <div class="section">
           <h2>💪 Key Strengths</h2>
           <p style="color: #64748b; margin-bottom: 20px;">Areas where you demonstrate strong capability and competitive advantage</p>
-          ${assessment.strengths.map(strength => `<div class="strength-item">✅ ${strength}</div>`).join('')}
+          ${assessment.strengths.map((strength) => `<div class="strength-item">✅ ${strength}</div>`).join("")}
         </div>
 
         <div class="section">
           <h2>🎯 Areas for Improvement</h2>
           <p style="color: #64748b; margin-bottom: 20px;">Focus areas that could strengthen your entrepreneurial effectiveness</p>
-          ${assessment.improvement_areas.map(area => `<div class="improvement-item">📈 ${area}</div>`).join('')}
+          ${assessment.improvement_areas.map((area) => `<div class="improvement-item">📈 ${area}</div>`).join("")}
         </div>
 
         <div class="section">
           <h2>🚀 Strategic Recommendations</h2>
           <p style="color: #64748b; margin-bottom: 20px;">Actionable steps to enhance your founder readiness and startup success potential</p>
-          ${assessment.recommendations.map(rec => `<div class="recommendation-item">💡 ${rec}</div>`).join('')}
+          ${assessment.recommendations.map((rec) => `<div class="recommendation-item">💡 ${rec}</div>`).join("")}
         </div>
 
         <div class="section">
@@ -339,7 +345,7 @@ export default function FounderReadiness() {
       </html>
     `;
 
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (printWindow) {
       printWindow.document.write(structuredFounderReport);
       printWindow.document.close();
@@ -354,29 +360,35 @@ export default function FounderReadiness() {
     if (!assessment || !validationData) return;
 
     const shareData = {
-      title: 'My Founder Readiness Assessment',
+      title: "My Founder Readiness Assessment",
       text: `I just completed my founder readiness assessment with Drishti and got a ${assessment.overall_score}/100 score! Check out my entrepreneurial capabilities.`,
-      url: window.location.href
+      url: window.location.href,
     };
 
-    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare(shareData)
+    ) {
       try {
         await navigator.share(shareData);
       } catch (error) {
-        console.log('Share cancelled');
+        console.log("Share cancelled");
       }
     } else {
       try {
-        await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
-        alert('Assessment link copied to clipboard!');
+        await navigator.clipboard.writeText(
+          `${shareData.text} ${shareData.url}`,
+        );
+        alert("Assessment link copied to clipboard!");
       } catch (error) {
-        const textArea = document.createElement('textarea');
+        const textArea = document.createElement("textarea");
         textArea.value = `${shareData.text} ${shareData.url}`;
         document.body.appendChild(textArea);
         textArea.select();
-        document.execCommand('copy');
+        document.execCommand("copy");
         document.body.removeChild(textArea);
-        alert('Assessment link copied to clipboard!');
+        alert("Assessment link copied to clipboard!");
       }
     }
   };
@@ -389,7 +401,9 @@ export default function FounderReadiness() {
           <div className="max-w-4xl mx-auto flex items-center justify-center min-h-[400px]">
             <div className="text-center">
               <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Generating your founder readiness assessment...</p>
+              <p className="text-muted-foreground">
+                Generating your founder readiness assessment...
+              </p>
             </div>
           </div>
         </div>
@@ -403,7 +417,7 @@ export default function FounderReadiness() {
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
-            <Button variant="outline" onClick={() => navigate('/results')}>
+            <Button variant="outline" onClick={() => navigate("/results")}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Results
             </Button>
@@ -429,7 +443,7 @@ export default function FounderReadiness() {
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
-            <Button variant="outline" onClick={() => navigate('/results')}>
+            <Button variant="outline" onClick={() => navigate("/results")}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Results
             </Button>
@@ -437,8 +451,10 @@ export default function FounderReadiness() {
               <div className="text-center">
                 <Brain className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                 <h2 className="text-2xl font-bold mb-2">No Assessment Data</h2>
-                <p className="text-muted-foreground mb-4">Unable to load founder readiness assessment.</p>
-                <Button onClick={() => navigate('/results')}>
+                <p className="text-muted-foreground mb-4">
+                  Unable to load founder readiness assessment.
+                </p>
+                <Button onClick={() => navigate("/results")}>
                   Back to Results
                 </Button>
               </div>
@@ -457,7 +473,7 @@ export default function FounderReadiness() {
         <div className="max-w-6xl mx-auto">
           {/* Navigation */}
           <div className="flex items-center justify-between mb-8">
-            <Button variant="outline" onClick={() => navigate('/results')}>
+            <Button variant="outline" onClick={() => navigate("/results")}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Results
             </Button>
@@ -478,9 +494,12 @@ export default function FounderReadiness() {
             <div className="flex items-center justify-center mb-4">
               <Brain className="w-12 h-12 text-primary" />
             </div>
-            <h1 className="text-3xl font-bold mb-2">Founder Readiness Assessment</h1>
+            <h1 className="text-3xl font-bold mb-2">
+              Founder Readiness Assessment
+            </h1>
             <p className="text-muted-foreground">
-              {validationData?.startupTitle && `for ${validationData.startupTitle} • `}
+              {validationData?.startupTitle &&
+                `for ${validationData.startupTitle} • `}
               Comprehensive evaluation of your entrepreneurial capabilities
             </p>
           </div>
@@ -495,8 +514,12 @@ export default function FounderReadiness() {
             </CardHeader>
             <CardContent>
               <div className="text-center">
-                <div className="text-6xl font-bold text-primary mb-4">{assessment.overall_score}</div>
-                <div className="text-xl text-muted-foreground mb-6">out of 100</div>
+                <div className="text-6xl font-bold text-primary mb-4">
+                  {assessment.overall_score}
+                </div>
+                <div className="text-xl text-muted-foreground mb-6">
+                  out of 100
+                </div>
                 <div className="max-w-md mx-auto">
                   <Progress value={assessment.overall_score} className="h-4" />
                   <div className="flex justify-between text-xs text-muted-foreground mt-2">
@@ -524,12 +547,12 @@ export default function FounderReadiness() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Object.entries(assessment.categories).map(([key, score]) => {
                   const categoryNames = {
-                    entrepreneurial_mindset: 'Entrepreneurial Mindset',
-                    technical_skills: 'Technical Skills',
-                    business_acumen: 'Business Acumen',
-                    leadership_ability: 'Leadership Ability',
-                    financial_management: 'Financial Management',
-                    network_connections: 'Network & Connections'
+                    entrepreneurial_mindset: "Entrepreneurial Mindset",
+                    technical_skills: "Technical Skills",
+                    business_acumen: "Business Acumen",
+                    leadership_ability: "Leadership Ability",
+                    financial_management: "Financial Management",
+                    network_connections: "Network & Connections",
                   };
 
                   const categoryIcons = {
@@ -538,24 +561,38 @@ export default function FounderReadiness() {
                     business_acumen: <DollarSign className="w-5 h-5" />,
                     leadership_ability: <Users className="w-5 h-5" />,
                     financial_management: <DollarSign className="w-5 h-5" />,
-                    network_connections: <User className="w-5 h-5" />
+                    network_connections: <User className="w-5 h-5" />,
                   };
 
                   return (
-                    <Card key={key} className={`border-l-4 ${
-                      score >= 80 ? 'border-l-green-500 bg-green-50' : 
-                      score >= 60 ? 'border-l-yellow-500 bg-yellow-50' : 'border-l-red-500 bg-red-50'
-                    }`}>
+                    <Card
+                      key={key}
+                      className={`border-l-4 ${
+                        score >= 80
+                          ? "border-l-green-500 bg-green-50"
+                          : score >= 60
+                            ? "border-l-yellow-500 bg-yellow-50"
+                            : "border-l-red-500 bg-red-50"
+                      }`}
+                    >
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
                             {categoryIcons[key]}
-                            <CardTitle className="text-base">{categoryNames[key]}</CardTitle>
+                            <CardTitle className="text-base">
+                              {categoryNames[key]}
+                            </CardTitle>
                           </div>
-                          <Badge variant="outline" className={
-                            score >= 80 ? 'border-green-500 text-green-700' : 
-                            score >= 60 ? 'border-yellow-500 text-yellow-700' : 'border-red-500 text-red-700'
-                          }>
+                          <Badge
+                            variant="outline"
+                            className={
+                              score >= 80
+                                ? "border-green-500 text-green-700"
+                                : score >= 60
+                                  ? "border-yellow-500 text-yellow-700"
+                                  : "border-red-500 text-red-700"
+                            }
+                          >
                             {score}%
                           </Badge>
                         </div>
@@ -585,7 +622,10 @@ export default function FounderReadiness() {
               <CardContent>
                 <div className="space-y-3">
                   {assessment.strengths.map((strength, index) => (
-                    <div key={index} className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                    <div
+                      key={index}
+                      className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg border border-green-200"
+                    >
                       <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-green-800">{strength}</span>
                     </div>
@@ -607,7 +647,10 @@ export default function FounderReadiness() {
               <CardContent>
                 <div className="space-y-3">
                   {assessment.improvement_areas.map((area, index) => (
-                    <div key={index} className="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                    <div
+                      key={index}
+                      className="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg border border-orange-200"
+                    >
                       <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-orange-800">{area}</span>
                     </div>
@@ -631,11 +674,16 @@ export default function FounderReadiness() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {assessment.recommendations.map((recommendation, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <div
+                    key={index}
+                    className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-200"
+                  >
                     <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                       {index + 1}
                     </div>
-                    <span className="text-sm text-blue-800">{recommendation}</span>
+                    <span className="text-sm text-blue-800">
+                      {recommendation}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -650,35 +698,64 @@ export default function FounderReadiness() {
                 <span>Development Roadmap</span>
               </CardTitle>
               <CardDescription>
-                Timeline-based approach to enhance your entrepreneurial capabilities
+                Timeline-based approach to enhance your entrepreneurial
+                capabilities
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 <div className="border-l-4 border-red-500 pl-6">
-                  <h3 className="font-semibold text-red-700 mb-2">Immediate Focus (Next 30 Days)</h3>
+                  <h3 className="font-semibold text-red-700 mb-2">
+                    Immediate Focus (Next 30 Days)
+                  </h3>
                   <ul className="space-y-1 text-sm text-muted-foreground">
-                    <li>• Address highest-priority improvement areas identified above</li>
-                    <li>• Begin networking activities to expand professional connections</li>
-                    <li>• Enroll in relevant courses or workshops for skill development</li>
+                    <li>
+                      • Address highest-priority improvement areas identified
+                      above
+                    </li>
+                    <li>
+                      • Begin networking activities to expand professional
+                      connections
+                    </li>
+                    <li>
+                      • Enroll in relevant courses or workshops for skill
+                      development
+                    </li>
                   </ul>
                 </div>
 
                 <div className="border-l-4 border-yellow-500 pl-6">
-                  <h3 className="font-semibold text-yellow-700 mb-2">Short-term Goals (Next 3 Months)</h3>
+                  <h3 className="font-semibold text-yellow-700 mb-2">
+                    Short-term Goals (Next 3 Months)
+                  </h3>
                   <ul className="space-y-1 text-sm text-muted-foreground">
-                    <li>• Implement financial management systems and processes</li>
+                    <li>
+                      • Implement financial management systems and processes
+                    </li>
                     <li>• Build advisory board with complementary expertise</li>
-                    <li>• Strengthen technical skills through hands-on projects</li>
+                    <li>
+                      • Strengthen technical skills through hands-on projects
+                    </li>
                   </ul>
                 </div>
 
                 <div className="border-l-4 border-green-500 pl-6">
-                  <h3 className="font-semibold text-green-700 mb-2">Long-term Objectives (Next 6-12 Months)</h3>
+                  <h3 className="font-semibold text-green-700 mb-2">
+                    Long-term Objectives (Next 6-12 Months)
+                  </h3>
                   <ul className="space-y-1 text-sm text-muted-foreground">
-                    <li>• Develop comprehensive business strategy and execution plan</li>
-                    <li>• Establish industry partnerships and strategic relationships</li>
-                    <li>• Build track record of successful project delivery and leadership</li>
+                    <li>
+                      • Develop comprehensive business strategy and execution
+                      plan
+                    </li>
+                    <li>
+                      • Establish industry partnerships and strategic
+                      relationships
+                    </li>
+                    <li>
+                      • Build track record of successful project delivery and
+                      leadership
+                    </li>
                   </ul>
                 </div>
               </div>

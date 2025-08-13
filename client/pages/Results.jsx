@@ -1,14 +1,27 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Header from "@/components/Header";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Lightbulb,
   ArrowLeft,
@@ -33,15 +46,23 @@ import {
   Eye,
   Sparkles,
   ExternalLink,
-  Building2
-} from 'lucide-react';
-import { generateAIPitch, generateSWOTAnalysis, checkFounderReadiness, generateMarketResearch, getViabilityLevel, getInvestorReadinessLevel, getScoreColor } from '@shared/api';
-import StartupComparison from './StartupComparison';
-import ContactDetailsModal from '@/components/ContactDetailsModal';
+  Building2,
+} from "lucide-react";
+import {
+  generateAIPitch,
+  generateSWOTAnalysis,
+  checkFounderReadiness,
+  generateMarketResearch,
+  getViabilityLevel,
+  getInvestorReadinessLevel,
+  getScoreColor,
+} from "@shared/api";
+import StartupComparison from "./StartupComparison";
+import ContactDetailsModal from "@/components/ContactDetailsModal";
 
 export default function Results() {
   const navigate = useNavigate();
-  const [selectedView, setSelectedView] = useState('overview');
+  const [selectedView, setSelectedView] = useState("overview");
   const [isGenerating, setIsGenerating] = useState(null);
   const [validationResults, setValidationResults] = useState(null);
   const [validationData, setValidationData] = useState(null);
@@ -49,20 +70,22 @@ export default function Results() {
   const [showComparison, setShowComparison] = useState(false);
 
   // New state for post-validation options
-  const [showPostValidationOptions, setShowPostValidationOptions] = useState(true);
+  const [showPostValidationOptions, setShowPostValidationOptions] =
+    useState(true);
   const [isPublic, setIsPublic] = useState(false);
   const [generatedPitch, setGeneratedPitch] = useState(null);
   const [showPitchModal, setShowPitchModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [contactDetails, setContactDetails] = useState(null);
-  
+
   // Load validation results and data on component mount
   useEffect(() => {
     const loadResults = () => {
       try {
-        const resultsStr = localStorage.getItem('validationResults');
-        const dataStr = localStorage.getItem('validationData');
-        const usedFallback = localStorage.getItem('validationUsedFallback') === 'true';
+        const resultsStr = localStorage.getItem("validationResults");
+        const dataStr = localStorage.getItem("validationData");
+        const usedFallback =
+          localStorage.getItem("validationUsedFallback") === "true";
 
         if (resultsStr && dataStr) {
           const results = JSON.parse(resultsStr);
@@ -75,15 +98,19 @@ export default function Results() {
 
           // Show fallback notice if needed
           if (usedFallback) {
-            console.log('ℹ️ Validation used offline analysis - results are based on proven validation frameworks');
+            console.log(
+              "ℹ️ Validation used offline analysis - results are based on proven validation frameworks",
+            );
           }
         } else {
-          console.warn('No validation results found, redirecting to validate page');
-          window.location.href = '/validate';
+          console.warn(
+            "No validation results found, redirecting to validate page",
+          );
+          window.location.href = "/validate";
         }
       } catch (error) {
-        console.error('Failed to load validation results:', error);
-        window.location.href = '/validate';
+        console.error("Failed to load validation results:", error);
+        window.location.href = "/validate";
       } finally {
         setLoading(false);
       }
@@ -94,31 +121,50 @@ export default function Results() {
 
   const saveValidationToHistory = (results, data) => {
     try {
-      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const currentUser = JSON.parse(
+        localStorage.getItem("currentUser") || "{}",
+      );
       if (!currentUser.id) return;
 
       const historyItem = {
         id: `val_${Date.now()}`,
-        ideaName: data.startupTitle || data.problemStatement?.substring(0, 50) + '...' || 'Unnamed Idea',
+        ideaName:
+          data.startupTitle ||
+          data.problemStatement?.substring(0, 50) + "..." ||
+          "Unnamed Idea",
         validatedAt: new Date().toISOString(),
         overallScore: results.overall_score,
         viabilityLevel: results.viability_level,
-        status: 'completed',
+        status: "completed",
         category: extractCategory(data),
-        stage: data.currentStage || 'idea',
+        stage: data.currentStage || "idea",
         keyMetrics: {
-          problemSolutionFit: results.scores?.find(s => s.category.includes('Problem'))?.score || 0,
-          marketOpportunity: results.scores?.find(s => s.category.includes('Market'))?.score || 0,
-          businessModel: results.scores?.find(s => s.category.includes('Business'))?.score || 0,
-          competition: results.scores?.find(s => s.category.includes('Competitive'))?.score || 0,
-          teamStrength: results.scores?.find(s => s.category.includes('Team'))?.score || 0,
-          executionReadiness: results.scores?.find(s => s.category.includes('Execution'))?.score || 0
+          problemSolutionFit:
+            results.scores?.find((s) => s.category.includes("Problem"))
+              ?.score || 0,
+          marketOpportunity:
+            results.scores?.find((s) => s.category.includes("Market"))?.score ||
+            0,
+          businessModel:
+            results.scores?.find((s) => s.category.includes("Business"))
+              ?.score || 0,
+          competition:
+            results.scores?.find((s) => s.category.includes("Competitive"))
+              ?.score || 0,
+          teamStrength:
+            results.scores?.find((s) => s.category.includes("Team"))?.score ||
+            0,
+          executionReadiness:
+            results.scores?.find((s) => s.category.includes("Execution"))
+              ?.score || 0,
         },
         validationData: data,
-        validationResults: results
+        validationResults: results,
       };
 
-      const existingHistory = JSON.parse(localStorage.getItem(`validationHistory_${currentUser.id}`) || '[]');
+      const existingHistory = JSON.parse(
+        localStorage.getItem(`validationHistory_${currentUser.id}`) || "[]",
+      );
       existingHistory.unshift(historyItem); // Add to beginning of array
 
       // Keep only last 10 validations
@@ -126,49 +172,64 @@ export default function Results() {
         existingHistory.splice(10);
       }
 
-      localStorage.setItem(`validationHistory_${currentUser.id}`, JSON.stringify(existingHistory));
+      localStorage.setItem(
+        `validationHistory_${currentUser.id}`,
+        JSON.stringify(existingHistory),
+      );
     } catch (error) {
-      console.error('Failed to save validation to history:', error);
+      console.error("Failed to save validation to history:", error);
     }
   };
 
   const extractCategory = (data) => {
-    const text = (data.problemStatement + ' ' + data.solutionDescription + ' ' + data.targetMarket).toLowerCase();
+    const text = (
+      data.problemStatement +
+      " " +
+      data.solutionDescription +
+      " " +
+      data.targetMarket
+    ).toLowerCase();
 
-    if (text.includes('healthcare') || text.includes('medical')) return 'HealthTech';
-    if (text.includes('education') || text.includes('learning')) return 'EdTech';
-    if (text.includes('finance') || text.includes('payment')) return 'FinTech';
-    if (text.includes('food') || text.includes('restaurant')) return 'FoodTech';
-    if (text.includes('ai') || text.includes('machine learning')) return 'AI/ML';
-    if (text.includes('environment') || text.includes('sustainable')) return 'ClimaTech';
-    return 'Technology';
+    if (text.includes("healthcare") || text.includes("medical"))
+      return "HealthTech";
+    if (text.includes("education") || text.includes("learning"))
+      return "EdTech";
+    if (text.includes("finance") || text.includes("payment")) return "FinTech";
+    if (text.includes("food") || text.includes("restaurant")) return "FoodTech";
+    if (text.includes("ai") || text.includes("machine learning"))
+      return "AI/ML";
+    if (text.includes("environment") || text.includes("sustainable"))
+      return "ClimaTech";
+    return "Technology";
   };
-  
+
   if (loading || !validationResults || !validationData) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading your validation results...</p>
+          <p className="text-muted-foreground">
+            Loading your validation results...
+          </p>
         </div>
       </div>
     );
   }
 
   const handleGeneratePitchDeck = async () => {
-    setIsGenerating('pitch');
-    
+    setIsGenerating("pitch");
+
     try {
       // Try to generate pitch using API
       const result = await generateAIPitch(validationData);
-      
+
       if (result.success && result.pitch_content) {
         // Create a STRUCTURED pitch deck content with real data
         const structuredPitchContent = `
           <!DOCTYPE html>
           <html>
           <head>
-            <title>${validationData.startupTitle || 'Startup'} - Investor Pitch Deck</title>
+            <title>${validationData.startupTitle || "Startup"} - Investor Pitch Deck</title>
             <style>
               body { 
                 font-family: 'Segoe UI', system-ui, sans-serif; 
@@ -305,9 +366,9 @@ export default function Results() {
           <body>
             <!-- SLIDE 1: TITLE -->
             <div class="slide center">
-              <div class="logo-placeholder">${(validationData.startupTitle || 'S').charAt(0).toUpperCase()}</div>
-              <h1>${validationData.startupTitle || 'Revolutionary Startup'}</h1>
-              <p style="font-size: 28px; color: #6366f1; font-weight: 600;">${validationData.uniqueValueProposition || 'Transforming Industries with Innovation'}</p>
+              <div class="logo-placeholder">${(validationData.startupTitle || "S").charAt(0).toUpperCase()}</div>
+              <h1>${validationData.startupTitle || "Revolutionary Startup"}</h1>
+              <p style="font-size: 28px; color: #6366f1; font-weight: 600;">${validationData.uniqueValueProposition || "Transforming Industries with Innovation"}</p>
               <div class="highlight">
                 <div class="metrics-grid">
                   <div>
@@ -319,7 +380,7 @@ export default function Results() {
                     <div class="metric-label" style="color: rgba(255,255,255,0.9);">Viability Level</div>
                   </div>
                   <div>
-                    <div class="metric-value">${validationData.currentStage || 'Early'}</div>
+                    <div class="metric-value">${validationData.currentStage || "Early"}</div>
                     <div class="metric-label" style="color: rgba(255,255,255,0.9);">Current Stage</div>
                   </div>
                 </div>
@@ -332,21 +393,21 @@ export default function Results() {
               <h1>🔍 The Problem</h1>
               <h2>Market Challenge We're Addressing</h2>
               <div style="background: #fef2f2; padding: 24px; border-radius: 8px; border-left: 4px solid #ef4444; margin: 24px 0;">
-                <p style="font-size: 20px; font-weight: 500; color: #dc2626;">${validationData.problemStatement || 'Significant market inefficiency affecting target customers'}</p>
+                <p style="font-size: 20px; font-weight: 500; color: #dc2626;">${validationData.problemStatement || "Significant market inefficiency affecting target customers"}</p>
               </div>
               
               <h3>Problem Impact Analysis</h3>
               <div class="metrics-grid">
                 <div class="metric-card">
-                  <div class="metric-value">${validationData.problemFrequency || 'Daily'}</div>
+                  <div class="metric-value">${validationData.problemFrequency || "Daily"}</div>
                   <div class="metric-label">Frequency</div>
                 </div>
                 <div class="metric-card">
-                  <div class="metric-value">${validationData.problemImpact || 'High'}</div>
+                  <div class="metric-value">${validationData.problemImpact || "High"}</div>
                   <div class="metric-label">Impact Level</div>
                 </div>
                 <div class="metric-card">
-                  <div class="metric-value">${validationData.marketSize || 'Large'}</div>
+                  <div class="metric-value">${validationData.marketSize || "Large"}</div>
                   <div class="metric-label">Market Size</div>
                 </div>
               </div>
@@ -366,7 +427,7 @@ export default function Results() {
               <h1>💡 Our Solution</h1>
               <h2>How We Solve the Problem</h2>
               <div style="background: #f0fdf4; padding: 24px; border-radius: 8px; border-left: 4px solid #22c55e; margin: 24px 0;">
-                <p style="font-size: 20px; font-weight: 500; color: #16a34a;">${validationData.solutionDescription || 'Innovative platform providing comprehensive solution'}</p>
+                <p style="font-size: 20px; font-weight: 500; color: #16a34a;">${validationData.solutionDescription || "Innovative platform providing comprehensive solution"}</p>
               </div>
 
               <h3>Solution Features & Benefits</h3>
@@ -374,7 +435,7 @@ export default function Results() {
                 <div>
                   <h4 style="color: #6366f1; margin-bottom: 12px;">Core Features</h4>
                   <ul>
-                    <li>Advanced ${validationData.solutionType || 'software'} platform</li>
+                    <li>Advanced ${validationData.solutionType || "software"} platform</li>
                     <li>Real-time analytics and insights</li>
                     <li>Seamless integration capabilities</li>
                     <li>User-friendly interface design</li>
@@ -393,7 +454,7 @@ export default function Results() {
 
               <div class="highlight">
                 <h3 style="color: white; margin-bottom: 16px;">Unique Value Proposition</h3>
-                <p style="font-size: 18px; margin: 0;">${validationData.uniqueValueProposition || 'First-to-market solution with superior technology and user experience'}</p>
+                <p style="font-size: 18px; margin: 0;">${validationData.uniqueValueProposition || "First-to-market solution with superior technology and user experience"}</p>
               </div>
               <div class="slide-footer">Slide 3 of 10</div>
             </div>
@@ -423,13 +484,13 @@ export default function Results() {
               </div>
 
               <h3>Target Customer Segments</h3>
-              <p><strong>Primary Target:</strong> ${validationData.targetMarket || 'Growing businesses seeking efficiency improvements'}</p>
+              <p><strong>Primary Target:</strong> ${validationData.targetMarket || "Growing businesses seeking efficiency improvements"}</p>
               <p><strong>Customer Segments:</strong></p>
-              <p style="background: #f8fafc; padding: 16px; border-radius: 8px; font-size: 16px;">${validationData.customerSegments || 'Early adopters, growing companies, enterprise clients seeking innovation'}</p>
+              <p style="background: #f8fafc; padding: 16px; border-radius: 8px; font-size: 16px;">${validationData.customerSegments || "Early adopters, growing companies, enterprise clients seeking innovation"}</p>
 
               <h3>Market Validation Evidence</h3>
               <ul>
-                <li>${validationData.marketValidation || 'Extensive customer interviews confirm strong demand'}</li>
+                <li>${validationData.marketValidation || "Extensive customer interviews confirm strong demand"}</li>
                 <li>Industry reports validate market size and growth projections</li>
                 <li>Early customer feedback demonstrates product-market fit</li>
                 <li>Competitive analysis reveals market gaps we can fill</li>
@@ -446,11 +507,11 @@ export default function Results() {
                 <div>
                   <h3>Revenue Model</h3>
                   <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; border-left: 4px solid #0ea5e9;">
-                    <p style="font-size: 18px; font-weight: 600; color: #0369a1; margin: 0;">${validationData.revenueModel || 'Subscription-based SaaS model'}</p>
+                    <p style="font-size: 18px; font-weight: 600; color: #0369a1; margin: 0;">${validationData.revenueModel || "Subscription-based SaaS model"}</p>
                   </div>
                   
                   <h4 style="margin-top: 20px;">Pricing Strategy</h4>
-                  <p style="font-size: 14px;">${validationData.pricingStrategy || 'Tiered pricing based on customer needs and usage'}</p>
+                  <p style="font-size: 14px;">${validationData.pricingStrategy || "Tiered pricing based on customer needs and usage"}</p>
                 </div>
                 
                 <div>
@@ -469,11 +530,11 @@ export default function Results() {
               </div>
 
               <h3>Unit Economics</h3>
-              <p>${validationData.unitEconomics || 'Strong unit economics with LTV:CAC ratio of 8:1, healthy gross margins, and efficient customer acquisition'}</p>
+              <p>${validationData.unitEconomics || "Strong unit economics with LTV:CAC ratio of 8:1, healthy gross margins, and efficient customer acquisition"}</p>
 
               <h3>Key Success Metrics</h3>
               <div style="background: #f8fafc; padding: 20px; border-radius: 8px;">
-                <p style="margin: 0; font-size: 16px;">${validationData.keyMetrics || 'Monthly Recurring Revenue (MRR), Customer Acquisition Cost (CAC), Customer Lifetime Value (LTV), Churn Rate, Net Promoter Score (NPS)'}</p>
+                <p style="margin: 0; font-size: 16px;">${validationData.keyMetrics || "Monthly Recurring Revenue (MRR), Customer Acquisition Cost (CAC), Customer Lifetime Value (LTV), Churn Rate, Net Promoter Score (NPS)"}</p>
               </div>
               <div class="slide-footer">Slide 5 of 10</div>
             </div>
@@ -485,15 +546,15 @@ export default function Results() {
 
               <h3>Current Stage & Achievements</h3>
               <div style="background: #f0fdf4; padding: 24px; border-radius: 8px; margin: 20px 0;">
-                <p><strong>Development Stage:</strong> ${validationData.currentStage || 'MVP/Prototype stage with early customer validation'}</p>
+                <p><strong>Development Stage:</strong> ${validationData.currentStage || "MVP/Prototype stage with early customer validation"}</p>
                 <p><strong>Existing Traction:</strong></p>
-                <p style="font-size: 16px; margin: 8px 0 0 0;">${validationData.existingTraction || 'Strong early validation signals including customer interviews, pilot programs, and positive market feedback'}</p>
+                <p style="font-size: 16px; margin: 8px 0 0 0;">${validationData.existingTraction || "Strong early validation signals including customer interviews, pilot programs, and positive market feedback"}</p>
               </div>
 
               <h3>Milestones Achieved</h3>
               <ul>
                 <li>✅ Completed comprehensive market research and validation</li>
-                <li>✅ Developed ${validationData.developmentStage || 'functional prototype'}</li>
+                <li>✅ Developed ${validationData.developmentStage || "functional prototype"}</li>
                 <li>✅ Identified and validated core customer segments</li>
                 <li>✅ Established go-to-market strategy</li>
                 <li>✅ Built foundational team with relevant expertise</li>
@@ -555,7 +616,7 @@ export default function Results() {
 
               <div class="highlight">
                 <h3 style="color: white; margin-bottom: 16px;">🏆 Our Competitive Advantages</h3>
-                <p style="font-size: 16px; margin: 0;">${validationData.competitiveAdvantage || 'Superior technology, exceptional user experience, strategic market positioning, and strong execution capabilities that create sustainable competitive moats'}</p>
+                <p style="font-size: 16px; margin: 0;">${validationData.competitiveAdvantage || "Superior technology, exceptional user experience, strategic market positioning, and strong execution capabilities that create sustainable competitive moats"}</p>
               </div>
               <div class="slide-footer">Slide 7 of 10</div>
             </div>
@@ -567,14 +628,14 @@ export default function Results() {
 
               <h3>Team Composition</h3>
               <div style="background: #f8fafc; padding: 24px; border-radius: 8px; margin: 20px 0;">
-                <p><strong>Team Size:</strong> ${validationData.teamSize || 'Growing team of dedicated professionals'}</p>
+                <p><strong>Team Size:</strong> ${validationData.teamSize || "Growing team of dedicated professionals"}</p>
                 <p><strong>Founders' Experience:</strong></p>
-                <p style="font-size: 16px; line-height: 1.6; margin: 8px 0 0 0;">${validationData.foundersExperience || 'Experienced founders with relevant industry expertise and proven track record'}</p>
+                <p style="font-size: 16px; line-height: 1.6; margin: 8px 0 0 0;">${validationData.foundersExperience || "Experienced founders with relevant industry expertise and proven track record"}</p>
               </div>
 
               <h3>Key Skills & Capabilities</h3>
               <div style="background: #f0f9ff; padding: 20px; border-radius: 8px;">
-                <p style="margin: 0; font-size: 16px;">${validationData.keySkills || 'Strong technical expertise, business acumen, industry knowledge, and execution capabilities'}</p>
+                <p style="margin: 0; font-size: 16px;">${validationData.keySkills || "Strong technical expertise, business acumen, industry knowledge, and execution capabilities"}</p>
               </div>
 
               <h3>Advisory & Support Network</h3>
@@ -602,7 +663,7 @@ export default function Results() {
 
               <div class="highlight">
                 <h3 style="color: white; margin-bottom: 16px;">Funding Requirements</h3>
-                <p style="font-size: 18px; margin: 0;">${validationData.fundingNeeds || 'Seeking strategic investment to accelerate growth and market expansion'}</p>
+                <p style="font-size: 18px; margin: 0;">${validationData.fundingNeeds || "Seeking strategic investment to accelerate growth and market expansion"}</p>
               </div>
 
               <h3>Capital Allocation Strategy</h3>
@@ -649,8 +710,8 @@ export default function Results() {
               <h2>Together, We'll Transform the Industry</h2>
               
               <div style="margin: 40px 0;">
-                <div class="logo-placeholder">${(validationData.startupTitle || 'S').charAt(0).toUpperCase()}</div>
-                <h3 style="font-size: 32px; color: #6366f1; margin: 20px 0;">${validationData.startupTitle || 'Revolutionary Startup'}</h3>
+                <div class="logo-placeholder">${(validationData.startupTitle || "S").charAt(0).toUpperCase()}</div>
+                <h3 style="font-size: 32px; color: #6366f1; margin: 20px 0;">${validationData.startupTitle || "Revolutionary Startup"}</h3>
               </div>
 
               <div style="background: linear-gradient(135deg, #f8fafc, #e2e8f0); padding: 30px; border-radius: 12px; margin: 30px 0;">
@@ -675,7 +736,7 @@ export default function Results() {
           </html>
         `;
 
-        const printWindow = window.open('', '_blank');
+        const printWindow = window.open("", "_blank");
         if (printWindow) {
           printWindow.document.write(structuredPitchContent);
           printWindow.document.close();
@@ -685,29 +746,29 @@ export default function Results() {
           }, 1000);
         }
       } else {
-        throw new Error(result.error || 'Failed to generate pitch');
+        throw new Error(result.error || "Failed to generate pitch");
       }
     } catch (error) {
-      console.error('Pitch generation failed:', error);
-      alert('Failed to generate pitch. Please try again.');
+      console.error("Pitch generation failed:", error);
+      alert("Failed to generate pitch. Please try again.");
     } finally {
       setIsGenerating(null);
     }
   };
 
   const handleSWOTAnalysis = async () => {
-    setIsGenerating('swot');
-    
+    setIsGenerating("swot");
+
     try {
       const result = await generateSWOTAnalysis(validationData);
-      
+
       if (result.success && result.swot_analysis) {
         // Create STRUCTURED SWOT analysis report
         const structuredSWOTContent = `
           <!DOCTYPE html>
           <html>
           <head>
-            <title>${validationData.startupTitle || 'Startup'} - SWOT Analysis Report</title>
+            <title>${validationData.startupTitle || "Startup"} - SWOT Analysis Report</title>
             <style>
               body { 
                 font-family: 'Segoe UI', system-ui, sans-serif; 
@@ -832,7 +893,7 @@ export default function Results() {
           <body>
             <div class="header">
               <h1>📊 SWOT Analysis Report</h1>
-              <h3>${validationData.startupTitle || 'Startup Idea'}</h3>
+              <h3>${validationData.startupTitle || "Startup Idea"}</h3>
               <div class="metric-highlight">
                 <div style="font-size: 28px; font-weight: 700; margin-bottom: 8px;">${validationResults.overall_score}/100</div>
                 <div style="font-size: 16px; opacity: 0.9;">Overall Validation Score</div>
@@ -849,7 +910,7 @@ export default function Results() {
                   <h2>💪 Strengths</h2>
                   <p style="color: #16a34a; font-weight: 600; margin-bottom: 16px;">Internal factors that give competitive advantage</p>
                   <ul>
-                    ${result.swot_analysis.strengths.map(item => `<li>${item}</li>`).join('')}
+                    ${result.swot_analysis.strengths.map((item) => `<li>${item}</li>`).join("")}
                   </ul>
                 </div>
 
@@ -857,7 +918,7 @@ export default function Results() {
                   <h2>⚠️ Weaknesses</h2>
                   <p style="color: #dc2626; font-weight: 600; margin-bottom: 16px;">Internal factors that need improvement</p>
                   <ul>
-                    ${result.swot_analysis.weaknesses.map(item => `<li>${item}</li>`).join('')}
+                    ${result.swot_analysis.weaknesses.map((item) => `<li>${item}</li>`).join("")}
                   </ul>
                 </div>
 
@@ -865,7 +926,7 @@ export default function Results() {
                   <h2>🚀 Opportunities</h2>
                   <p style="color: #2563eb; font-weight: 600; margin-bottom: 16px;">External factors for potential growth</p>
                   <ul>
-                    ${result.swot_analysis.opportunities.map(item => `<li>${item}</li>`).join('')}
+                    ${result.swot_analysis.opportunities.map((item) => `<li>${item}</li>`).join("")}
                   </ul>
                 </div>
 
@@ -873,7 +934,7 @@ export default function Results() {
                   <h2>⚡ Threats</h2>
                   <p style="color: #d97706; font-weight: 600; margin-bottom: 16px;">External challenges requiring mitigation</p>
                   <ul>
-                    ${result.swot_analysis.threats.map(item => `<li>${item}</li>`).join('')}
+                    ${result.swot_analysis.threats.map((item) => `<li>${item}</li>`).join("")}
                   </ul>
                 </div>
               </div>
@@ -922,7 +983,7 @@ export default function Results() {
           </html>
         `;
 
-        const printWindow = window.open('', '_blank');
+        const printWindow = window.open("", "_blank");
         if (printWindow) {
           printWindow.document.write(structuredSWOTContent);
           printWindow.document.close();
@@ -932,34 +993,34 @@ export default function Results() {
           }, 1000);
         }
       } else {
-        throw new Error(result.error || 'Failed to generate SWOT analysis');
+        throw new Error(result.error || "Failed to generate SWOT analysis");
       }
     } catch (error) {
-      console.error('SWOT analysis failed:', error);
-      alert('Failed to generate SWOT analysis. Please try again.');
+      console.error("SWOT analysis failed:", error);
+      alert("Failed to generate SWOT analysis. Please try again.");
     } finally {
       setIsGenerating(null);
     }
   };
 
   const handleFounderReadiness = async () => {
-    setIsGenerating('founder');
+    setIsGenerating("founder");
 
     try {
       // Redirect to dedicated founder readiness page with validation data
-      navigate('/founder-readiness', {
-        state: { validationData }
+      navigate("/founder-readiness", {
+        state: { validationData },
       });
     } catch (error) {
-      console.error('Failed to navigate to founder readiness:', error);
-      alert('Failed to open founder readiness assessment. Please try again.');
+      console.error("Failed to navigate to founder readiness:", error);
+      alert("Failed to open founder readiness assessment. Please try again.");
     } finally {
       setIsGenerating(null);
     }
   };
 
   const handleFounderReadinessReport = async () => {
-    setIsGenerating('founder-report');
+    setIsGenerating("founder-report");
 
     try {
       const result = await checkFounderReadiness(validationData);
@@ -972,7 +1033,7 @@ export default function Results() {
           <!DOCTYPE html>
           <html>
           <head>
-            <title>${validationData.startupTitle || 'Startup'} - Founder Readiness Assessment</title>
+            <title>${validationData.startupTitle || "Startup"} - Founder Readiness Assessment</title>
             <style>
               body { 
                 font-family: 'Segoe UI', system-ui, sans-serif; 
@@ -1121,7 +1182,7 @@ export default function Results() {
           <body>
             <div class="header">
               <h1>👨‍💼 Founder Readiness Assessment</h1>
-              <h3>${validationData.startupTitle || 'Startup Leadership Analysis'}</h3>
+              <h3>${validationData.startupTitle || "Startup Leadership Analysis"}</h3>
               <p style="color: #64748b; margin: 20px 0;">Comprehensive evaluation of entrepreneurial capabilities and readiness</p>
               <p style="color: #64748b; font-size: 14px; margin: 0;">Generated on ${new Date().toLocaleDateString()} • Professional Assessment Report</p>
             </div>
@@ -1190,19 +1251,19 @@ export default function Results() {
             <div class="section">
               <h2>💪 Key Strengths</h2>
               <p style="color: #64748b; margin-bottom: 20px;">Areas where you demonstrate strong capability and competitive advantage</p>
-              ${assessment.strengths.map(strength => `<div class="strength-item">✅ ${strength}</div>`).join('')}
+              ${assessment.strengths.map((strength) => `<div class="strength-item">✅ ${strength}</div>`).join("")}
             </div>
 
             <div class="section">
               <h2>🎯 Areas for Improvement</h2>
               <p style="color: #64748b; margin-bottom: 20px;">Focus areas that could strengthen your entrepreneurial effectiveness</p>
-              ${assessment.improvement_areas.map(area => `<div class="improvement-item">📈 ${area}</div>`).join('')}
+              ${assessment.improvement_areas.map((area) => `<div class="improvement-item">📈 ${area}</div>`).join("")}
             </div>
 
             <div class="section">
               <h2>🚀 Strategic Recommendations</h2>
               <p style="color: #64748b; margin-bottom: 20px;">Actionable steps to enhance your founder readiness and startup success potential</p>
-              ${assessment.recommendations.map(rec => `<div class="recommendation-item">💡 ${rec}</div>`).join('')}
+              ${assessment.recommendations.map((rec) => `<div class="recommendation-item">💡 ${rec}</div>`).join("")}
             </div>
 
             <div class="section">
@@ -1237,7 +1298,7 @@ export default function Results() {
           </html>
         `;
 
-        const printWindow = window.open('', '_blank');
+        const printWindow = window.open("", "_blank");
         if (printWindow) {
           printWindow.document.write(structuredFounderReport);
           printWindow.document.close();
@@ -1247,29 +1308,29 @@ export default function Results() {
           }, 1000);
         }
       } else {
-        throw new Error(result.error || 'Failed to assess founder readiness');
+        throw new Error(result.error || "Failed to assess founder readiness");
       }
     } catch (error) {
-      console.error('Founder readiness assessment failed:', error);
-      alert('Failed to generate founder readiness report. Please try again.');
+      console.error("Founder readiness assessment failed:", error);
+      alert("Failed to generate founder readiness report. Please try again.");
     } finally {
       setIsGenerating(null);
     }
   };
 
   const handleMarketResearch = async () => {
-    setIsGenerating('market');
-    
+    setIsGenerating("market");
+
     try {
       const result = await generateMarketResearch(validationData);
-      
+
       if (result.success && result.market_data) {
         // Create STRUCTURED market research report
         const structuredMarketContent = `
           <!DOCTYPE html>
           <html>
           <head>
-            <title>${validationData.startupTitle || 'Startup'} - Market Research Report</title>
+            <title>${validationData.startupTitle || "Startup"} - Market Research Report</title>
             <style>
               body { 
                 font-family: 'Segoe UI', system-ui, sans-serif; 
@@ -1396,7 +1457,7 @@ export default function Results() {
           <body>
             <div class="header">
               <h1>📊 Market Research Report</h1>
-              <h3>${validationData.startupTitle || 'Comprehensive Market Analysis'}</h3>
+              <h3>${validationData.startupTitle || "Comprehensive Market Analysis"}</h3>
               <p style="color: #64748b; margin: 20px 0;"><strong>Validation Score:</strong> ${validationResults.overall_score}/100 • <strong>Viability:</strong> ${validationResults.viability_level}</p>
               <p style="color: #64748b; font-size: 14px; margin: 0;">Generated on ${new Date().toLocaleDateString()} • Professional Market Intelligence Report</p>
             </div>
@@ -1505,12 +1566,16 @@ export default function Results() {
               <h2>📈 Market Trends</h2>
               <p style="color: #64748b; margin-bottom: 24px;">Current and emerging trends shaping the market landscape</p>
               
-              ${result.market_data.market_trends.map((trend, index) => `
+              ${result.market_data.market_trends
+                .map(
+                  (trend, index) => `
                 <div class="trend-item">
                   <span style="background: #22c55e; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px;">${index + 1}</span>
                   <span style="font-weight: 500;">${trend}</span>
                 </div>
-              `).join('')}
+              `,
+                )
+                .join("")}
 
               <h3>Trend Analysis Impact</h3>
               <ul>
@@ -1606,7 +1671,7 @@ export default function Results() {
           </html>
         `;
 
-        const printWindow = window.open('', '_blank');
+        const printWindow = window.open("", "_blank");
         if (printWindow) {
           printWindow.document.write(structuredMarketContent);
           printWindow.document.close();
@@ -1616,11 +1681,11 @@ export default function Results() {
           }, 1000);
         }
       } else {
-        throw new Error(result.error || 'Failed to generate market research');
+        throw new Error(result.error || "Failed to generate market research");
       }
     } catch (error) {
-      console.error('Market research failed:', error);
-      alert('Failed to generate market research. Please try again.');
+      console.error("Market research failed:", error);
+      alert("Failed to generate market research. Please try again.");
     } finally {
       setIsGenerating(null);
     }
@@ -1628,44 +1693,50 @@ export default function Results() {
 
   const handleShare = async () => {
     const shareData = {
-      title: 'My Startup Validation Results',
-      text: `I just validated my startup idea "${validationData.startupTitle || 'my startup'}" with Drishti and got a ${validationResults.overall_score}/100 score with ${validationResults.viability_level} viability!`,
-      url: window.location.href
+      title: "My Startup Validation Results",
+      text: `I just validated my startup idea "${validationData.startupTitle || "my startup"}" with Drishti and got a ${validationResults.overall_score}/100 score with ${validationResults.viability_level} viability!`,
+      url: window.location.href,
     };
 
-    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare(shareData)
+    ) {
       try {
         await navigator.share(shareData);
       } catch (error) {
-        console.log('Share cancelled');
+        console.log("Share cancelled");
       }
     } else {
       // Fallback to clipboard
       try {
-        await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
-        alert('Results link copied to clipboard!');
+        await navigator.clipboard.writeText(
+          `${shareData.text} ${shareData.url}`,
+        );
+        alert("Results link copied to clipboard!");
       } catch (error) {
         // Fallback for older browsers
-        const textArea = document.createElement('textarea');
+        const textArea = document.createElement("textarea");
         textArea.value = `${shareData.text} ${shareData.url}`;
         document.body.appendChild(textArea);
         textArea.select();
-        document.execCommand('copy');
+        document.execCommand("copy");
         document.body.removeChild(textArea);
-        alert('Results link copied to clipboard!');
+        alert("Results link copied to clipboard!");
       }
     }
   };
 
   const handleExportPDF = () => {
     // Create a simple PDF export using browser print functionality
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (printWindow) {
       const htmlContent = `
         <!DOCTYPE html>
         <html>
         <head>
-          <title>${validationData.startupTitle || 'Startup'} - Validation Results</title>
+          <title>${validationData.startupTitle || "Startup"} - Validation Results</title>
           <style>
             body { font-family: Arial, sans-serif; margin: 40px; }
             .header { text-align: center; margin-bottom: 30px; }
@@ -1681,25 +1752,29 @@ export default function Results() {
         </head>
         <body>
           <div class="header">
-            <h1>${validationData.startupTitle || 'Startup'} - Validation Results</h1>
+            <h1>${validationData.startupTitle || "Startup"} - Validation Results</h1>
             <div class="score">Overall Score: ${validationResults.overall_score}/100</div>
             <div>Viability Level: ${validationResults.viability_level}</div>
           </div>
 
           <div class="score-section">
             <h2>Category Breakdown</h2>
-            ${validationResults.scores.map(score => `
+            ${validationResults.scores
+              .map(
+                (score) => `
               <div class="category">
                 <h3>${score.category}: ${score.score}%</h3>
                 <p>${score.feedback}</p>
                 <div class="suggestions">
                   <strong>Suggestions:</strong>
                   <ul>
-                    ${score.suggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}
+                    ${score.suggestions.map((suggestion) => `<li>${suggestion}</li>`).join("")}
                   </ul>
                 </div>
               </div>
-            `).join('')}
+            `,
+              )
+              .join("")}
           </div>
 
           <div class="score-section">
@@ -1733,40 +1808,51 @@ export default function Results() {
   // New handler functions for post-validation features with bulletproof error handling
   const handleGenerateAIPitch = async () => {
     if (!validationData) {
-      alert('Validation data is missing. Please re-run the validation.');
+      alert("Validation data is missing. Please re-run the validation.");
       return;
     }
 
-    setIsGenerating('ai-pitch');
+    setIsGenerating("ai-pitch");
     try {
-      console.log('🚀 Starting AI pitch generation...');
+      console.log("🚀 Starting AI pitch generation...");
       const result = await generateAIPitch(validationData);
 
       if (result && result.success && result.pitch_content) {
-        console.log('✅ Pitch generated successfully');
+        console.log("✅ Pitch generated successfully");
         setGeneratedPitch(result.pitch_content);
         setShowPitchModal(true);
       } else if (result && result.pitch_content) {
         // Sometimes success flag might be missing but content is there
-        console.log('⚠️ Pitch generated with warnings, using content anyway');
+        console.log("⚠️ Pitch generated with warnings, using content anyway");
         setGeneratedPitch(result.pitch_content);
         setShowPitchModal(true);
       } else {
-        console.error('Pitch generation returned invalid result:', result);
-        throw new Error('Invalid pitch generation result');
+        console.error("Pitch generation returned invalid result:", result);
+        throw new Error("Invalid pitch generation result");
       }
     } catch (error) {
-      console.error('Pitch generation error caught, generating emergency content:', error);
+      console.error(
+        "Pitch generation error caught, generating emergency content:",
+        error,
+      );
 
       // Emergency fallback - generate basic pitch from validation data
       const emergencyPitch = {
-        executiveSummary: `Our startup "${validationData.startupTitle || 'innovative solution'}" addresses ${validationData.problemStatement?.substring(0, 100) || 'a critical market need'}... With our ${validationData.revenueModel || 'innovative'} business model, we are positioned for significant growth and investor returns.`,
-        problemStatement: validationData.problemStatement || 'The market faces significant challenges that impact efficiency and growth.',
-        solutionOverview: validationData.solutionDescription || 'Our innovative solution addresses core market challenges through advanced technology.',
-        marketOpportunity: `We target ${validationData.targetMarket || 'a growing market'} with ${validationData.marketSize || 'substantial'} opportunity and strong growth potential.`,
-        businessModel: `Our ${validationData.revenueModel || 'subscription'} model with ${validationData.pricingStrategy || 'competitive pricing'} ensures sustainable revenue growth.`,
-        competitiveAdvantage: validationData.competitiveAdvantage || 'We provide unique value through superior technology and market positioning.',
-        fundingRequirements: validationData.fundingNeeds || 'We seek strategic investment to accelerate growth and market expansion.'
+        executiveSummary: `Our startup "${validationData.startupTitle || "innovative solution"}" addresses ${validationData.problemStatement?.substring(0, 100) || "a critical market need"}... With our ${validationData.revenueModel || "innovative"} business model, we are positioned for significant growth and investor returns.`,
+        problemStatement:
+          validationData.problemStatement ||
+          "The market faces significant challenges that impact efficiency and growth.",
+        solutionOverview:
+          validationData.solutionDescription ||
+          "Our innovative solution addresses core market challenges through advanced technology.",
+        marketOpportunity: `We target ${validationData.targetMarket || "a growing market"} with ${validationData.marketSize || "substantial"} opportunity and strong growth potential.`,
+        businessModel: `Our ${validationData.revenueModel || "subscription"} model with ${validationData.pricingStrategy || "competitive pricing"} ensures sustainable revenue growth.`,
+        competitiveAdvantage:
+          validationData.competitiveAdvantage ||
+          "We provide unique value through superior technology and market positioning.",
+        fundingRequirements:
+          validationData.fundingNeeds ||
+          "We seek strategic investment to accelerate growth and market expansion.",
       };
 
       setGeneratedPitch(emergencyPitch);
@@ -1774,7 +1860,9 @@ export default function Results() {
 
       // Show user that fallback was used
       setTimeout(() => {
-        alert('ℹ️ Pitch generated using offline analysis. Content based on your validation data.');
+        alert(
+          "ℹ️ Pitch generated using offline analysis. Content based on your validation data.",
+        );
       }, 1000);
     } finally {
       setIsGenerating(null);
@@ -1784,8 +1872,12 @@ export default function Results() {
   const handleVisibilityChange = (isPublicValue) => {
     if (isPublicValue && validationData && validationResults) {
       // Check if contact details are already saved
-      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-      const savedContactDetails = localStorage.getItem(`contactDetails_${currentUser.id}`);
+      const currentUser = JSON.parse(
+        localStorage.getItem("currentUser") || "{}",
+      );
+      const savedContactDetails = localStorage.getItem(
+        `contactDetails_${currentUser.id}`,
+      );
 
       if (!savedContactDetails) {
         // Show contact details modal first
@@ -1799,21 +1891,31 @@ export default function Results() {
     } else if (!isPublicValue) {
       setIsPublic(false);
       // Remove from public ideas
-      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-      const existingIdeas = JSON.parse(localStorage.getItem('publicStartupIdeas') || '[]');
-      const filteredIdeas = existingIdeas.filter(idea =>
-        !(idea.founder?.id === currentUser.id &&
-          idea.validationData?.startupTitle === validationData?.startupTitle)
+      const currentUser = JSON.parse(
+        localStorage.getItem("currentUser") || "{}",
       );
-      localStorage.setItem('publicStartupIdeas', JSON.stringify(filteredIdeas));
-      alert('✅ Your startup idea is now private and hidden from public view.');
+      const existingIdeas = JSON.parse(
+        localStorage.getItem("publicStartupIdeas") || "[]",
+      );
+      const filteredIdeas = existingIdeas.filter(
+        (idea) =>
+          !(
+            idea.founder?.id === currentUser.id &&
+            idea.validationData?.startupTitle === validationData?.startupTitle
+          ),
+      );
+      localStorage.setItem("publicStartupIdeas", JSON.stringify(filteredIdeas));
+      alert("✅ Your startup idea is now private and hidden from public view.");
     }
   };
 
   const handleContactDetailsSubmit = (contactData) => {
     // Save contact details
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    localStorage.setItem(`contactDetails_${currentUser.id}`, JSON.stringify(contactData));
+    const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+    localStorage.setItem(
+      `contactDetails_${currentUser.id}`,
+      JSON.stringify(contactData),
+    );
     setContactDetails(contactData);
 
     // Now make startup public
@@ -1823,67 +1925,78 @@ export default function Results() {
   const makeStartupPublic = (contactData) => {
     const publicIdea = {
       id: `idea_${Date.now()}`,
-      ideaName: validationData.startupTitle || validationData.problemStatement?.substring(0, 50) + '...' || 'Unnamed Startup Idea',
-      description: validationData.solutionDescription || 'No description provided',
-      problemStatement: validationData.problemStatement || '',
-      solutionDescription: validationData.solutionDescription || '',
-      targetMarket: validationData.targetMarket || '',
-      revenueModel: validationData.revenueModel || '',
-      fundingNeeds: validationData.fundingNeeds || 'Not specified',
-      industry: validationData.customerSegments || 'General',
-      stage: validationData.currentStage || 'Idea',
+      ideaName:
+        validationData.startupTitle ||
+        validationData.problemStatement?.substring(0, 50) + "..." ||
+        "Unnamed Startup Idea",
+      description:
+        validationData.solutionDescription || "No description provided",
+      problemStatement: validationData.problemStatement || "",
+      solutionDescription: validationData.solutionDescription || "",
+      targetMarket: validationData.targetMarket || "",
+      revenueModel: validationData.revenueModel || "",
+      fundingNeeds: validationData.fundingNeeds || "Not specified",
+      industry: validationData.customerSegments || "General",
+      stage: validationData.currentStage || "Idea",
       validationScore: validationResults.overall_score,
       viabilityLevel: validationResults.viability_level,
       createdAt: new Date().toISOString(),
       founder: {
-        ...JSON.parse(localStorage.getItem('currentUser') || '{}'),
-        contactDetails: contactData
+        ...JSON.parse(localStorage.getItem("currentUser") || "{}"),
+        contactDetails: contactData,
       },
       validationData: validationData,
-      validationResults: validationResults
+      validationResults: validationResults,
     };
 
     // Store in localStorage for demo (in real app would be database)
-    const existingIdeas = JSON.parse(localStorage.getItem('publicStartupIdeas') || '[]');
+    const existingIdeas = JSON.parse(
+      localStorage.getItem("publicStartupIdeas") || "[]",
+    );
     existingIdeas.push(publicIdea);
-    localStorage.setItem('publicStartupIdeas', JSON.stringify(existingIdeas));
+    localStorage.setItem("publicStartupIdeas", JSON.stringify(existingIdeas));
 
     setIsPublic(true);
-    alert('✅ Your startup idea is now public and visible to investors with your contact details!');
+    alert(
+      "✅ Your startup idea is now public and visible to investors with your contact details!",
+    );
   };
 
   const handlePostValidationSubmit = () => {
     setShowPostValidationOptions(false);
-    alert('✅ Your preferences have been saved successfully!');
+    alert("✅ Your preferences have been saved successfully!");
   };
 
   const copyPitchToClipboard = () => {
     if (!generatedPitch) return;
 
     const sections = [
-      'Executive Summary: ' + generatedPitch.executiveSummary,
-      'Problem Statement: ' + generatedPitch.problemStatement,
-      'Solution Overview: ' + generatedPitch.solutionOverview,
-      'Market Opportunity: ' + generatedPitch.marketOpportunity,
-      'Business Model: ' + generatedPitch.businessModel,
-      'Competitive Advantage: ' + generatedPitch.competitiveAdvantage,
-      'Funding Requirements: ' + generatedPitch.fundingRequirements
+      "Executive Summary: " + generatedPitch.executiveSummary,
+      "Problem Statement: " + generatedPitch.problemStatement,
+      "Solution Overview: " + generatedPitch.solutionOverview,
+      "Market Opportunity: " + generatedPitch.marketOpportunity,
+      "Business Model: " + generatedPitch.businessModel,
+      "Competitive Advantage: " + generatedPitch.competitiveAdvantage,
+      "Funding Requirements: " + generatedPitch.fundingRequirements,
     ];
 
-    const fullPitch = sections.join('\n\n');
+    const fullPitch = sections.join("\n\n");
 
-    navigator.clipboard.writeText(fullPitch).then(() => {
-      alert('Pitch copied to clipboard!');
-    }).catch(() => {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = fullPitch;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      alert('Pitch copied to clipboard!');
-    });
+    navigator.clipboard
+      .writeText(fullPitch)
+      .then(() => {
+        alert("Pitch copied to clipboard!");
+      })
+      .catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = fullPitch;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+        alert("Pitch copied to clipboard!");
+      });
   };
 
   // Use real validation results
@@ -1895,25 +2008,52 @@ export default function Results() {
   const investorReadinessScore = validationResults.investor_readiness_score;
 
   const getRecommendation = (score) => {
-    if (score >= 80) return {
-      title: "Investor Ready",
-      description: "Your startup is ready for institutional investors. Consider approaching VCs and institutional funding.",
-      actions: ["Prepare detailed financial projections", "Build investor deck", "Network with VCs", "Consider Series A preparation"]
-    };
-    if (score >= 65) return {
-      title: "Angel Investor Ready",
-      description: "You're ready for angel investors and early-stage funding. Focus on building traction.",
-      actions: ["Approach angel investors", "Join angel networks", "Build MVP and get customers", "Refine business model"]
-    };
-    if (score >= 50) return {
-      title: "Accelerator Ready",
-      description: "Consider joining an accelerator program to strengthen your foundation and get mentorship.",
-      actions: ["Apply to accelerator programs", "Build stronger team", "Validate market further", "Develop prototype"]
-    };
+    if (score >= 80)
+      return {
+        title: "Investor Ready",
+        description:
+          "Your startup is ready for institutional investors. Consider approaching VCs and institutional funding.",
+        actions: [
+          "Prepare detailed financial projections",
+          "Build investor deck",
+          "Network with VCs",
+          "Consider Series A preparation",
+        ],
+      };
+    if (score >= 65)
+      return {
+        title: "Angel Investor Ready",
+        description:
+          "You're ready for angel investors and early-stage funding. Focus on building traction.",
+        actions: [
+          "Approach angel investors",
+          "Join angel networks",
+          "Build MVP and get customers",
+          "Refine business model",
+        ],
+      };
+    if (score >= 50)
+      return {
+        title: "Accelerator Ready",
+        description:
+          "Consider joining an accelerator program to strengthen your foundation and get mentorship.",
+        actions: [
+          "Apply to accelerator programs",
+          "Build stronger team",
+          "Validate market further",
+          "Develop prototype",
+        ],
+      };
     return {
       title: "Bootstrap Stage",
-      description: "Focus on self-funding and proving concept before seeking external investment.",
-      actions: ["Bootstrap with personal funds", "Validate problem-solution fit", "Build founding team", "Create detailed business plan"]
+      description:
+        "Focus on self-funding and proving concept before seeking external investment.",
+      actions: [
+        "Bootstrap with personal funds",
+        "Validate problem-solution fit",
+        "Build founding team",
+        "Create detailed business plan",
+      ],
     };
   };
 
@@ -1940,40 +2080,42 @@ export default function Results() {
 
   const getViabilityBadge = (level) => {
     const colors = {
-      'High': 'bg-green-500 text-white',
-      'Moderate': 'bg-yellow-500 text-white',
-      'Low': 'bg-red-500 text-white'
+      High: "bg-green-500 text-white",
+      Moderate: "bg-yellow-500 text-white",
+      Low: "bg-red-500 text-white",
     };
-    return colors[level] || 'bg-gray-500 text-white';
+    return colors[level] || "bg-gray-500 text-white";
   };
 
   const similarStartups = [
     {
-      name: 'Slack',
-      description: 'Team communication platform',
-      similarity: 'Communication/collaboration focus',
-      outcome: 'Acquired by Salesforce for $27.7B'
+      name: "Slack",
+      description: "Team communication platform",
+      similarity: "Communication/collaboration focus",
+      outcome: "Acquired by Salesforce for $27.7B",
     },
     {
-      name: 'Zoom',
-      description: 'Video conferencing platform',
-      similarity: 'Remote work enablement',
-      outcome: 'IPO 2019, valued at $100B+'
+      name: "Zoom",
+      description: "Video conferencing platform",
+      similarity: "Remote work enablement",
+      outcome: "IPO 2019, valued at $100B+",
     },
     {
-      name: 'Notion',
-      description: 'All-in-one workspace',
-      similarity: 'Productivity and organization',
-      outcome: 'Valued at $10B in Series C'
-    }
+      name: "Notion",
+      description: "All-in-one workspace",
+      similarity: "Productivity and organization",
+      outcome: "Valued at $10B in Series C",
+    },
   ];
 
   const generateGovernmentSchemes = (validationData) => {
     if (!validationData) return [];
 
     const userText = (
-      validationData.problemStatement + ' ' +
-      validationData.solutionDescription + ' ' +
+      validationData.problemStatement +
+      " " +
+      validationData.solutionDescription +
+      " " +
       validationData.targetMarket
     ).toLowerCase();
 
@@ -1981,21 +2123,25 @@ export default function Results() {
     const baseSchemes = [
       {
         name: "Startup India Scheme",
-        description: "Tax exemptions, faster patent examination, and self-certification compliance",
-        eligibility: "Incorporated in India, under 10 years old, annual turnover <₹100 crores",
-        benefits: "3-year tax exemption, 80% rebate on patent filing, easier compliance",
+        description:
+          "Tax exemptions, faster patent examination, and self-certification compliance",
+        eligibility:
+          "Incorporated in India, under 10 years old, annual turnover <₹100 crores",
+        benefits:
+          "3-year tax exemption, 80% rebate on patent filing, easier compliance",
         amount: "Up to ₹10 lakh tax savings",
         link: "https://www.startupindia.gov.in",
-        category: "General"
+        category: "General",
       },
       {
         name: "MUDRA Loan Scheme",
         description: "Micro-finance for small businesses and startups",
-        eligibility: "Non-agricultural income generating activities, funding up to ₹10 lakh",
+        eligibility:
+          "Non-agricultural income generating activities, funding up to ₹10 lakh",
         benefits: "No collateral required, competitive interest rates",
         amount: "₹50,000 - ₹10 lakh",
         link: "https://www.mudra.org.in",
-        category: "General"
+        category: "General",
       },
       {
         name: "Stand-Up India Scheme",
@@ -2004,14 +2150,18 @@ export default function Results() {
         benefits: "Preferential lending, mentorship support",
         amount: "₹10 lakh - ₹1 crore",
         link: "https://www.standupmitra.in",
-        category: "General"
-      }
+        category: "General",
+      },
     ];
 
     // Industry-specific schemes
     let industrySchemes = [];
 
-    if (userText.includes('healthcare') || userText.includes('medical') || userText.includes('health')) {
+    if (
+      userText.includes("healthcare") ||
+      userText.includes("medical") ||
+      userText.includes("health")
+    ) {
       industrySchemes = [
         {
           name: "Biotechnology Ignition Grant (BIG)",
@@ -2020,7 +2170,7 @@ export default function Results() {
           benefits: "Funding for product development and validation",
           amount: "Up to ₹50 lakh",
           link: "https://birac.nic.in",
-          category: "HealthTech"
+          category: "HealthTech",
         },
         {
           name: "Ayushman Bharat Digital Mission",
@@ -2029,19 +2179,24 @@ export default function Results() {
           benefits: "Integration support, government backing",
           amount: "Technical support + market access",
           link: "https://abdm.gov.in",
-          category: "HealthTech"
-        }
+          category: "HealthTech",
+        },
       ];
-    } else if (userText.includes('education') || userText.includes('learning') || userText.includes('student')) {
+    } else if (
+      userText.includes("education") ||
+      userText.includes("learning") ||
+      userText.includes("student")
+    ) {
       industrySchemes = [
         {
           name: "PM eVIDYA Scheme",
           description: "Digital education infrastructure support",
           eligibility: "EdTech companies providing digital learning solutions",
-          benefits: "Government partnership opportunities, content distribution",
+          benefits:
+            "Government partnership opportunities, content distribution",
           amount: "Partnership + market access",
           link: "https://www.mhrd.gov.in",
-          category: "EdTech"
+          category: "EdTech",
         },
         {
           name: "SWAYAM Platform Integration",
@@ -2050,22 +2205,31 @@ export default function Results() {
           benefits: "Access to millions of students, government credibility",
           amount: "Revenue sharing opportunities",
           link: "https://swayam.gov.in",
-          category: "EdTech"
-        }
+          category: "EdTech",
+        },
       ];
-    } else if (userText.includes('environment') || userText.includes('sustainable') || userText.includes('green')) {
+    } else if (
+      userText.includes("environment") ||
+      userText.includes("sustainable") ||
+      userText.includes("green")
+    ) {
       industrySchemes = [
         {
           name: "National Clean Energy Fund",
           description: "Funding for clean energy and environmental projects",
-          eligibility: "Clean energy, waste management, environmental solutions",
+          eligibility:
+            "Clean energy, waste management, environmental solutions",
           benefits: "Grants and low-interest loans for green initiatives",
           amount: "₹10 lakh - ₹5 crore",
           link: "https://mnre.gov.in",
-          category: "CleanTech"
-        }
+          category: "CleanTech",
+        },
       ];
-    } else if (userText.includes('technology') || userText.includes('software') || userText.includes('ai')) {
+    } else if (
+      userText.includes("technology") ||
+      userText.includes("software") ||
+      userText.includes("ai")
+    ) {
       industrySchemes = [
         {
           name: "Technology Incubation and Development of Entrepreneurs (TIDE)",
@@ -2074,8 +2238,8 @@ export default function Results() {
           benefits: "Technical mentorship, funding support",
           amount: "Up to ₹15 lakh",
           link: "https://tide.gov.in",
-          category: "Technology"
-        }
+          category: "Technology",
+        },
       ];
     }
 
@@ -2110,13 +2274,22 @@ export default function Results() {
           <div className="mb-8">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h1 className="text-3xl font-bold mb-2">{validationData.startupTitle || 'Startup'} - Validation Results</h1>
+                <h1 className="text-3xl font-bold mb-2">
+                  {validationData.startupTitle || "Startup"} - Validation
+                  Results
+                </h1>
                 <p className="text-muted-foreground">
-                  Complete analysis of your startup idea with AI-powered insights
+                  Complete analysis of your startup idea with AI-powered
+                  insights
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-4xl font-bold text-primary mb-2">{typeof overallScore === 'number' && !isNaN(overallScore) ? overallScore : 0}/100</div>
+                <div className="text-4xl font-bold text-primary mb-2">
+                  {typeof overallScore === "number" && !isNaN(overallScore)
+                    ? overallScore
+                    : 0}
+                  /100
+                </div>
                 <Badge className={getViabilityBadge(viabilityLevel)}>
                   {viabilityLevel} Viability
                 </Badge>
@@ -2153,17 +2326,19 @@ export default function Results() {
                           <FileText className="w-6 h-6 text-primary" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold mb-2">Generate Pitch Deck</h3>
+                          <h3 className="font-semibold mb-2">
+                            Generate Pitch Deck
+                          </h3>
                           <p className="text-sm text-muted-foreground mb-4">
                             Create professional, structured investor pitch deck
                           </p>
                           <Button
                             onClick={handleGeneratePitchDeck}
-                            disabled={isGenerating === 'pitch'}
+                            disabled={isGenerating === "pitch"}
                             className="w-full"
                             size="sm"
                           >
-                            {isGenerating === 'pitch' ? (
+                            {isGenerating === "pitch" ? (
                               <>
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                                 Generating...
@@ -2186,18 +2361,20 @@ export default function Results() {
                           <BarChart3 className="w-6 h-6 text-blue-600" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold mb-2">Market Research</h3>
+                          <h3 className="font-semibold mb-2">
+                            Market Research
+                          </h3>
                           <p className="text-sm text-muted-foreground mb-4">
                             Generate structured market analysis report
                           </p>
                           <Button
                             onClick={handleMarketResearch}
-                            disabled={isGenerating === 'market'}
+                            disabled={isGenerating === "market"}
                             className="w-full"
                             size="sm"
                             variant="outline"
                           >
-                            {isGenerating === 'market' ? (
+                            {isGenerating === "market" ? (
                               <>
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
                                 Generating...
@@ -2226,12 +2403,12 @@ export default function Results() {
                           </p>
                           <Button
                             onClick={handleFounderReadiness}
-                            disabled={isGenerating === 'founder'}
+                            disabled={isGenerating === "founder"}
                             className="w-full"
                             size="sm"
                             variant="outline"
                           >
-                            {isGenerating === 'founder' ? (
+                            {isGenerating === "founder" ? (
                               <>
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
                                 Checking...
@@ -2260,12 +2437,12 @@ export default function Results() {
                           </p>
                           <Button
                             onClick={handleSWOTAnalysis}
-                            disabled={isGenerating === 'swot'}
+                            disabled={isGenerating === "swot"}
                             className="w-full"
                             size="sm"
                             variant="outline"
                           >
-                            {isGenerating === 'swot' ? (
+                            {isGenerating === "swot" ? (
                               <>
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
                                 Analyzing...
@@ -2289,9 +2466,12 @@ export default function Results() {
                         <Globe className="w-6 h-6 text-blue-600" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold mb-2">Startup Visibility</h3>
+                        <h3 className="font-semibold mb-2">
+                          Startup Visibility
+                        </h3>
                         <p className="text-sm text-muted-foreground mb-4">
-                          Make your startup visible to investors or keep it private
+                          Make your startup visible to investors or keep it
+                          private
                         </p>
                         <div className="flex items-center justify-between p-3 border rounded-lg">
                           <div className="flex items-center space-x-3">
@@ -2300,8 +2480,13 @@ export default function Results() {
                             ) : (
                               <Lock className="w-4 h-4 text-gray-500" />
                             )}
-                            <Label htmlFor="visibility-toggle" className="text-sm font-medium">
-                              {isPublic ? 'Public - Visible to investors' : 'Private - Hidden from public'}
+                            <Label
+                              htmlFor="visibility-toggle"
+                              className="text-sm font-medium"
+                            >
+                              {isPublic
+                                ? "Public - Visible to investors"
+                                : "Private - Hidden from public"}
                             </Label>
                           </div>
                           <Switch
@@ -2336,10 +2521,13 @@ export default function Results() {
                 <DialogHeader>
                   <DialogTitle className="flex items-center space-x-2">
                     <Sparkles className="w-6 h-6 text-primary" />
-                    <span className="text-2xl">AI-Generated Investor Pitch</span>
+                    <span className="text-2xl">
+                      AI-Generated Investor Pitch
+                    </span>
                   </DialogTitle>
                   <DialogDescription className="text-base">
-                    Professional, data-driven pitch content powered by advanced AI analysis of your validation results
+                    Professional, data-driven pitch content powered by advanced
+                    AI analysis of your validation results
                   </DialogDescription>
                 </DialogHeader>
 
@@ -2350,14 +2538,22 @@ export default function Results() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <CheckCircle className="w-5 h-5 text-green-600" />
-                          <span className="font-semibold text-green-800">High-Quality AI Pitch Generated</span>
+                          <span className="font-semibold text-green-800">
+                            High-Quality AI Pitch Generated
+                          </span>
                         </div>
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                        <Badge
+                          variant="secondary"
+                          className="bg-green-100 text-green-800"
+                        >
                           Investor-Ready
                         </Badge>
                       </div>
                       <p className="text-sm text-green-700 mt-1">
-                        Based on {validationResults.overall_score}/100 validation score • {validationResults.scores?.length || 6} categories analyzed
+                        Based on {validationResults.overall_score}/100
+                        validation score •{" "}
+                        {validationResults.scores?.length || 6} categories
+                        analyzed
                       </p>
                     </div>
 
@@ -2368,7 +2564,9 @@ export default function Results() {
                           <Target className="w-6 h-6 mr-3" />
                           Executive Summary
                         </h3>
-                        <p className="text-base leading-relaxed font-medium">{generatedPitch.executiveSummary}</p>
+                        <p className="text-base leading-relaxed font-medium">
+                          {generatedPitch.executiveSummary}
+                        </p>
                       </div>
 
                       {/* Two-column layout for remaining sections */}
@@ -2378,7 +2576,9 @@ export default function Results() {
                             <AlertTriangle className="w-5 h-5 mr-2" />
                             Problem Statement
                           </h3>
-                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.problemStatement}</p>
+                          <p className="text-sm leading-relaxed text-gray-700">
+                            {generatedPitch.problemStatement}
+                          </p>
                         </div>
 
                         <div className="p-6 border rounded-lg bg-green-50 border-green-200">
@@ -2386,7 +2586,9 @@ export default function Results() {
                             <Lightbulb className="w-5 h-5 mr-2" />
                             Solution Overview
                           </h3>
-                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.solutionOverview}</p>
+                          <p className="text-sm leading-relaxed text-gray-700">
+                            {generatedPitch.solutionOverview}
+                          </p>
                         </div>
 
                         <div className="p-6 border rounded-lg bg-blue-50 border-blue-200">
@@ -2394,7 +2596,9 @@ export default function Results() {
                             <TrendingUp className="w-5 h-5 mr-2" />
                             Market Opportunity
                           </h3>
-                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.marketOpportunity}</p>
+                          <p className="text-sm leading-relaxed text-gray-700">
+                            {generatedPitch.marketOpportunity}
+                          </p>
                         </div>
 
                         <div className="p-6 border rounded-lg bg-green-50 border-green-200">
@@ -2402,7 +2606,9 @@ export default function Results() {
                             <DollarSign className="w-5 h-5 mr-2" />
                             Business Model
                           </h3>
-                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.businessModel}</p>
+                          <p className="text-sm leading-relaxed text-gray-700">
+                            {generatedPitch.businessModel}
+                          </p>
                         </div>
 
                         <div className="p-6 border rounded-lg bg-purple-50 border-purple-200">
@@ -2410,7 +2616,9 @@ export default function Results() {
                             <Trophy className="w-5 h-5 mr-2" />
                             Competitive Advantage
                           </h3>
-                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.competitiveAdvantage}</p>
+                          <p className="text-sm leading-relaxed text-gray-700">
+                            {generatedPitch.competitiveAdvantage}
+                          </p>
                         </div>
 
                         <div className="p-6 border rounded-lg bg-yellow-50 border-yellow-200">
@@ -2418,7 +2626,9 @@ export default function Results() {
                             <Users className="w-5 h-5 mr-2" />
                             Funding Requirements
                           </h3>
-                          <p className="text-sm leading-relaxed text-gray-700">{generatedPitch.fundingRequirements}</p>
+                          <p className="text-sm leading-relaxed text-gray-700">
+                            {generatedPitch.fundingRequirements}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -2426,16 +2636,21 @@ export default function Results() {
                     {/* Action Buttons */}
                     <div className="flex justify-between items-center pt-6 border-t bg-muted/30 p-4 rounded-lg">
                       <div className="flex space-x-3">
-                        <Button variant="outline" onClick={copyPitchToClipboard}>
+                        <Button
+                          variant="outline"
+                          onClick={copyPitchToClipboard}
+                        >
                           <Copy className="w-4 h-4 mr-2" />
                           Copy Full Pitch
                         </Button>
-                        <Button variant="outline" onClick={() => {
-                          const pitchWindow = window.open('', '_blank');
-                          if (pitchWindow) {
-                            const html = `
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            const pitchWindow = window.open("", "_blank");
+                            if (pitchWindow) {
+                              const html = `
                               <html>
-                                <head><title>AI Generated Pitch - ${validationData?.startupTitle || validationData?.problemStatement?.substring(0, 30) || 'Startup Pitch'}</title></head>
+                                <head><title>AI Generated Pitch - ${validationData?.startupTitle || validationData?.problemStatement?.substring(0, 30) || "Startup Pitch"}</title></head>
                                 <body style="font-family: Arial; padding: 40px; line-height: 1.6;">
                                   <h1>AI-Generated Investor Pitch</h1>
                                   <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
@@ -2457,16 +2672,20 @@ export default function Results() {
                                 </body>
                               </html>
                             `;
-                            pitchWindow.document.write(html);
-                            pitchWindow.document.close();
-                          }
-                        }}>
+                              pitchWindow.document.write(html);
+                              pitchWindow.document.close();
+                            }
+                          }}
+                        >
                           <Download className="w-4 h-4 mr-2" />
                           Export as HTML
                         </Button>
                       </div>
 
-                      <Button onClick={() => setShowPitchModal(false)} size="lg">
+                      <Button
+                        onClick={() => setShowPitchModal(false)}
+                        size="lg"
+                      >
                         <Eye className="w-4 h-4 mr-2" />
                         Close Pitch
                       </Button>
@@ -2482,10 +2701,18 @@ export default function Results() {
               onOpenChange={setShowContactModal}
               onSubmit={handleContactDetailsSubmit}
               initialData={{
-                fullName: JSON.parse(localStorage.getItem('currentUser') || '{}').firstName + ' ' + JSON.parse(localStorage.getItem('currentUser') || '{}').lastName,
-                email: JSON.parse(localStorage.getItem('currentUser') || '{}').email,
-                phone: JSON.parse(localStorage.getItem('currentUser') || '{}').phone || '',
-                company: validationData?.startupTitle || ''
+                fullName:
+                  JSON.parse(localStorage.getItem("currentUser") || "{}")
+                    .firstName +
+                  " " +
+                  JSON.parse(localStorage.getItem("currentUser") || "{}")
+                    .lastName,
+                email: JSON.parse(localStorage.getItem("currentUser") || "{}")
+                  .email,
+                phone:
+                  JSON.parse(localStorage.getItem("currentUser") || "{}")
+                    .phone || "",
+                company: validationData?.startupTitle || "",
               }}
             />
 
@@ -2500,10 +2727,24 @@ export default function Results() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Startup Viability</span>
-                    <span className="text-2xl font-bold text-primary">{typeof overallScore === 'number' && !isNaN(overallScore) ? overallScore : 0}%</span>
+                    <span className="text-sm font-medium">
+                      Startup Viability
+                    </span>
+                    <span className="text-2xl font-bold text-primary">
+                      {typeof overallScore === "number" && !isNaN(overallScore)
+                        ? overallScore
+                        : 0}
+                      %
+                    </span>
                   </div>
-                  <Progress value={typeof overallScore === 'number' && !isNaN(overallScore) ? overallScore : 0} className="h-3" />
+                  <Progress
+                    value={
+                      typeof overallScore === "number" && !isNaN(overallScore)
+                        ? overallScore
+                        : 0
+                    }
+                    className="h-3"
+                  />
                   <div className="flex justify-between text-xs text-muted-foreground">
                     <span>Low (0-40)</span>
                     <span>Moderate (41-70)</span>
@@ -2521,15 +2762,20 @@ export default function Results() {
                   <span>Investor Readiness Meter</span>
                 </CardTitle>
                 <CardDescription>
-                  Combined assessment of viability, founder readiness, and idea clarity
+                  Combined assessment of viability, founder readiness, and idea
+                  clarity
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   {/* Main Readiness Score */}
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-primary mb-2">{investorReadinessScore}/100</div>
-                    <Badge className={`${readinessLevel.color} ${readinessLevel.bg} ${readinessLevel.border} border`}>
+                    <div className="text-4xl font-bold text-primary mb-2">
+                      {investorReadinessScore}/100
+                    </div>
+                    <Badge
+                      className={`${readinessLevel.color} ${readinessLevel.bg} ${readinessLevel.border} border`}
+                    >
                       {readinessLevel.level}
                     </Badge>
                   </div>
@@ -2538,7 +2784,9 @@ export default function Results() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
                       <span>Investor Readiness</span>
-                      <span className="font-semibold">{investorReadinessScore}%</span>
+                      <span className="font-semibold">
+                        {investorReadinessScore}%
+                      </span>
                     </div>
                     <Progress value={investorReadinessScore} className="h-4" />
                     <div className="flex justify-between text-xs text-muted-foreground">
@@ -2552,29 +2800,51 @@ export default function Results() {
                   {/* Component Breakdown */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center p-4 bg-muted/30 rounded-lg">
-                      <div className="text-2xl font-bold text-primary mb-1">{typeof overallScore === 'number' && !isNaN(overallScore) ? overallScore : 0}%</div>
-                      <div className="text-sm text-muted-foreground">Viability Score</div>
+                      <div className="text-2xl font-bold text-primary mb-1">
+                        {typeof overallScore === "number" &&
+                        !isNaN(overallScore)
+                          ? overallScore
+                          : 0}
+                        %
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Viability Score
+                      </div>
                     </div>
                     <div className="text-center p-4 bg-muted/30 rounded-lg">
-                      <div className="text-2xl font-bold text-primary mb-1">{founderReadinessScore}%</div>
-                      <div className="text-sm text-muted-foreground">Founder Readiness</div>
+                      <div className="text-2xl font-bold text-primary mb-1">
+                        {founderReadinessScore}%
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Founder Readiness
+                      </div>
                     </div>
                     <div className="text-center p-4 bg-muted/30 rounded-lg">
-                      <div className="text-2xl font-bold text-primary mb-1">{clarityScore}%</div>
-                      <div className="text-sm text-muted-foreground">Idea Clarity</div>
+                      <div className="text-2xl font-bold text-primary mb-1">
+                        {clarityScore}%
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Idea Clarity
+                      </div>
                     </div>
                   </div>
 
                   {/* Recommendation */}
-                  <div className={`p-4 rounded-lg border ${readinessLevel.border} ${readinessLevel.bg}`}>
-                    <h4 className={`font-semibold mb-2 ${readinessLevel.color}`}>
+                  <div
+                    className={`p-4 rounded-lg border ${readinessLevel.border} ${readinessLevel.bg}`}
+                  >
+                    <h4
+                      className={`font-semibold mb-2 ${readinessLevel.color}`}
+                    >
                       📊 {recommendation.title}
                     </h4>
                     <p className="text-sm text-muted-foreground mb-3">
                       {recommendation.description}
                     </p>
                     <div>
-                      <div className="text-sm font-medium mb-2">Recommended Actions:</div>
+                      <div className="text-sm font-medium mb-2">
+                        Recommended Actions:
+                      </div>
                       <ul className="space-y-1 text-sm text-muted-foreground">
                         {recommendation.actions.map((action, index) => (
                           <li key={index} className="flex items-start">
@@ -2590,7 +2860,11 @@ export default function Results() {
             </Card>
           </div>
 
-          <Tabs value={selectedView} onValueChange={(value) => setSelectedView(value)} className="space-y-6">
+          <Tabs
+            value={selectedView}
+            onValueChange={(value) => setSelectedView(value)}
+            className="space-y-6"
+          >
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="detailed">Detailed Analysis</TabsTrigger>
@@ -2602,21 +2876,34 @@ export default function Results() {
               {/* Score Breakdown */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {scores.map((score, index) => (
-                  <Card key={index} className={`border-l-4 ${
-                    score.score >= 80 ? 'border-l-green-500' : 
-                    score.score >= 60 ? 'border-l-yellow-500' : 'border-l-red-500'
-                  }`}>
+                  <Card
+                    key={index}
+                    className={`border-l-4 ${
+                      score.score >= 80
+                        ? "border-l-green-500"
+                        : score.score >= 60
+                          ? "border-l-yellow-500"
+                          : "border-l-red-500"
+                    }`}
+                  >
                     <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">{score.category}</CardTitle>
-                        <Badge variant="outline" className={getScoreColor(score.score)}>
+                        <CardTitle className="text-lg">
+                          {score.category}
+                        </CardTitle>
+                        <Badge
+                          variant="outline"
+                          className={getScoreColor(score.score)}
+                        >
                           {score.score}%
                         </Badge>
                       </div>
                     </CardHeader>
                     <CardContent>
                       <Progress value={score.score} className="mb-3 h-2" />
-                      <p className="text-sm text-muted-foreground">{score.feedback}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {score.feedback}
+                      </p>
                     </CardContent>
                   </Card>
                 ))}
@@ -2635,11 +2922,16 @@ export default function Results() {
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-start space-x-2">
                         <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span>Strong problem-solution fit with clear value proposition</span>
+                        <span>
+                          Strong problem-solution fit with clear value
+                          proposition
+                        </span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span>Solid business model with viable revenue streams</span>
+                        <span>
+                          Solid business model with viable revenue streams
+                        </span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -2664,15 +2956,21 @@ export default function Results() {
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-start space-x-2">
                         <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span>Team could benefit from additional technical expertise</span>
+                        <span>
+                          Team could benefit from additional technical expertise
+                        </span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span>Market sizing and segmentation needs refinement</span>
+                        <span>
+                          Market sizing and segmentation needs refinement
+                        </span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span>Competitive differentiation could be stronger</span>
+                        <span>
+                          Competitive differentiation could be stronger
+                        </span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -2690,10 +2988,15 @@ export default function Results() {
                 <Card key={index}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl">{score.category}</CardTitle>
+                      <CardTitle className="text-xl">
+                        {score.category}
+                      </CardTitle>
                       <div className="flex items-center space-x-3">
                         <Progress value={score.score} className="w-24 h-2" />
-                        <Badge variant="outline" className={getScoreColor(score.score)}>
+                        <Badge
+                          variant="outline"
+                          className={getScoreColor(score.score)}
+                        >
                           {score.score}%
                         </Badge>
                       </div>
@@ -2702,14 +3005,21 @@ export default function Results() {
                   </CardHeader>
                   <CardContent>
                     <div>
-                      <h4 className="font-semibold mb-3 text-sm">Improvement Suggestions:</h4>
+                      <h4 className="font-semibold mb-3 text-sm">
+                        Improvement Suggestions:
+                      </h4>
                       <ul className="space-y-2">
-                        {score.suggestions.map((suggestion, suggestionIndex) => (
-                          <li key={suggestionIndex} className="flex items-start space-x-2 text-sm">
-                            <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                            <span>{suggestion}</span>
-                          </li>
-                        ))}
+                        {score.suggestions.map(
+                          (suggestion, suggestionIndex) => (
+                            <li
+                              key={suggestionIndex}
+                              className="flex items-start space-x-2 text-sm"
+                            >
+                              <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                              <span>{suggestion}</span>
+                            </li>
+                          ),
+                        )}
                       </ul>
                     </div>
                   </CardContent>
@@ -2735,9 +3045,12 @@ export default function Results() {
                     <div className="flex items-start space-x-3">
                       <Badge className="bg-red-500 text-white">1</Badge>
                       <div>
-                        <h4 className="font-semibold">Validate Problem-Solution Fit</h4>
+                        <h4 className="font-semibold">
+                          Validate Problem-Solution Fit
+                        </h4>
                         <p className="text-sm text-muted-foreground mt-1">
-                          Conduct 20-30 customer interviews to validate the problem severity and solution approach
+                          Conduct 20-30 customer interviews to validate the
+                          problem severity and solution approach
                         </p>
                       </div>
                     </div>
@@ -2746,7 +3059,8 @@ export default function Results() {
                       <div>
                         <h4 className="font-semibold">Build MVP</h4>
                         <p className="text-sm text-muted-foreground mt-1">
-                          Create a minimum viable product to test core assumptions with early users
+                          Create a minimum viable product to test core
+                          assumptions with early users
                         </p>
                       </div>
                     </div>
@@ -2755,7 +3069,8 @@ export default function Results() {
                       <div>
                         <h4 className="font-semibold">Strengthen Team</h4>
                         <p className="text-sm text-muted-foreground mt-1">
-                          Consider adding technical co-founder or senior advisor with relevant experience
+                          Consider adding technical co-founder or senior advisor
+                          with relevant experience
                         </p>
                       </div>
                     </div>
@@ -2764,7 +3079,8 @@ export default function Results() {
                       <div>
                         <h4 className="font-semibold">Market Research</h4>
                         <p className="text-sm text-muted-foreground mt-1">
-                          Conduct detailed market sizing and competitive analysis
+                          Conduct detailed market sizing and competitive
+                          analysis
                         </p>
                       </div>
                     </div>
@@ -2780,7 +3096,11 @@ export default function Results() {
                       <BarChart3 className="w-5 h-5 text-primary" />
                       <span>Similar Successful Startups</span>
                     </div>
-                    <Button variant="outline" size="sm" onClick={handleViewComparison}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleViewComparison}
+                    >
                       <ExternalLink className="w-4 h-4 mr-2" />
                       View Smart Comparison
                     </Button>
@@ -2797,9 +3117,15 @@ export default function Results() {
                           <h4 className="font-semibold">{startup.name}</h4>
                           <Badge variant="outline">Similar</Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground mb-2">{startup.description}</p>
-                        <p className="text-sm"><strong>Similarity:</strong> {startup.similarity}</p>
-                        <p className="text-sm text-green-600 mt-1"><strong>Outcome:</strong> {startup.outcome}</p>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {startup.description}
+                        </p>
+                        <p className="text-sm">
+                          <strong>Similarity:</strong> {startup.similarity}
+                        </p>
+                        <p className="text-sm text-green-600 mt-1">
+                          <strong>Outcome:</strong> {startup.outcome}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -2819,48 +3145,79 @@ export default function Results() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {generateGovernmentSchemes(validationData).map((scheme, index) => (
-                      <div key={index} className="border rounded-lg p-4 bg-gradient-to-r from-green-50 to-blue-50">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <h4 className="font-semibold text-green-800">{scheme.name}</h4>
-                            <Badge variant="outline" className="mt-1 text-xs">
-                              {scheme.category}
-                            </Badge>
+                    {generateGovernmentSchemes(validationData).map(
+                      (scheme, index) => (
+                        <div
+                          key={index}
+                          className="border rounded-lg p-4 bg-gradient-to-r from-green-50 to-blue-50"
+                        >
+                          <div className="flex items-start justify-between mb-3">
+                            <div>
+                              <h4 className="font-semibold text-green-800">
+                                {scheme.name}
+                              </h4>
+                              <Badge variant="outline" className="mt-1 text-xs">
+                                {scheme.category}
+                              </Badge>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-sm font-semibold text-primary">
+                                {scheme.amount}
+                              </div>
+                              <a
+                                href={scheme.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-blue-600 hover:underline flex items-center mt-1"
+                              >
+                                Apply Online{" "}
+                                <ExternalLink className="w-3 h-3 ml-1" />
+                              </a>
+                            </div>
                           </div>
-                          <div className="text-right">
-                            <div className="text-sm font-semibold text-primary">{scheme.amount}</div>
-                            <a 
-                              href={scheme.link} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-xs text-blue-600 hover:underline flex items-center mt-1"
-                            >
-                              Apply Online <ExternalLink className="w-3 h-3 ml-1" />
-                            </a>
+                          <p className="text-sm text-gray-700 mb-2">
+                            {scheme.description}
+                          </p>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                            <div>
+                              <strong className="text-gray-600">
+                                Eligibility:
+                              </strong>
+                              <p className="text-gray-600 mt-1">
+                                {scheme.eligibility}
+                              </p>
+                            </div>
+                            <div>
+                              <strong className="text-gray-600">
+                                Benefits:
+                              </strong>
+                              <p className="text-gray-600 mt-1">
+                                {scheme.benefits}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                        <p className="text-sm text-gray-700 mb-2">{scheme.description}</p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                          <div>
-                            <strong className="text-gray-600">Eligibility:</strong>
-                            <p className="text-gray-600 mt-1">{scheme.eligibility}</p>
-                          </div>
-                          <div>
-                            <strong className="text-gray-600">Benefits:</strong>
-                            <p className="text-gray-600 mt-1">{scheme.benefits}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                      ),
+                    )}
                   </div>
                   <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h4 className="font-semibold text-blue-900 mb-2">💡 Application Tips</h4>
+                    <h4 className="font-semibold text-blue-900 mb-2">
+                      💡 Application Tips
+                    </h4>
                     <ul className="text-sm text-blue-800 space-y-1">
-                      <li>• Ensure your startup is registered and compliant before applying</li>
-                      <li>• Prepare detailed business plan and financial projections</li>
+                      <li>
+                        • Ensure your startup is registered and compliant before
+                        applying
+                      </li>
+                      <li>
+                        • Prepare detailed business plan and financial
+                        projections
+                      </li>
                       <li>• Keep all legal documents and certificates ready</li>
-                      <li>• Apply early as many schemes have limited funding or deadlines</li>
+                      <li>
+                        • Apply early as many schemes have limited funding or
+                        deadlines
+                      </li>
                     </ul>
                   </div>
                 </CardContent>
