@@ -39,6 +39,7 @@ import { generateAIPitch, generateSWOTAnalysis, checkFounderReadiness, generateM
 import StartupComparison from './StartupComparison';
 
 export default function Results() {
+  const navigate = useNavigate();
   const [selectedView, setSelectedView] = useState('overview');
   const [isGenerating, setIsGenerating] = useState(null);
   const [validationResults, setValidationResults] = useState(null);
