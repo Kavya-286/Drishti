@@ -702,12 +702,28 @@ export const resetFallbackStates = () => {
 // Helper functions for common operations with guaranteed fallback
 export const validateStartupIdea = async (data: ValidationData): Promise<ValidationResult> => {
   try {
+    // Log validation attempt for debugging
+    console.log('🚀 Starting startup validation process...');
+
     const result = await apiService.validateStartup(data);
+
+    // Ensure result is valid
+    if (!result || typeof result.overall_score !== 'number') {
+      throw new Error('Invalid validation result structure');
+    }
+
+    console.log('✅ Validation completed successfully');
     return result;
   } catch (error) {
-    console.error('validateStartupIdea: All validation methods failed, using emergency fallback:', error);
+    console.error('🚨 validateStartupIdea: All validation methods failed, using emergency fallback:', error);
+
+    // Mark that fallback was used for user information
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('validationUsedFallback', 'true');
+    }
+
     // Emergency fallback - this should never fail
-    return {
+    const emergencyResult: ValidationResult = {
       success: true,
       overall_score: 70,
       viability_level: 'Moderate',
