@@ -1392,6 +1392,234 @@ ${assessment.recommendations.map(rec => `• ${rec}`).join('\n')}
                 </CardContent>
               </Card>
 
+              {/* Government Schemes & Subsidies */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Building2 className="w-5 h-5 text-primary" />
+                    <span>Government Schemes & Financial Support</span>
+                  </CardTitle>
+                  <CardDescription>
+                    Available government programs and subsidies for your startup
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {(() => {
+                    const generateGovernmentSchemes = (validationData: any) => {
+                      if (!validationData) return [];
+
+                      const userText = (
+                        validationData.problemStatement + ' ' +
+                        validationData.solutionDescription + ' ' +
+                        validationData.targetMarket
+                      ).toLowerCase();
+
+                      // Base schemes available to all startups
+                      const baseSchemes = [
+                        {
+                          name: "Startup India Scheme",
+                          description: "Tax exemptions, faster patent examination, and self-certification compliance",
+                          eligibility: "Incorporated in India, under 10 years old, annual turnover <₹100 crores",
+                          benefits: "3-year tax exemption, 80% rebate on patent filing, easier compliance",
+                          amount: "Up to ₹10 lakh tax savings",
+                          link: "https://www.startupindia.gov.in",
+                          category: "General"
+                        },
+                        {
+                          name: "MUDRA Loan Scheme",
+                          description: "Micro-finance for small businesses and startups",
+                          eligibility: "Non-agricultural income generating activities, funding up to ₹10 lakh",
+                          benefits: "No collateral required, competitive interest rates",
+                          amount: "₹50,000 - ₹10 lakh",
+                          link: "https://www.mudra.org.in",
+                          category: "General"
+                        },
+                        {
+                          name: "Stand-Up India Scheme",
+                          description: "Bank loans for SC/ST and women entrepreneurs",
+                          eligibility: "SC/ST or women entrepreneurs, greenfield projects",
+                          benefits: "Preferential lending, mentorship support",
+                          amount: "₹10 lakh - ₹1 crore",
+                          link: "https://www.standupmitra.in",
+                          category: "General"
+                        }
+                      ];
+
+                      // Industry-specific schemes
+                      const industrySchemes = {
+                        healthcare: [
+                          {
+                            name: "Biotechnology Ignition Grant (BIG)",
+                            description: "Support for biotech and healthcare startups",
+                            eligibility: "Biotech/healthcare startups with innovative products",
+                            benefits: "Funding for product development and validation",
+                            amount: "Up to ₹50 lakh",
+                            link: "https://birac.nic.in",
+                            category: "HealthTech"
+                          },
+                          {
+                            name: "Ayushman Bharat Digital Mission",
+                            description: "Digital health ID and health tech support",
+                            eligibility: "Digital health solutions and platforms",
+                            benefits: "Integration support, government backing",
+                            amount: "Technical support + market access",
+                            link: "https://abdm.gov.in",
+                            category: "HealthTech"
+                          }
+                        ],
+                        education: [
+                          {
+                            name: "PM eVIDYA Scheme",
+                            description: "Digital education infrastructure support",
+                            eligibility: "EdTech companies providing digital learning solutions",
+                            benefits: "Government partnership opportunities, content distribution",
+                            amount: "Partnership + market access",
+                            link: "https://www.mhrd.gov.in",
+                            category: "EdTech"
+                          },
+                          {
+                            name: "SWAYAM Platform Integration",
+                            description: "Integration with national education platform",
+                            eligibility: "Quality educational content providers",
+                            benefits: "Access to millions of students, government credibility",
+                            amount: "Revenue sharing opportunities",
+                            link: "https://swayam.gov.in",
+                            category: "EdTech"
+                          }
+                        ],
+                        environment: [
+                          {
+                            name: "National Clean Energy Fund",
+                            description: "Funding for clean energy and environmental projects",
+                            eligibility: "Clean energy, waste management, environmental solutions",
+                            benefits: "Grants and low-interest loans for green initiatives",
+                            amount: "₹10 lakh - ₹5 crore",
+                            link: "https://mnre.gov.in",
+                            category: "CleanTech"
+                          },
+                          {
+                            name: "Swachh Bharat Mission Support",
+                            description: "Support for sanitation and waste management startups",
+                            eligibility: "Waste management, sanitation, cleanliness solutions",
+                            benefits: "Government contracts, policy support",
+                            amount: "Project-based funding",
+                            link: "https://swachhbharat.mygov.in",
+                            category: "CleanTech"
+                          }
+                        ],
+                        technology: [
+                          {
+                            name: "Software Technology Parks (STPI) Scheme",
+                            description: "Export promotion and tax benefits for software companies",
+                            eligibility: "Software development and IT services companies",
+                            benefits: "100% export income tax exemption, duty-free imports",
+                            amount: "Tax exemptions worth lakhs",
+                            link: "https://www.stpi.in",
+                            category: "Technology"
+                          },
+                          {
+                            name: "Digital India Land Records Modernization",
+                            description: "Opportunities in government digitization projects",
+                            eligibility: "Technology companies with government solutions",
+                            benefits: "Large-scale government contracts",
+                            amount: "Contract-based revenue",
+                            link: "https://digitalindia.gov.in",
+                            category: "Technology"
+                          }
+                        ],
+                        agriculture: [
+                          {
+                            name: "Agriculture Infrastructure Fund",
+                            description: "Funding for agriculture infrastructure and agri-tech",
+                            eligibility: "Agri-tech solutions, farming infrastructure",
+                            benefits: "Low-interest loans, subsidies",
+                            amount: "₹15 lakh - ₹2 crore",
+                            link: "https://www.nabard.org",
+                            category: "AgriTech"
+                          }
+                        ]
+                      };
+
+                      // Detect industry from user's startup description
+                      let applicableSchemes = [...baseSchemes];
+
+                      if (userText.includes('health') || userText.includes('medical') || userText.includes('medicine')) {
+                        applicableSchemes = [...applicableSchemes, ...(industrySchemes.healthcare || [])];
+                      }
+                      if (userText.includes('education') || userText.includes('learn') || userText.includes('student')) {
+                        applicableSchemes = [...applicableSchemes, ...(industrySchemes.education || [])];
+                      }
+                      if (userText.includes('environment') || userText.includes('green') || userText.includes('clean') || userText.includes('sustainable')) {
+                        applicableSchemes = [...applicableSchemes, ...(industrySchemes.environment || [])];
+                      }
+                      if (userText.includes('software') || userText.includes('technology') || userText.includes('digital') || userText.includes('app')) {
+                        applicableSchemes = [...applicableSchemes, ...(industrySchemes.technology || [])];
+                      }
+                      if (userText.includes('farm') || userText.includes('agriculture') || userText.includes('crop') || userText.includes('food production')) {
+                        applicableSchemes = [...applicableSchemes, ...(industrySchemes.agriculture || [])];
+                      }
+
+                      return applicableSchemes.slice(0, 6); // Show top 6 most relevant schemes
+                    };
+
+                    const schemes = generateGovernmentSchemes(validationData);
+
+                    return (
+                      <div className="space-y-4">
+                        {schemes.map((scheme, index) => (
+                          <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div className="flex items-start justify-between mb-3">
+                              <div>
+                                <h4 className="font-semibold text-lg">{scheme.name}</h4>
+                                <Badge variant="secondary" className="mt-1">{scheme.category}</Badge>
+                              </div>
+                              <div className="text-right">
+                                <div className="font-semibold text-green-600">{scheme.amount}</div>
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-3">{scheme.description}</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                              <div>
+                                <p className="text-xs font-medium text-gray-600">Eligibility:</p>
+                                <p className="text-xs text-gray-700">{scheme.eligibility}</p>
+                              </div>
+                              <div>
+                                <p className="text-xs font-medium text-gray-600">Benefits:</p>
+                                <p className="text-xs text-gray-700">{scheme.benefits}</p>
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <Button variant="outline" size="sm" asChild>
+                                <a href={scheme.link} target="_blank" rel="noopener noreferrer">
+                                  <ExternalLink className="w-3 h-3 mr-1" />
+                                  Learn More
+                                </a>
+                              </Button>
+                              <Badge variant="outline" className="text-green-600 border-green-200">
+                                Recommended for your startup
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+
+                        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                          <div className="flex items-start space-x-3">
+                            <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5" />
+                            <div>
+                              <h4 className="font-semibold text-blue-900 mb-2">💡 Pro Tip</h4>
+                              <p className="text-sm text-blue-700">
+                                Apply for multiple schemes simultaneously as they often complement each other.
+                                Consider consulting with a CA or business advisor to maximize your benefits.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </CardContent>
+              </Card>
+
               {/* Additional Tools */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
