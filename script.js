@@ -748,6 +748,41 @@ function loadDashboard() {
   }, 100);
 }
 
+function getValidationIcon(score) {
+  if (score >= 80) return '🌟';
+  if (score >= 60) return '✅';
+  if (score >= 40) return '⚡';
+  return '💡';
+}
+
+function getScoreClass(score) {
+  if (score >= 80) return 'excellent';
+  if (score >= 60) return 'good';
+  if (score >= 40) return 'average';
+  return 'needs-work';
+}
+
+function initializeDashboardCharts() {
+  // Add any chart initialization here
+}
+
+// New feature functions
+function showCompetitorAnalysis() {
+  showModal('competitor-analysis-modal');
+}
+
+function showPitchGenerator() {
+  showModal('pitch-generator-modal');
+}
+
+function showMonetizationFinder() {
+  showModal('monetization-finder-modal');
+}
+
+function showPitchDeckGenerator() {
+  showModal('pitch-deck-generator-modal');
+}
+
 function loadDashboardStats() {
   try {
     const history = JSON.parse(
@@ -771,9 +806,13 @@ function loadDashboardStats() {
           )
         : 0;
 
-    document.getElementById("total-validations").textContent = totalValidations;
-    document.getElementById("avg-score").textContent = avgScore;
-    document.getElementById("success-rate").textContent = `${successRate}%`;
+    const totalValidationsEl = document.getElementById("total-validations");
+    const avgScoreEl = document.getElementById("avg-score");
+    const successRateEl = document.getElementById("success-rate");
+
+    if (totalValidationsEl) totalValidationsEl.textContent = totalValidations;
+    if (avgScoreEl) avgScoreEl.textContent = avgScore;
+    if (successRateEl) successRateEl.textContent = `${successRate}%`;
   } catch (error) {
     console.error("Error loading dashboard stats:", error);
   }
