@@ -920,6 +920,45 @@ textarea {
   }
 }
 
+/* Auto-save Status */
+.auto-save-status {
+  position: fixed;
+  top: 100px;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-md);
+  z-index: 1100;
+  opacity: 0;
+  transform: translateX(100px);
+  transition: var(--transition);
+}
+
+.auto-save-status.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.auto-save-status.saving {
+  border-color: var(--warning-color);
+  color: var(--warning-color);
+}
+
+.auto-save-status.saved {
+  border-color: var(--success-color);
+  color: var(--success-color);
+}
+
+.auto-save-status.error {
+  border-color: var(--error-color);
+  color: var(--error-color);
+}
+
 /* Animation Classes */
 .fade-in {
   animation: fadeIn 0.3s ease-in;
