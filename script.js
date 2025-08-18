@@ -629,7 +629,7 @@ function loadDashboard() {
         <div class="dashboard-header">
           <div class="welcome-section">
             <h1>Welcome to Your Dashboard</h1>
-            <p>Welcome back, ${currentUser.firstName || currentUser.email.split('@')[0]}!</p>
+            <p>Welcome back, ${currentUser.firstName || currentUser.email.split("@")[0]}!</p>
           </div>
           <div class="quick-actions">
             <button onclick="showPage('validate')" class="btn btn-primary">
@@ -647,8 +647,8 @@ function loadDashboard() {
             <div class="stat-content">
               <div class="stat-value">${totalValidations}</div>
               <div class="stat-label">Total Validations</div>
-              <div class="stat-trend ${totalValidations > 0 ? 'positive' : 'neutral'}">
-                ${totalValidations > 0 ? '+' + totalValidations + ' this month' : 'Get started today'}
+              <div class="stat-trend ${totalValidations > 0 ? "positive" : "neutral"}">
+                ${totalValidations > 0 ? "+" + totalValidations + " this month" : "Get started today"}
               </div>
             </div>
           </div>
@@ -658,8 +658,8 @@ function loadDashboard() {
             <div class="stat-content">
               <div class="stat-value">${avgScore}</div>
               <div class="stat-label">Average Score</div>
-              <div class="stat-trend ${avgScore >= 70 ? 'positive' : avgScore >= 50 ? 'warning' : 'neutral'}">
-                ${avgScore >= 70 ? 'Excellent performance' : avgScore >= 50 ? 'Good progress' : 'Start validating'}
+              <div class="stat-trend ${avgScore >= 70 ? "positive" : avgScore >= 50 ? "warning" : "neutral"}">
+                ${avgScore >= 70 ? "Excellent performance" : avgScore >= 50 ? "Good progress" : "Start validating"}
               </div>
             </div>
           </div>
@@ -669,8 +669,8 @@ function loadDashboard() {
             <div class="stat-content">
               <div class="stat-value">${successRate}%</div>
               <div class="stat-label">Success Rate</div>
-              <div class="stat-trend ${successRate >= 60 ? 'positive' : successRate >= 30 ? 'warning' : 'neutral'}">
-                ${successRate >= 60 ? 'Great success rate' : successRate >= 30 ? 'Keep improving' : 'Start your journey'}
+              <div class="stat-trend ${successRate >= 60 ? "positive" : successRate >= 30 ? "warning" : "neutral"}">
+                ${successRate >= 60 ? "Great success rate" : successRate >= 30 ? "Keep improving" : "Start your journey"}
               </div>
             </div>
           </div>
@@ -683,14 +683,20 @@ function loadDashboard() {
               <button onclick="showPage('results')" class="btn btn-secondary btn-small">View All</button>
             </div>
             <div class="validation-list modern">
-              ${totalValidations === 0 ? `
+              ${
+                totalValidations === 0
+                  ? `
                 <div class="no-data-modern">
                   <div class="no-data-icon">🚀</div>
                   <h3>Ready to validate your first idea?</h3>
                   <p>Start your entrepreneurial journey by validating your startup concept with our AI-powered analysis.</p>
                   <button onclick="showPage('validate')" class="btn btn-primary">Start First Validation</button>
                 </div>
-              ` : validationHistory.slice(0, 5).map(validation => `
+              `
+                  : validationHistory
+                      .slice(0, 5)
+                      .map(
+                        (validation) => `
                 <div class="validation-item modern" onclick="loadValidationDetail('${validation.id}')">
                   <div class="validation-icon">
                     ${getValidationIcon(validation.overallScore)}
@@ -706,7 +712,10 @@ function loadDashboard() {
                     <span class="score-value">${validation.overallScore}</span>
                   </div>
                 </div>
-              `).join('')}
+              `,
+                      )
+                      .join("")
+              }
             </div>
           </div>
 
@@ -749,17 +758,17 @@ function loadDashboard() {
 }
 
 function getValidationIcon(score) {
-  if (score >= 80) return '🌟';
-  if (score >= 60) return '✅';
-  if (score >= 40) return '⚡';
-  return '💡';
+  if (score >= 80) return "🌟";
+  if (score >= 60) return "✅";
+  if (score >= 40) return "⚡";
+  return "💡";
 }
 
 function getScoreClass(score) {
-  if (score >= 80) return 'excellent';
-  if (score >= 60) return 'good';
-  if (score >= 40) return 'average';
-  return 'needs-work';
+  if (score >= 80) return "excellent";
+  if (score >= 60) return "good";
+  if (score >= 40) return "average";
+  return "needs-work";
 }
 
 function initializeDashboardCharts() {
@@ -768,19 +777,19 @@ function initializeDashboardCharts() {
 
 // New feature functions
 function showCompetitorAnalysis() {
-  showModal('competitor-analysis-modal');
+  showModal("competitor-analysis-modal");
 }
 
 function showPitchGenerator() {
-  showModal('pitch-generator-modal');
+  showModal("pitch-generator-modal");
 }
 
 function showMonetizationFinder() {
-  showModal('monetization-finder-modal');
+  showModal("monetization-finder-modal");
 }
 
 function showPitchDeckGenerator() {
-  showModal('pitch-deck-generator-modal');
+  showModal("pitch-deck-generator-modal");
 }
 
 function loadDashboardStats() {
@@ -1104,35 +1113,39 @@ function loadValidationContent() {
         </div>
     `;
 
-    // Force white styling after DOM is updated
-    setTimeout(() => {
-        forceValidationFormWhite();
-        if (typeof initializeAutoSave === 'function') {
-            initializeAutoSave();
-        }
-    }, 100);
+  // Force white styling after DOM is updated
+  setTimeout(() => {
+    forceValidationFormWhite();
+    if (typeof initializeAutoSave === "function") {
+      initializeAutoSave();
+    }
+  }, 100);
 }
 
 function forceValidationFormWhite() {
-    const container = document.querySelector('.validation-form-container');
-    const form = document.getElementById('validation-form');
+  const container = document.querySelector(".validation-form-container");
+  const form = document.getElementById("validation-form");
 
-    if (container) {
-        container.style.backgroundColor = 'white';
-        container.style.color = '#1a202c';
-    }
+  if (container) {
+    container.style.backgroundColor = "white";
+    container.style.color = "#1a202c";
+  }
 
-    if (form) {
-        const inputs = form.querySelectorAll('input, select, textarea, label, h3');
-        inputs.forEach(input => {
-            if (input.tagName === 'INPUT' || input.tagName === 'SELECT' || input.tagName === 'TEXTAREA') {
-                input.style.backgroundColor = 'white';
-                input.style.color = '#1a202c';
-            } else {
-                input.style.color = '#1a202c';
-            }
-        });
-    }
+  if (form) {
+    const inputs = form.querySelectorAll("input, select, textarea, label, h3");
+    inputs.forEach((input) => {
+      if (
+        input.tagName === "INPUT" ||
+        input.tagName === "SELECT" ||
+        input.tagName === "TEXTAREA"
+      ) {
+        input.style.backgroundColor = "white";
+        input.style.color = "#1a202c";
+      } else {
+        input.style.color = "#1a202c";
+      }
+    });
+  }
 }
 
 function loadResultsPage() {
@@ -1974,21 +1987,32 @@ function loadDemoData() {
     if (form) {
       const startupTitle = form.querySelector('[name="startupTitle"]');
       const problemStatement = form.querySelector('[name="problemStatement"]');
-      const solutionDescription = form.querySelector('[name="solutionDescription"]');
+      const solutionDescription = form.querySelector(
+        '[name="solutionDescription"]',
+      );
       const targetMarket = form.querySelector('[name="targetMarket"]');
       const marketSize = form.querySelector('[name="marketSize"]');
       const revenueModel = form.querySelector('[name="revenueModel"]');
       const currentStage = form.querySelector('[name="currentStage"]');
 
       if (startupTitle) startupTitle.value = "EcoClean Solutions";
-      if (problemStatement) problemStatement.value = "Traditional cleaning products contain harmful chemicals that damage the environment and pose health risks to users. Many eco-friendly alternatives are either expensive or ineffective, leaving consumers with limited sustainable options.";
-      if (solutionDescription) solutionDescription.value = "EcoClean Solutions offers biodegradable, plant-based cleaning products that are both environmentally safe and highly effective. Our products use innovative natural formulations that clean as well as traditional chemicals without the environmental impact.";
-      if (targetMarket) targetMarket.value = "Environmentally conscious households and businesses";
+      if (problemStatement)
+        problemStatement.value =
+          "Traditional cleaning products contain harmful chemicals that damage the environment and pose health risks to users. Many eco-friendly alternatives are either expensive or ineffective, leaving consumers with limited sustainable options.";
+      if (solutionDescription)
+        solutionDescription.value =
+          "EcoClean Solutions offers biodegradable, plant-based cleaning products that are both environmentally safe and highly effective. Our products use innovative natural formulations that clean as well as traditional chemicals without the environmental impact.";
+      if (targetMarket)
+        targetMarket.value =
+          "Environmentally conscious households and businesses";
       if (marketSize) marketSize.value = "large";
       if (revenueModel) revenueModel.value = "subscription";
       if (currentStage) currentStage.value = "mvp";
 
-      showAlert("Demo data loaded! Feel free to modify the inputs and submit for validation.", "success");
+      showAlert(
+        "Demo data loaded! Feel free to modify the inputs and submit for validation.",
+        "success",
+      );
     }
   }, 500);
 }
@@ -2001,7 +2025,7 @@ function initializeAuthPage() {
 
   // Update user type selection UI if needed
   const userTypeCards = document.querySelectorAll(".user-type-card");
-  userTypeCards.forEach(card => {
+  userTypeCards.forEach((card) => {
     card.classList.remove("active");
     if (card.onclick.toString().includes("entrepreneur")) {
       card.classList.add("active");
@@ -2013,9 +2037,9 @@ function initializeAuthPage() {
 }
 
 // Close modal when clicking outside
-window.addEventListener("click", function(event) {
+window.addEventListener("click", function (event) {
   const modals = document.querySelectorAll(".modal");
-  modals.forEach(modal => {
+  modals.forEach((modal) => {
     if (event.target === modal) {
       modal.style.display = "none";
       document.body.style.overflow = "auto";

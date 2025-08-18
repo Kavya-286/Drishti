@@ -165,8 +165,8 @@ function renderResults() {
                     </div>
                 </div>
             `
-                : ""
-            }
+                            : ""
+                        }
             
             <div class="results-recommendations">
                 <h2>Strategic Recommendations</h2>
