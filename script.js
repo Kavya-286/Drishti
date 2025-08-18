@@ -915,6 +915,36 @@ function loadValidationContent() {
             </div>
         </div>
     `;
+
+    // Force white styling after DOM is updated
+    setTimeout(() => {
+        forceValidationFormWhite();
+        if (typeof initializeAutoSave === 'function') {
+            initializeAutoSave();
+        }
+    }, 100);
+}
+
+function forceValidationFormWhite() {
+    const container = document.querySelector('.validation-form-container');
+    const form = document.getElementById('validation-form');
+
+    if (container) {
+        container.style.backgroundColor = 'white';
+        container.style.color = '#1a202c';
+    }
+
+    if (form) {
+        const inputs = form.querySelectorAll('input, select, textarea, label, h3');
+        inputs.forEach(input => {
+            if (input.tagName === 'INPUT' || input.tagName === 'SELECT' || input.tagName === 'TEXTAREA') {
+                input.style.backgroundColor = 'white';
+                input.style.color = '#1a202c';
+            } else {
+                input.style.color = '#1a202c';
+            }
+        });
+    }
 }
 
 function loadResultsPage() {
