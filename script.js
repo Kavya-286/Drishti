@@ -73,6 +73,11 @@ function loadPageContent(pageName) {
     case "about":
       loadAboutPage();
       break;
+    case "auth":
+      // Auth page is already in HTML, just show it
+      // Initialize auto-save for the auth form if needed
+      initializeAuthPage();
+      break;
   }
 }
 
@@ -1510,7 +1515,7 @@ function loadAboutPage() {
                     </div>
 
                     <div class="about-section">
-                        <h2>📈 Our Impact</h2>
+                        <h2>��� Our Impact</h2>
                         <p>Since our launch, we've helped thousands of entrepreneurs validate their ideas and achieve remarkable success.</p>
                         <div class="impact-stats">
                             <div class="stat-highlight">
