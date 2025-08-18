@@ -1,6 +1,10 @@
 // Simple build script for the server
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Create dist directory if it doesn't exist
 const distDir = path.join(__dirname, "dist");
@@ -26,9 +30,13 @@ mlFiles.forEach((file) => {
 
 // Create a simple Node.js server entry point
 const serverCode = `
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -54,7 +62,7 @@ app.listen(PORT, () => {
 });
 `;
 
-fs.writeFileSync(path.join(serverDir, "node-build.js"), serverCode);
-console.log("Created node-build.js server file");
+fs.writeFileSync(path.join(serverDir, "node-build.mjs"), serverCode);
+console.log("Created node-build.mjs server file");
 
 console.log("Build completed successfully!");

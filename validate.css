@@ -1,5 +1,11 @@
 /* Validation Page Styles */
 
+#page-validate {
+  background: var(--background-gradient) !important;
+  min-height: 100vh;
+  color: var(--text-primary) !important;
+}
+
 .validation-header {
   text-align: center;
   margin-bottom: 3rem;
@@ -29,11 +35,16 @@
 .validation-form-container {
   max-width: 800px;
   margin: 0 auto;
-  background: white;
+  background: white !important;
+  backdrop-filter: blur(20px);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
-  padding: 2rem;
-  border: 1px solid var(--border-color);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  padding: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 2rem;
+  color: var(--text-primary) !important;
 }
 
 /* Form Sections */
@@ -41,6 +52,8 @@
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid var(--border-color);
+  background: transparent !important;
+  color: var(--text-primary) !important;
 }
 
 .form-section:last-child {
@@ -50,12 +63,13 @@
 }
 
 .form-section h3 {
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
   margin-bottom: 1.5rem;
   font-size: 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-weight: 600;
 }
 
 .form-section h3::before {
@@ -81,7 +95,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
   font-size: 0.875rem;
 }
 
@@ -94,7 +108,8 @@
   border-radius: var(--border-radius);
   font-size: 0.875rem;
   transition: var(--transition);
-  background: white;
+  background: white !important;
+  color: var(--text-primary) !important;
   font-family: inherit;
 }
 
@@ -103,7 +118,12 @@
 #validation-form textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.15),
+    0 4px 12px rgba(99, 102, 241, 0.1);
+  transform: translateY(-1px);
+  background: white !important;
+  color: var(--text-primary) !important;
 }
 
 #validation-form textarea {
@@ -471,22 +491,77 @@
   }
 }
 
-/* Dark mode considerations (if implemented later) */
+/* Force white background for validation form - override any dark themes */
+#page-validate,
+#page-validate *,
+.validation-form-container,
+.validation-form-container *,
+#validation-form,
+#validation-form * {
+  color: var(--text-primary) !important;
+}
+
+.validation-form-container,
+#validation-form {
+  background: white !important;
+}
+
+#validation-form input,
+#validation-form select,
+#validation-form textarea,
+#validation-form input:focus,
+#validation-form select:focus,
+#validation-form textarea:focus {
+  background: white !important;
+  color: var(--text-primary) !important;
+}
+
+.form-section h3,
+#validation-form label {
+  color: var(--text-primary) !important;
+}
+
+/* Dark mode override - force light mode for validation form */
 @media (prefers-color-scheme: dark) {
+  #page-validate {
+    background: var(--background-gradient) !important;
+  }
+
   .validation-form-container {
-    background: #1a1a1a;
-    border-color: #404040;
+    background: white !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
   }
 
   #validation-form input,
   #validation-form select,
   #validation-form textarea {
-    background: #2a2a2a;
-    color: #ffffff;
-    border-color: #404040;
+    background: white !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
   }
 
   .validation-tips {
-    background: rgba(99, 102, 241, 0.1);
+    background: rgba(99, 102, 241, 0.1) !important;
   }
+
+  .form-section h3,
+  #validation-form label {
+    color: var(--text-primary) !important;
+  }
+}
+
+/* Additional validation form fixes */
+#validation-form input::placeholder,
+#validation-form textarea::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+}
+
+/* Ultra-specific form styling to override any theme conflicts */
+.page#page-validate #validation-form input,
+.page#page-validate #validation-form select,
+.page#page-validate #validation-form textarea {
+  color: #1a202c !important;
+  background: white !important;
+  border: 1px solid #e2e8f0 !important;
 }

@@ -73,6 +73,11 @@ function loadPageContent(pageName) {
     case "about":
       loadAboutPage();
       break;
+    case "auth":
+      // Auth page is already in HTML, just show it
+      // Initialize auto-save for the auth form if needed
+      initializeAuthPage();
+      break;
   }
 }
 
@@ -589,9 +594,202 @@ function loadDashboard() {
     return;
   }
 
-  // Load user statistics
-  loadDashboardStats();
-  loadValidationHistory();
+  const dashboardPage = document.getElementById("page-dashboard");
+  if (currentUser.userType === "investor") {
+    // Load investor dashboard instead
+    showPage("investor-dashboard");
+    return;
+  }
+
+  // Load entrepreneur dashboard with enhanced design
+  const validationHistory = JSON.parse(
+    localStorage.getItem(`validationHistory_${currentUser.id}`) || "[]",
+  );
+
+  const totalValidations = validationHistory.length;
+  const avgScore =
+    totalValidations > 0
+      ? Math.round(
+          validationHistory.reduce((sum, val) => sum + val.overallScore, 0) /
+            totalValidations,
+        )
+      : 0;
+  const successRate =
+    totalValidations > 0
+      ? Math.round(
+          (validationHistory.filter((val) => val.overallScore >= 70).length /
+            totalValidations) *
+            100,
+        )
+      : 0;
+
+  dashboardPage.innerHTML = `
+    <div class="dashboard-page">
+      <div class="container">
+        <div class="dashboard-header">
+          <div class="welcome-section">
+            <h1>Welcome to Your Dashboard</h1>
+            <p>Welcome back, ${currentUser.firstName || currentUser.email.split("@")[0]}!</p>
+          </div>
+          <div class="quick-actions">
+            <button onclick="showPage('validate')" class="btn btn-primary">
+              🚀 Start New Validation
+            </button>
+            <button onclick="showPage('features')" class="btn btn-outline">
+              ✨ Explore Features
+            </button>
+          </div>
+        </div>
+
+        <div class="dashboard-stats">
+          <div class="stat-card modern">
+            <div class="stat-icon">📈</div>
+            <div class="stat-content">
+              <div class="stat-value">${totalValidations}</div>
+              <div class="stat-label">Total Validations</div>
+              <div class="stat-trend ${totalValidations > 0 ? "positive" : "neutral"}">
+                ${totalValidations > 0 ? "+" + totalValidations + " this month" : "Get started today"}
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card modern">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-content">
+              <div class="stat-value">${avgScore}</div>
+              <div class="stat-label">Average Score</div>
+              <div class="stat-trend ${avgScore >= 70 ? "positive" : avgScore >= 50 ? "warning" : "neutral"}">
+                ${avgScore >= 70 ? "Excellent performance" : avgScore >= 50 ? "Good progress" : "Start validating"}
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card modern">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-content">
+              <div class="stat-value">${successRate}%</div>
+              <div class="stat-label">Success Rate</div>
+              <div class="stat-trend ${successRate >= 60 ? "positive" : successRate >= 30 ? "warning" : "neutral"}">
+                ${successRate >= 60 ? "Great success rate" : successRate >= 30 ? "Keep improving" : "Start your journey"}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-content">
+          <div class="dashboard-section">
+            <div class="section-header">
+              <h2>Recent Validations</h2>
+              <button onclick="showPage('results')" class="btn btn-secondary btn-small">View All</button>
+            </div>
+            <div class="validation-list modern">
+              ${
+                totalValidations === 0
+                  ? `
+                <div class="no-data-modern">
+                  <div class="no-data-icon">🚀</div>
+                  <h3>Ready to validate your first idea?</h3>
+                  <p>Start your entrepreneurial journey by validating your startup concept with our AI-powered analysis.</p>
+                  <button onclick="showPage('validate')" class="btn btn-primary">Start First Validation</button>
+                </div>
+              `
+                  : validationHistory
+                      .slice(0, 5)
+                      .map(
+                        (validation) => `
+                <div class="validation-item modern" onclick="loadValidationDetail('${validation.id}')">
+                  <div class="validation-icon">
+                    ${getValidationIcon(validation.overallScore)}
+                  </div>
+                  <div class="validation-content">
+                    <div class="validation-title">${validation.ideaName}</div>
+                    <div class="validation-meta">
+                      <span class="validation-date">${formatTime(validation.validatedAt)}</span>
+                      <span class="validation-stage badge">${validation.stage || "Idea"}</span>
+                    </div>
+                  </div>
+                  <div class="validation-score-circle ${getScoreClass(validation.overallScore)}">
+                    <span class="score-value">${validation.overallScore}</span>
+                  </div>
+                </div>
+              `,
+                      )
+                      .join("")
+              }
+            </div>
+          </div>
+
+          <div class="dashboard-section">
+            <div class="section-header">
+              <h2>Quick Tools</h2>
+            </div>
+            <div class="tools-grid">
+              <div class="tool-card" onclick="showCompetitorAnalysis()">
+                <div class="tool-icon">🏆</div>
+                <h3>Competitor Analysis</h3>
+                <p>Analyze top 5 competitors and find your differentiation</p>
+              </div>
+              <div class="tool-card" onclick="showPitchGenerator()">
+                <div class="tool-icon">🎤</div>
+                <h3>AI Pitch Generator</h3>
+                <p>Generate compelling pitches with AI assistance</p>
+              </div>
+              <div class="tool-card" onclick="showMonetizationFinder()">
+                <div class="tool-icon">💰</div>
+                <h3>Monetization Finder</h3>
+                <p>Discover revenue models for your business</p>
+              </div>
+              <div class="tool-card" onclick="showPitchDeckGenerator()">
+                <div class="tool-icon">📊</div>
+                <h3>Pitch Deck Builder</h3>
+                <p>Create professional pitch decks automatically</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Initialize any charts or dynamic content
+  setTimeout(() => {
+    initializeDashboardCharts();
+  }, 100);
+}
+
+function getValidationIcon(score) {
+  if (score >= 80) return "🌟";
+  if (score >= 60) return "✅";
+  if (score >= 40) return "⚡";
+  return "💡";
+}
+
+function getScoreClass(score) {
+  if (score >= 80) return "excellent";
+  if (score >= 60) return "good";
+  if (score >= 40) return "average";
+  return "needs-work";
+}
+
+function initializeDashboardCharts() {
+  // Add any chart initialization here
+}
+
+// New feature functions
+function showCompetitorAnalysis() {
+  showModal("competitor-analysis-modal");
+}
+
+function showPitchGenerator() {
+  showModal("pitch-generator-modal");
+}
+
+function showMonetizationFinder() {
+  showModal("monetization-finder-modal");
+}
+
+function showPitchDeckGenerator() {
+  showModal("pitch-deck-generator-modal");
 }
 
 function loadDashboardStats() {
@@ -617,9 +815,13 @@ function loadDashboardStats() {
           )
         : 0;
 
-    document.getElementById("total-validations").textContent = totalValidations;
-    document.getElementById("avg-score").textContent = avgScore;
-    document.getElementById("success-rate").textContent = `${successRate}%`;
+    const totalValidationsEl = document.getElementById("total-validations");
+    const avgScoreEl = document.getElementById("avg-score");
+    const successRateEl = document.getElementById("success-rate");
+
+    if (totalValidationsEl) totalValidationsEl.textContent = totalValidations;
+    if (avgScoreEl) avgScoreEl.textContent = avgScore;
+    if (successRateEl) successRateEl.textContent = `${successRate}%`;
   } catch (error) {
     console.error("Error loading dashboard stats:", error);
   }
@@ -910,6 +1112,40 @@ function loadValidationContent() {
             </div>
         </div>
     `;
+
+  // Force white styling after DOM is updated
+  setTimeout(() => {
+    forceValidationFormWhite();
+    if (typeof initializeAutoSave === "function") {
+      initializeAutoSave();
+    }
+  }, 100);
+}
+
+function forceValidationFormWhite() {
+  const container = document.querySelector(".validation-form-container");
+  const form = document.getElementById("validation-form");
+
+  if (container) {
+    container.style.backgroundColor = "white";
+    container.style.color = "#1a202c";
+  }
+
+  if (form) {
+    const inputs = form.querySelectorAll("input, select, textarea, label, h3");
+    inputs.forEach((input) => {
+      if (
+        input.tagName === "INPUT" ||
+        input.tagName === "SELECT" ||
+        input.tagName === "TEXTAREA"
+      ) {
+        input.style.backgroundColor = "white";
+        input.style.color = "#1a202c";
+      } else {
+        input.style.color = "#1a202c";
+      }
+    });
+  }
 }
 
 function loadResultsPage() {
@@ -1152,23 +1388,127 @@ function generateFounderReadinessContent() {
 function loadFeaturesPage() {
   const featuresPage = document.getElementById("page-features");
   featuresPage.innerHTML = `
-        <div class="container">
-            <div class="page-header">
-                <h1>Platform Features</h1>
-                <p>Comprehensive tools for startup validation and growth</p>
-            </div>
-            <div class="features-content">
-                <div class="feature-detail">
-                    <h3>🤖 AI-Powered Analysis</h3>
-                    <p>Advanced machine learning algorithms analyze your startup idea across multiple dimensions.</p>
+        <div class="features-page">
+            <div class="container">
+                <div class="features-hero">
+                    <div class="badge">🚀 Comprehensive Platform</div>
+                    <h1>Powerful Features for Startup Success</h1>
+                    <p>Everything you need to validate, analyze, and launch your startup with confidence</p>
                 </div>
-                <div class="feature-detail">
-                    <h3>📊 Market Research</h3>
-                    <p>Comprehensive market analysis and competitive intelligence.</p>
+
+                <div class="features-main-grid">
+                    <div class="feature-showcase">
+                        <div class="feature-showcase-icon">🤖</div>
+                        <div class="feature-showcase-content">
+                            <h2>AI-Powered Analysis</h2>
+                            <p>Advanced machine learning algorithms analyze your startup idea across 15+ dimensions, providing insights that would take months of manual research.</p>
+                            <ul class="feature-benefits">
+                                <li>Natural language processing for idea assessment</li>
+                                <li>Market sentiment analysis</li>
+                                <li>Competitive landscape mapping</li>
+                                <li>Risk assessment algorithms</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="feature-showcase">
+                        <div class="feature-showcase-icon">📊</div>
+                        <div class="feature-showcase-content">
+                            <h2>Comprehensive Scoring System</h2>
+                            <p>Multi-dimensional scoring framework that evaluates your startup across critical success factors with transparent methodology.</p>
+                            <ul class="feature-benefits">
+                                <li>Problem-solution fit analysis</li>
+                                <li>Market opportunity assessment</li>
+                                <li>Business model viability</li>
+                                <li>Team strength evaluation</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="feature-showcase">
+                        <div class="feature-showcase-icon">💡</div>
+                        <div class="feature-showcase-content">
+                            <h2>Actionable Recommendations</h2>
+                            <p>Receive personalized, step-by-step guidance based on your specific startup challenges and market conditions.</p>
+                            <ul class="feature-benefits">
+                                <li>Strategic roadmap creation</li>
+                                <li>Priority action items</li>
+                                <li>Resource recommendations</li>
+                                <li>Risk mitigation strategies</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="feature-detail">
-                    <h3>💰 Financial Modeling</h3>
-                    <p>Revenue projections and business model validation.</p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Market Analysis</h3>
+                        <p>Deep market research, size estimation, and trend analysis to understand your opportunity.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <h3>Competitive Intelligence</h3>
+                        <p>Comprehensive competitor analysis and positioning strategies to find your unique advantage.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3>Financial Modeling</h3>
+                        <p>Revenue projections, cost analysis, and business model validation with scenario planning.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3>Team Assessment</h3>
+                        <p>Founder readiness evaluation and team capability analysis for execution success.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3>Growth Potential</h3>
+                        <p>Scalability analysis and growth trajectory forecasting with market expansion insights.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <h3>Real-time Updates</h3>
+                        <p>Live market data integration and continuous validation updates as conditions change.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <h3>Export & Reports</h3>
+                        <p>Professional pitch decks, investor reports, and detailed analysis exports in multiple formats.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🌐</div>
+                        <h3>Investor Matching</h3>
+                        <p>Connect with relevant investors based on your industry, stage, and funding requirements.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3>SWOT Analysis</h3>
+                        <p>Automated strengths, weaknesses, opportunities, and threats analysis for strategic planning.</p>
+                    </div>
+                </div>
+
+                <div class="features-cta">
+                    <div class="cta-content">
+                        <h2>Ready to Experience These Features?</h2>
+                        <p>Start your free validation today and see how our comprehensive platform can accelerate your startup journey.</p>
+                        <div class="cta-buttons">
+                            <button onclick="showPage('validate')" class="btn btn-primary btn-large">
+                                Start Free Validation
+                            </button>
+                            <button onclick="showDemoModal()" class="btn btn-outline btn-large">
+                                Watch Demo
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1178,32 +1518,127 @@ function loadFeaturesPage() {
 function loadPricingPage() {
   const pricingPage = document.getElementById("page-pricing");
   pricingPage.innerHTML = `
-        <div class="container">
-            <div class="page-header">
-                <h1>Pricing Plans</h1>
-                <p>Choose the plan that fits your needs</p>
-            </div>
-            <div class="pricing-content">
-                <div class="pricing-card">
-                    <h3>Free</h3>
-                    <div class="price">$0/month</div>
-                    <ul>
-                        <li>1 validation per month</li>
-                        <li>Basic analysis</li>
-                        <li>Email support</li>
-                    </ul>
-                    <button class="btn btn-outline">Current Plan</button>
+        <div class="pricing-page">
+            <div class="container">
+                <div class="pricing-hero">
+                    <div class="badge">💰 Flexible Pricing</div>
+                    <h1>Choose Your Success Plan</h1>
+                    <p>Transparent pricing designed to grow with your startup journey. No hidden fees, cancel anytime.</p>
                 </div>
-                <div class="pricing-card featured">
-                    <h3>Pro</h3>
-                    <div class="price">$29/month</div>
-                    <ul>
-                        <li>Unlimited validations</li>
-                        <li>Advanced AI analysis</li>
-                        <li>Priority support</li>
-                        <li>Export reports</li>
-                    </ul>
-                    <button class="btn btn-primary">Upgrade</button>
+
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <h3>Starter</h3>
+                        <div class="price">$0<span class="period">/month</span></div>
+                        <p class="plan-description">Perfect for exploring your first startup idea</p>
+                        <ul>
+                            <li>1 validation per month</li>
+                            <li>Basic AI analysis</li>
+                            <li>Essential scoring metrics</li>
+                            <li>Email support</li>
+                            <li>Community access</li>
+                        </ul>
+                        <button onclick="showPage('auth')" class="btn btn-outline">Get Started Free</button>
+                    </div>
+
+                    <div class="pricing-card featured">
+                        <h3>Professional</h3>
+                        <div class="price">$29<span class="period">/month</span></div>
+                        <p class="plan-description">Ideal for serious entrepreneurs and early-stage startups</p>
+                        <ul>
+                            <li>Unlimited validations</li>
+                            <li>Advanced AI analysis</li>
+                            <li>Comprehensive scoring</li>
+                            <li>SWOT analysis</li>
+                            <li>Pitch deck generation</li>
+                            <li>Export capabilities</li>
+                            <li>Priority support</li>
+                            <li>Investor matching</li>
+                        </ul>
+                        <button onclick="showAlert('Pro plan coming soon!', 'info')" class="btn btn-primary">Upgrade to Pro</button>
+                    </div>
+
+                    <div class="pricing-card">
+                        <h3>Enterprise</h3>
+                        <div class="price">$99<span class="period">/month</span></div>
+                        <p class="plan-description">For teams, accelerators, and established companies</p>
+                        <ul>
+                            <li>Everything in Professional</li>
+                            <li>Team collaboration</li>
+                            <li>Multiple project management</li>
+                            <li>Custom branding</li>
+                            <li>API access</li>
+                            <li>Dedicated support</li>
+                            <li>Custom integrations</li>
+                            <li>Training sessions</li>
+                        </ul>
+                        <button onclick="showAlert('Enterprise plan coming soon!', 'info')" class="btn btn-secondary">Contact Sales</button>
+                    </div>
+                </div>
+
+                <div class="pricing-features">
+                    <div class="features-comparison">
+                        <h2>Why Choose Drishti?</h2>
+                        <div class="comparison-grid">
+                            <div class="comparison-item">
+                                <div class="comparison-icon">🎯</div>
+                                <h4>Accurate Analysis</h4>
+                                <p>95% accuracy rate validated by successful startup outcomes</p>
+                            </div>
+                            <div class="comparison-item">
+                                <div class="comparison-icon">⚡</div>
+                                <h4>Lightning Fast</h4>
+                                <p>Get comprehensive validation results in under 3 minutes</p>
+                            </div>
+                            <div class="comparison-item">
+                                <div class="comparison-icon">🔒</div>
+                                <h4>Secure & Private</h4>
+                                <p>Your ideas are protected with enterprise-grade security</p>
+                            </div>
+                            <div class="comparison-item">
+                                <div class="comparison-icon">🌟</div>
+                                <h4>Proven Results</h4>
+                                <p>500+ successful startups validated and $2M+ in funding secured</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pricing-faq">
+                    <h2>Frequently Asked Questions</h2>
+                    <div class="faq-grid">
+                        <div class="faq-item">
+                            <h4>Can I change plans anytime?</h4>
+                            <p>Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h4>Is there a free trial?</h4>
+                            <p>Our Starter plan is completely free with no time limit. Upgrade when you're ready for more features.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h4>What payment methods do you accept?</h4>
+                            <p>We accept all major credit cards, PayPal, and bank transfers for enterprise plans.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h4>Do you offer refunds?</h4>
+                            <p>Yes, we offer a 30-day money-back guarantee on all paid plans, no questions asked.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pricing-cta">
+                    <div class="cta-content">
+                        <h2>Ready to Validate Your Startup?</h2>
+                        <p>Join thousands of entrepreneurs who trust Drishti for their startup validation needs.</p>
+                        <div class="cta-buttons">
+                            <button onclick="showPage('validate')" class="btn btn-primary btn-large">
+                                Start Free Validation
+                            </button>
+                            <button onclick="showDemoModal()" class="btn btn-outline btn-large">
+                                Watch Demo
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1213,19 +1648,140 @@ function loadPricingPage() {
 function loadAboutPage() {
   const aboutPage = document.getElementById("page-about");
   aboutPage.innerHTML = `
-        <div class="container">
-            <div class="page-header">
-                <h1>About Drishti</h1>
-                <p>Empowering entrepreneurs with AI-driven insights</p>
-            </div>
-            <div class="about-content">
-                <div class="about-section">
-                    <h3>Our Mission</h3>
-                    <p>To help entrepreneurs validate their startup ideas and increase their chances of success through advanced AI analysis and comprehensive market research.</p>
+        <div class="about-page">
+            <div class="container">
+                <div class="about-hero">
+                    <div class="badge">🌟 Our Story</div>
+                    <h1>Empowering Entrepreneurs Worldwide</h1>
+                    <p>We're on a mission to democratize startup success through AI-powered validation and insights.</p>
                 </div>
-                <div class="about-section">
-                    <h3>How It Works</h3>
-                    <p>Our platform uses machine learning algorithms to analyze your startup idea across multiple dimensions including market potential, competitive landscape, and financial viability.</p>
+
+                <div class="about-content">
+                    <div class="about-section">
+                        <h2>🎯 Our Mission</h2>
+                        <p>To help entrepreneurs validate their startup ideas and increase their chances of success through advanced AI analysis and comprehensive market research. We believe that every great idea deserves a fair chance to succeed, and our platform provides the tools and insights needed to turn ideas into thriving businesses.</p>
+                        <p>Founded by entrepreneurs for entrepreneurs, we understand the challenges of building a startup from the ground up. That's why we've created a platform that combines cutting-edge technology with practical business wisdom to guide you through the validation process.</p>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>🚀 How Drishti Works</h2>
+                        <p>Our platform uses advanced machine learning algorithms to analyze your startup idea across 15+ critical dimensions including market potential, competitive landscape, financial viability, and execution readiness. Here's how we make it happen:</p>
+                        <div class="process-steps">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Idea Submission</h4>
+                                    <p>Share your startup concept through our comprehensive questionnaire</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>AI Analysis</h4>
+                                    <p>Our algorithms analyze market data, competition, and business model viability</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Insights & Recommendations</h4>
+                                    <p>Receive detailed scores, analysis, and actionable next steps</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>👥 Meet Our Team</h2>
+                        <p>We're a diverse team of entrepreneurs, engineers, and business experts passionate about helping startups succeed.</p>
+                        <div class="team-grid">
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-name">Alex Thompson</div>
+                                <div class="member-role">CEO & Co-founder</div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👩‍🔬</div>
+                                <div class="member-name">Dr. Sarah Chen</div>
+                                <div class="member-role">CTO & AI Lead</div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍📊</div>
+                                <div class="member-name">Michael Rodriguez</div>
+                                <div class="member-role">Head of Business Development</div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👩‍💼</div>
+                                <div class="member-name">Emma Wilson</div>
+                                <div class="member-role">Head of Product</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>💎 Our Values</h2>
+                        <p>These core values guide everything we do and shape our commitment to helping entrepreneurs succeed.</p>
+                        <div class="values-grid">
+                            <div class="value-item">
+                                <span class="value-icon">🎯</span>
+                                <h4>Accuracy First</h4>
+                                <p>We're committed to providing the most accurate and reliable startup validation insights in the industry.</p>
+                            </div>
+                            <div class="value-item">
+                                <span class="value-icon">🚀</span>
+                                <h4>Innovation</h4>
+                                <p>We continuously push the boundaries of what's possible with AI and machine learning for business validation.</p>
+                            </div>
+                            <div class="value-item">
+                                <span class="value-icon">🤝</span>
+                                <h4>Transparency</h4>
+                                <p>We believe in clear, honest communication and transparent methodologies in all our analyses.</p>
+                            </div>
+                            <div class="value-item">
+                                <span class="value-icon">🌟</span>
+                                <h4>Empowerment</h4>
+                                <p>We empower entrepreneurs with the tools and knowledge they need to make informed decisions.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>📈 Our Impact</h2>
+                        <p>Since our launch, we've helped thousands of entrepreneurs validate their ideas and achieve remarkable success.</p>
+                        <div class="impact-stats">
+                            <div class="stat-highlight">
+                                <div class="stat-number">500+</div>
+                                <div class="stat-label">Startups Validated</div>
+                            </div>
+                            <div class="stat-highlight">
+                                <div class="stat-number">95%</div>
+                                <div class="stat-label">Accuracy Rate</div>
+                            </div>
+                            <div class="stat-highlight">
+                                <div class="stat-number">$2M+</div>
+                                <div class="stat-label">Funding Secured</div>
+                            </div>
+                            <div class="stat-highlight">
+                                <div class="stat-number">50+</div>
+                                <div class="stat-label">Countries Served</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-cta">
+                    <div class="cta-content">
+                        <h2>Ready to Validate Your Idea?</h2>
+                        <p>Join the community of successful entrepreneurs who trust Drishti for their startup validation needs.</p>
+                        <div class="cta-buttons">
+                            <button onclick="showPage('validate')" class="btn btn-primary btn-large">
+                                Start Your Validation
+                            </button>
+                            <button onclick="showPage('auth')" class="btn btn-outline btn-large">
+                                Create Account
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1396,3 +1952,97 @@ function exportFounderReport() {
     showAlert("Report exported successfully!", "success");
   }, 1500);
 }
+
+// Demo Modal Functions
+function showDemoModal() {
+  const modal = document.getElementById("demo-modal");
+  modal.style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = "none";
+  document.body.style.overflow = "auto";
+}
+
+function startInteractiveDemo() {
+  // Close the modal first
+  closeModal("demo-modal");
+
+  // Show a demo version of the validation page
+  showAlert("Starting interactive demo...", "info");
+
+  // Navigate to validation page with demo data
+  setTimeout(() => {
+    showPage("validate");
+    loadDemoData();
+  }, 1000);
+}
+
+function loadDemoData() {
+  // Auto-fill the validation form with demo data
+  setTimeout(() => {
+    const form = document.getElementById("validation-form");
+    if (form) {
+      const startupTitle = form.querySelector('[name="startupTitle"]');
+      const problemStatement = form.querySelector('[name="problemStatement"]');
+      const solutionDescription = form.querySelector(
+        '[name="solutionDescription"]',
+      );
+      const targetMarket = form.querySelector('[name="targetMarket"]');
+      const marketSize = form.querySelector('[name="marketSize"]');
+      const revenueModel = form.querySelector('[name="revenueModel"]');
+      const currentStage = form.querySelector('[name="currentStage"]');
+
+      if (startupTitle) startupTitle.value = "EcoClean Solutions";
+      if (problemStatement)
+        problemStatement.value =
+          "Traditional cleaning products contain harmful chemicals that damage the environment and pose health risks to users. Many eco-friendly alternatives are either expensive or ineffective, leaving consumers with limited sustainable options.";
+      if (solutionDescription)
+        solutionDescription.value =
+          "EcoClean Solutions offers biodegradable, plant-based cleaning products that are both environmentally safe and highly effective. Our products use innovative natural formulations that clean as well as traditional chemicals without the environmental impact.";
+      if (targetMarket)
+        targetMarket.value =
+          "Environmentally conscious households and businesses";
+      if (marketSize) marketSize.value = "large";
+      if (revenueModel) revenueModel.value = "subscription";
+      if (currentStage) currentStage.value = "mvp";
+
+      showAlert(
+        "Demo data loaded! Feel free to modify the inputs and submit for validation.",
+        "success",
+      );
+    }
+  }, 500);
+}
+
+// Initialize auth page
+function initializeAuthPage() {
+  // Reset any auth-related states
+  authMode = "signin";
+  currentUserType = "entrepreneur";
+
+  // Update user type selection UI if needed
+  const userTypeCards = document.querySelectorAll(".user-type-card");
+  userTypeCards.forEach((card) => {
+    card.classList.remove("active");
+    if (card.onclick.toString().includes("entrepreneur")) {
+      card.classList.add("active");
+    }
+  });
+
+  // Ensure the signin tab is active
+  switchTab("signin");
+}
+
+// Close modal when clicking outside
+window.addEventListener("click", function (event) {
+  const modals = document.querySelectorAll(".modal");
+  modals.forEach((modal) => {
+    if (event.target === modal) {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+  });
+});

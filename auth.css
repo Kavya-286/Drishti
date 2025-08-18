@@ -8,19 +8,25 @@
   padding: 2rem 1rem;
   background: linear-gradient(
     135deg,
-    rgba(99, 102, 241, 0.05) 0%,
-    rgba(59, 130, 246, 0.05) 100%
+    rgba(99, 102, 241, 0.08) 0%,
+    rgba(59, 130, 246, 0.08) 100%
   );
+  backdrop-filter: blur(10px);
 }
 
 .auth-content {
   width: 100%;
   max-width: 500px;
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
-  padding: 2rem;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  padding: 2.5rem;
   margin: 1rem;
+  transition: var(--transition);
 }
 
 .auth-header {
@@ -75,8 +81,15 @@
 
 .user-type-card.active {
   border-color: var(--primary-color);
-  background: rgba(99, 102, 241, 0.05);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.08) 0%,
+    rgba(59, 130, 246, 0.08) 100%
+  );
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.15),
+    0 8px 25px rgba(99, 102, 241, 0.1);
+  transform: translateY(-2px);
 }
 
 .user-type-icon {
