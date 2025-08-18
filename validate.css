@@ -545,3 +545,19 @@
     color: var(--text-primary) !important;
   }
 }
+
+/* Additional validation form fixes */
+#validation-form input::placeholder,
+#validation-form textarea::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+}
+
+/* Ultra-specific form styling to override any theme conflicts */
+.page#page-validate #validation-form input,
+.page#page-validate #validation-form select,
+.page#page-validate #validation-form textarea {
+  color: #1a202c !important;
+  background: white !important;
+  border: 1px solid #e2e8f0 !important;
+}
