@@ -48,6 +48,14 @@ div#page-validate #validation-form textarea {
   color: #1a202c !important;
 }
 
+/* Override any potential browser dark mode styling */
+html[data-theme="dark"] #page-validate .validation-form-container,
+html[color-scheme="dark"] #page-validate .validation-form-container,
+body[data-theme="dark"] #page-validate .validation-form-container {
+  background: white !important;
+  color: #1a202c !important;
+}
+
 /* CSS Variables for consistent theming */
 :root {
   --primary-color: #6366f1;
