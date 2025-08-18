@@ -1412,19 +1412,140 @@ function loadPricingPage() {
 function loadAboutPage() {
   const aboutPage = document.getElementById("page-about");
   aboutPage.innerHTML = `
-        <div class="container">
-            <div class="page-header">
-                <h1>About Drishti</h1>
-                <p>Empowering entrepreneurs with AI-driven insights</p>
-            </div>
-            <div class="about-content">
-                <div class="about-section">
-                    <h3>Our Mission</h3>
-                    <p>To help entrepreneurs validate their startup ideas and increase their chances of success through advanced AI analysis and comprehensive market research.</p>
+        <div class="about-page">
+            <div class="container">
+                <div class="about-hero">
+                    <div class="badge">🌟 Our Story</div>
+                    <h1>Empowering Entrepreneurs Worldwide</h1>
+                    <p>We're on a mission to democratize startup success through AI-powered validation and insights.</p>
                 </div>
-                <div class="about-section">
-                    <h3>How It Works</h3>
-                    <p>Our platform uses machine learning algorithms to analyze your startup idea across multiple dimensions including market potential, competitive landscape, and financial viability.</p>
+
+                <div class="about-content">
+                    <div class="about-section">
+                        <h2>🎯 Our Mission</h2>
+                        <p>To help entrepreneurs validate their startup ideas and increase their chances of success through advanced AI analysis and comprehensive market research. We believe that every great idea deserves a fair chance to succeed, and our platform provides the tools and insights needed to turn ideas into thriving businesses.</p>
+                        <p>Founded by entrepreneurs for entrepreneurs, we understand the challenges of building a startup from the ground up. That's why we've created a platform that combines cutting-edge technology with practical business wisdom to guide you through the validation process.</p>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>🚀 How Drishti Works</h2>
+                        <p>Our platform uses advanced machine learning algorithms to analyze your startup idea across 15+ critical dimensions including market potential, competitive landscape, financial viability, and execution readiness. Here's how we make it happen:</p>
+                        <div class="process-steps">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Idea Submission</h4>
+                                    <p>Share your startup concept through our comprehensive questionnaire</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>AI Analysis</h4>
+                                    <p>Our algorithms analyze market data, competition, and business model viability</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Insights & Recommendations</h4>
+                                    <p>Receive detailed scores, analysis, and actionable next steps</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>👥 Meet Our Team</h2>
+                        <p>We're a diverse team of entrepreneurs, engineers, and business experts passionate about helping startups succeed.</p>
+                        <div class="team-grid">
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-name">Alex Thompson</div>
+                                <div class="member-role">CEO & Co-founder</div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👩‍🔬</div>
+                                <div class="member-name">Dr. Sarah Chen</div>
+                                <div class="member-role">CTO & AI Lead</div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍📊</div>
+                                <div class="member-name">Michael Rodriguez</div>
+                                <div class="member-role">Head of Business Development</div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👩‍💼</div>
+                                <div class="member-name">Emma Wilson</div>
+                                <div class="member-role">Head of Product</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>💎 Our Values</h2>
+                        <p>These core values guide everything we do and shape our commitment to helping entrepreneurs succeed.</p>
+                        <div class="values-grid">
+                            <div class="value-item">
+                                <span class="value-icon">🎯</span>
+                                <h4>Accuracy First</h4>
+                                <p>We're committed to providing the most accurate and reliable startup validation insights in the industry.</p>
+                            </div>
+                            <div class="value-item">
+                                <span class="value-icon">🚀</span>
+                                <h4>Innovation</h4>
+                                <p>We continuously push the boundaries of what's possible with AI and machine learning for business validation.</p>
+                            </div>
+                            <div class="value-item">
+                                <span class="value-icon">🤝</span>
+                                <h4>Transparency</h4>
+                                <p>We believe in clear, honest communication and transparent methodologies in all our analyses.</p>
+                            </div>
+                            <div class="value-item">
+                                <span class="value-icon">🌟</span>
+                                <h4>Empowerment</h4>
+                                <p>We empower entrepreneurs with the tools and knowledge they need to make informed decisions.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>📈 Our Impact</h2>
+                        <p>Since our launch, we've helped thousands of entrepreneurs validate their ideas and achieve remarkable success.</p>
+                        <div class="impact-stats">
+                            <div class="stat-highlight">
+                                <div class="stat-number">500+</div>
+                                <div class="stat-label">Startups Validated</div>
+                            </div>
+                            <div class="stat-highlight">
+                                <div class="stat-number">95%</div>
+                                <div class="stat-label">Accuracy Rate</div>
+                            </div>
+                            <div class="stat-highlight">
+                                <div class="stat-number">$2M+</div>
+                                <div class="stat-label">Funding Secured</div>
+                            </div>
+                            <div class="stat-highlight">
+                                <div class="stat-number">50+</div>
+                                <div class="stat-label">Countries Served</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-cta">
+                    <div class="cta-content">
+                        <h2>Ready to Validate Your Idea?</h2>
+                        <p>Join the community of successful entrepreneurs who trust Drishti for their startup validation needs.</p>
+                        <div class="cta-buttons">
+                            <button onclick="showPage('validate')" class="btn btn-primary btn-large">
+                                Start Your Validation
+                            </button>
+                            <button onclick="showPage('auth')" class="btn btn-outline btn-large">
+                                Create Account
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
