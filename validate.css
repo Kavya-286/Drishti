@@ -1,5 +1,11 @@
 /* Validation Page Styles */
 
+#page-validate {
+  background: var(--background-gradient);
+  min-height: 100vh;
+  color: var(--text-primary);
+}
+
 .validation-header {
   text-align: center;
   margin-bottom: 3rem;
@@ -29,13 +35,14 @@
 .validation-form-container {
   max-width: 800px;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   border-radius: var(--border-radius-lg);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.2);
   padding: 2.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   margin-bottom: 2rem;
+  color: var(--text-primary);
 }
 
 /* Form Sections */
@@ -52,12 +59,13 @@
 }
 
 .form-section h3 {
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
   margin-bottom: 1.5rem;
   font-size: 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-weight: 600;
 }
 
 .form-section h3::before {
@@ -83,7 +91,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
   font-size: 0.875rem;
 }
 
@@ -96,7 +104,8 @@
   border-radius: var(--border-radius);
   font-size: 0.875rem;
   transition: var(--transition);
-  background: white;
+  background: white !important;
+  color: var(--text-primary) !important;
   font-family: inherit;
 }
 
@@ -107,7 +116,8 @@
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15), 0 4px 12px rgba(99, 102, 241, 0.1);
   transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.95);
+  background: white !important;
+  color: var(--text-primary) !important;
 }
 
 #validation-form textarea {
