@@ -63,6 +63,6 @@ app.listen(PORT, () => {
 `;
 
 fs.writeFileSync(path.join(serverDir, "node-build.mjs"), serverCode);
-console.log("Created node-build.js server file");
+console.log("Created node-build.mjs server file");
 
 console.log("Build completed successfully!");
