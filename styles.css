@@ -24,6 +24,30 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Force validation form to always be white - ultra specific selectors */
+#page-validate .validation-form-container,
+div#page-validate .validation-form-container,
+.page#page-validate .validation-form-container {
+  background: white !important;
+  color: #1a202c !important;
+}
+
+#page-validate .validation-form-container *,
+div#page-validate .validation-form-container *,
+.page#page-validate .validation-form-container * {
+  color: #1a202c !important;
+}
+
+#page-validate #validation-form input,
+#page-validate #validation-form select,
+#page-validate #validation-form textarea,
+div#page-validate #validation-form input,
+div#page-validate #validation-form select,
+div#page-validate #validation-form textarea {
+  background: white !important;
+  color: #1a202c !important;
+}
+
 /* CSS Variables for consistent theming */
 :root {
   --primary-color: #6366f1;
