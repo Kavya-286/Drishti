@@ -594,9 +594,158 @@ function loadDashboard() {
     return;
   }
 
-  // Load user statistics
-  loadDashboardStats();
-  loadValidationHistory();
+  const dashboardPage = document.getElementById("page-dashboard");
+  if (currentUser.userType === "investor") {
+    // Load investor dashboard instead
+    showPage("investor-dashboard");
+    return;
+  }
+
+  // Load entrepreneur dashboard with enhanced design
+  const validationHistory = JSON.parse(
+    localStorage.getItem(`validationHistory_${currentUser.id}`) || "[]",
+  );
+
+  const totalValidations = validationHistory.length;
+  const avgScore =
+    totalValidations > 0
+      ? Math.round(
+          validationHistory.reduce((sum, val) => sum + val.overallScore, 0) /
+            totalValidations,
+        )
+      : 0;
+  const successRate =
+    totalValidations > 0
+      ? Math.round(
+          (validationHistory.filter((val) => val.overallScore >= 70).length /
+            totalValidations) *
+            100,
+        )
+      : 0;
+
+  dashboardPage.innerHTML = `
+    <div class="dashboard-page">
+      <div class="container">
+        <div class="dashboard-header">
+          <div class="welcome-section">
+            <h1>Welcome to Your Dashboard</h1>
+            <p>Welcome back, ${currentUser.firstName || currentUser.email.split('@')[0]}!</p>
+          </div>
+          <div class="quick-actions">
+            <button onclick="showPage('validate')" class="btn btn-primary">
+              🚀 Start New Validation
+            </button>
+            <button onclick="showPage('features')" class="btn btn-outline">
+              ✨ Explore Features
+            </button>
+          </div>
+        </div>
+
+        <div class="dashboard-stats">
+          <div class="stat-card modern">
+            <div class="stat-icon">📈</div>
+            <div class="stat-content">
+              <div class="stat-value">${totalValidations}</div>
+              <div class="stat-label">Total Validations</div>
+              <div class="stat-trend ${totalValidations > 0 ? 'positive' : 'neutral'}">
+                ${totalValidations > 0 ? '+' + totalValidations + ' this month' : 'Get started today'}
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card modern">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-content">
+              <div class="stat-value">${avgScore}</div>
+              <div class="stat-label">Average Score</div>
+              <div class="stat-trend ${avgScore >= 70 ? 'positive' : avgScore >= 50 ? 'warning' : 'neutral'}">
+                ${avgScore >= 70 ? 'Excellent performance' : avgScore >= 50 ? 'Good progress' : 'Start validating'}
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card modern">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-content">
+              <div class="stat-value">${successRate}%</div>
+              <div class="stat-label">Success Rate</div>
+              <div class="stat-trend ${successRate >= 60 ? 'positive' : successRate >= 30 ? 'warning' : 'neutral'}">
+                ${successRate >= 60 ? 'Great success rate' : successRate >= 30 ? 'Keep improving' : 'Start your journey'}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-content">
+          <div class="dashboard-section">
+            <div class="section-header">
+              <h2>Recent Validations</h2>
+              <button onclick="showPage('results')" class="btn btn-secondary btn-small">View All</button>
+            </div>
+            <div class="validation-list modern">
+              ${totalValidations === 0 ? `
+                <div class="no-data-modern">
+                  <div class="no-data-icon">🚀</div>
+                  <h3>Ready to validate your first idea?</h3>
+                  <p>Start your entrepreneurial journey by validating your startup concept with our AI-powered analysis.</p>
+                  <button onclick="showPage('validate')" class="btn btn-primary">Start First Validation</button>
+                </div>
+              ` : validationHistory.slice(0, 5).map(validation => `
+                <div class="validation-item modern" onclick="loadValidationDetail('${validation.id}')">
+                  <div class="validation-icon">
+                    ${getValidationIcon(validation.overallScore)}
+                  </div>
+                  <div class="validation-content">
+                    <div class="validation-title">${validation.ideaName}</div>
+                    <div class="validation-meta">
+                      <span class="validation-date">${formatTime(validation.validatedAt)}</span>
+                      <span class="validation-stage badge">${validation.stage || "Idea"}</span>
+                    </div>
+                  </div>
+                  <div class="validation-score-circle ${getScoreClass(validation.overallScore)}">
+                    <span class="score-value">${validation.overallScore}</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="dashboard-section">
+            <div class="section-header">
+              <h2>Quick Tools</h2>
+            </div>
+            <div class="tools-grid">
+              <div class="tool-card" onclick="showCompetitorAnalysis()">
+                <div class="tool-icon">🏆</div>
+                <h3>Competitor Analysis</h3>
+                <p>Analyze top 5 competitors and find your differentiation</p>
+              </div>
+              <div class="tool-card" onclick="showPitchGenerator()">
+                <div class="tool-icon">🎤</div>
+                <h3>AI Pitch Generator</h3>
+                <p>Generate compelling pitches with AI assistance</p>
+              </div>
+              <div class="tool-card" onclick="showMonetizationFinder()">
+                <div class="tool-icon">💰</div>
+                <h3>Monetization Finder</h3>
+                <p>Discover revenue models for your business</p>
+              </div>
+              <div class="tool-card" onclick="showPitchDeckGenerator()">
+                <div class="tool-icon">📊</div>
+                <h3>Pitch Deck Builder</h3>
+                <p>Create professional pitch decks automatically</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Initialize any charts or dynamic content
+  setTimeout(() => {
+    initializeDashboardCharts();
+  }, 100);
 }
 
 function loadDashboardStats() {
