@@ -1152,23 +1152,127 @@ function generateFounderReadinessContent() {
 function loadFeaturesPage() {
   const featuresPage = document.getElementById("page-features");
   featuresPage.innerHTML = `
-        <div class="container">
-            <div class="page-header">
-                <h1>Platform Features</h1>
-                <p>Comprehensive tools for startup validation and growth</p>
-            </div>
-            <div class="features-content">
-                <div class="feature-detail">
-                    <h3>🤖 AI-Powered Analysis</h3>
-                    <p>Advanced machine learning algorithms analyze your startup idea across multiple dimensions.</p>
+        <div class="features-page">
+            <div class="container">
+                <div class="features-hero">
+                    <div class="badge">🚀 Comprehensive Platform</div>
+                    <h1>Powerful Features for Startup Success</h1>
+                    <p>Everything you need to validate, analyze, and launch your startup with confidence</p>
                 </div>
-                <div class="feature-detail">
-                    <h3>📊 Market Research</h3>
-                    <p>Comprehensive market analysis and competitive intelligence.</p>
+
+                <div class="features-main-grid">
+                    <div class="feature-showcase">
+                        <div class="feature-showcase-icon">🤖</div>
+                        <div class="feature-showcase-content">
+                            <h2>AI-Powered Analysis</h2>
+                            <p>Advanced machine learning algorithms analyze your startup idea across 15+ dimensions, providing insights that would take months of manual research.</p>
+                            <ul class="feature-benefits">
+                                <li>Natural language processing for idea assessment</li>
+                                <li>Market sentiment analysis</li>
+                                <li>Competitive landscape mapping</li>
+                                <li>Risk assessment algorithms</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="feature-showcase">
+                        <div class="feature-showcase-icon">📊</div>
+                        <div class="feature-showcase-content">
+                            <h2>Comprehensive Scoring System</h2>
+                            <p>Multi-dimensional scoring framework that evaluates your startup across critical success factors with transparent methodology.</p>
+                            <ul class="feature-benefits">
+                                <li>Problem-solution fit analysis</li>
+                                <li>Market opportunity assessment</li>
+                                <li>Business model viability</li>
+                                <li>Team strength evaluation</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="feature-showcase">
+                        <div class="feature-showcase-icon">💡</div>
+                        <div class="feature-showcase-content">
+                            <h2>Actionable Recommendations</h2>
+                            <p>Receive personalized, step-by-step guidance based on your specific startup challenges and market conditions.</p>
+                            <ul class="feature-benefits">
+                                <li>Strategic roadmap creation</li>
+                                <li>Priority action items</li>
+                                <li>Resource recommendations</li>
+                                <li>Risk mitigation strategies</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="feature-detail">
-                    <h3>💰 Financial Modeling</h3>
-                    <p>Revenue projections and business model validation.</p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Market Analysis</h3>
+                        <p>Deep market research, size estimation, and trend analysis to understand your opportunity.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <h3>Competitive Intelligence</h3>
+                        <p>Comprehensive competitor analysis and positioning strategies to find your unique advantage.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3>Financial Modeling</h3>
+                        <p>Revenue projections, cost analysis, and business model validation with scenario planning.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3>Team Assessment</h3>
+                        <p>Founder readiness evaluation and team capability analysis for execution success.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3>Growth Potential</h3>
+                        <p>Scalability analysis and growth trajectory forecasting with market expansion insights.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <h3>Real-time Updates</h3>
+                        <p>Live market data integration and continuous validation updates as conditions change.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <h3>Export & Reports</h3>
+                        <p>Professional pitch decks, investor reports, and detailed analysis exports in multiple formats.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🌐</div>
+                        <h3>Investor Matching</h3>
+                        <p>Connect with relevant investors based on your industry, stage, and funding requirements.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3>SWOT Analysis</h3>
+                        <p>Automated strengths, weaknesses, opportunities, and threats analysis for strategic planning.</p>
+                    </div>
+                </div>
+
+                <div class="features-cta">
+                    <div class="cta-content">
+                        <h2>Ready to Experience These Features?</h2>
+                        <p>Start your free validation today and see how our comprehensive platform can accelerate your startup journey.</p>
+                        <div class="cta-buttons">
+                            <button onclick="showPage('validate')" class="btn btn-primary btn-large">
+                                Start Free Validation
+                            </button>
+                            <button onclick="showDemoModal()" class="btn btn-outline btn-large">
+                                Watch Demo
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
