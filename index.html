@@ -613,7 +613,7 @@
               onclick="showPage('validate')"
               class="btn btn-primary btn-large"
             >
-              �� Start New Validation
+              🚀 Start New Validation
             </button>
             <button
               onclick="showPage('results')"
@@ -693,6 +693,51 @@
     </main>
 
     <!-- Modals -->
+    <!-- Demo Modal -->
+    <div id="demo-modal" class="modal" style="display: none">
+      <div class="modal-content demo-modal-content">
+        <div class="modal-header">
+          <h2>🎥 Drishti Demo</h2>
+          <button onclick="closeModal('demo-modal')" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="demo-video-container">
+            <div class="demo-placeholder">
+              <div class="demo-icon">🎬</div>
+              <h3>Interactive Demo</h3>
+              <p>Experience Drishti's powerful validation features in action</p>
+              <div class="demo-features">
+                <div class="demo-feature">
+                  <span class="feature-icon">✅</span>
+                  <span>AI-powered analysis</span>
+                </div>
+                <div class="demo-feature">
+                  <span class="feature-icon">📊</span>
+                  <span>Comprehensive scoring</span>
+                </div>
+                <div class="demo-feature">
+                  <span class="feature-icon">💡</span>
+                  <span>Actionable insights</span>
+                </div>
+                <div class="demo-feature">
+                  <span class="feature-icon">🚀</span>
+                  <span>Real-time results</span>
+                </div>
+              </div>
+              <div class="demo-actions">
+                <button onclick="startInteractiveDemo()" class="btn btn-primary">
+                  Start Interactive Demo
+                </button>
+                <button onclick="showPage('validate'); closeModal('demo-modal')" class="btn btn-outline">
+                  Try It Yourself
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="contact-details-modal" class="modal" style="display: none">
       <div class="modal-content">
         <div class="modal-header">
