@@ -37,67 +37,114 @@ function renderResults() {
 
   const resultsPage = document.getElementById("page-results");
   resultsPage.innerHTML = `
-        <div class="container">
-            <div class="results-header">
-                <h1>Validation Results</h1>
-                <p>Comprehensive analysis of ${currentValidationData.startupTitle || "your startup idea"}</p>
-            </div>
-            
-            <div class="results-summary">
-                <div class="main-score">
-                    <div class="score-value">${currentValidationResults.overall_score}</div>
-                    <div class="score-label">Overall Score</div>
+        <div class="results-page">
+            <div class="container">
+                <div class="results-header">
+                    <h1>Validation Results</h1>
+                    <p>Comprehensive analysis of ${currentValidationData.startupTitle || "your startup idea"}</p>
                 </div>
-                <div class="score-info">
-                    <h3>${currentValidationData.startupTitle || "Your Startup Idea"}</h3>
-                    <p><strong>Viability Level:</strong> ${currentValidationResults.viability_level}</p>
-                    <p><strong>Market Size:</strong> ${currentValidationData.marketSize || "Medium"}</p>
-                    <p><strong>Current Stage:</strong> ${currentValidationData.currentStage || "Idea"}</p>
-                    <p><strong>Validation Date:</strong> ${formatDate(new Date().toISOString())}</p>
-                </div>
-            </div>
-            
-            <div class="results-actions">
-                <button onclick="generatePitchDeck()" class="btn btn-primary">
-                    📊 Generate Pitch Deck
-                </button>
-                <button onclick="generateSWOTAnalysis()" class="btn btn-outline">
-                    🎯 SWOT Analysis
-                </button>
-                <button onclick="showPage('founder-readiness')" class="btn btn-outline">
-                    👨‍💼 Founder Readiness
-                </button>
-                <button onclick="handleMakePublic()" class="btn btn-secondary">
-                    🌐 Make Public to Investors
-                </button>
-            </div>
-            
-            <div class="results-details">
-                <h2>Detailed Score Breakdown</h2>
-                <div class="score-breakdown">
-                    ${currentValidationResults.scores
-                      .map(
-                        (score) => `
-                        <div class="score-item">
-                            <div class="score-category">${score.category}</div>
-                            <div class="score-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${score.score}%"></div>
-                                </div>
-                                <div class="score-number">${score.score}/100</div>
+
+                <div class="results-summary modern">
+                    <div class="score-visualization">
+                        <div class="pie-chart-container">
+                            <canvas id="scoreChart" width="200" height="200"></canvas>
+                            <div class="score-center">
+                                <div class="score-value">${currentValidationResults.overall_score}</div>
+                                <div class="score-label">Overall Score</div>
                             </div>
                         </div>
-                    `,
-                      )
-                      .join("")}
+                    </div>
+                    <div class="score-info">
+                        <h3>${currentValidationData.startupTitle || "Your Startup Idea"}</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Viability Level:</span>
+                                <span class="info-value ${currentValidationResults.viability_level.toLowerCase()}">${currentValidationResults.viability_level}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Market Size:</span>
+                                <span class="info-value">${currentValidationData.marketSize || "Medium"}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Current Stage:</span>
+                                <span class="info-value">${currentValidationData.currentStage || "Idea"}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Validation Date:</span>
+                                <span class="info-value">${formatDate(new Date().toISOString())}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            ${
-              currentValidationResults.analysis
-                ? `
-                <div class="analysis-summary">
-                    <h2>Analysis Summary</h2>
+
+                <div class="results-actions modern">
+                    <button onclick="generatePitchDeck()" class="btn btn-primary">
+                        📊 Generate Pitch Deck
+                    </button>
+                    <button onclick="generateSWOTAnalysis()" class="btn btn-outline">
+                        🎯 SWOT Analysis
+                    </button>
+                    <button onclick="showPage('founder-readiness')" class="btn btn-outline">
+                        👨‍💼 Founder Readiness
+                    </button>
+                    <button onclick="generateCompetitorSnapshot()" class="btn btn-outline">
+                        🏆 Competitor Snapshot
+                    </button>
+                    <button onclick="generateMonetizationPath()" class="btn btn-outline">
+                        💰 Monetization Path
+                    </button>
+                    <button onclick="handleMakePublic()" class="btn btn-secondary">
+                        🌐 Make Public to Investors
+                    </button>
+                </div>
+
+                <div class="results-content">
+                    <div class="results-tabs">
+                        <button class="tab-button active" onclick="switchResultsTab('scores')">
+                            📈 Score Breakdown
+                        </button>
+                        <button class="tab-button" onclick="switchResultsTab('analysis')">
+                            🔍 Analysis Summary
+                        </button>
+                        <button class="tab-button" onclick="switchResultsTab('recommendations')">
+                            💡 Strategic Recommendations
+                        </button>
+                    </div>
+
+                    <div class="tab-content active" id="scores-tab">
+                        <div class="results-details">
+                            <h2>Detailed Score Breakdown</h2>
+                            <div class="score-breakdown modern">
+                                ${currentValidationResults.scores
+                                  .map(
+                                    (score) => `
+                                    <div class="score-item modern">
+                                        <div class="score-header">
+                                            <div class="score-category">${score.category}</div>
+                                            <div class="score-number">${score.score}/100</div>
+                                        </div>
+                                        <div class="score-progress">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill ${getScoreClass(score.score)}" style="width: ${score.score}%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="score-description">
+                                            ${getScoreDescription(score.category, score.score)}
+                                        </div>
+                                    </div>
+                                `,
+                                  )
+                                  .join("")}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="analysis-tab">
+                        ${
+                          currentValidationResults.analysis
+                            ? `
+                            <div class="analysis-summary modern">
+                                <h2>Analysis Summary</h2>
                     <div class="analysis-grid">
                         <div class="analysis-item">
                             <h4>Problem Quality</h4>
