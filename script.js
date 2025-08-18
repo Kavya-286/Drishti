@@ -1396,3 +1396,67 @@ function exportFounderReport() {
     showAlert("Report exported successfully!", "success");
   }, 1500);
 }
+
+// Demo Modal Functions
+function showDemoModal() {
+  const modal = document.getElementById("demo-modal");
+  modal.style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = "none";
+  document.body.style.overflow = "auto";
+}
+
+function startInteractiveDemo() {
+  // Close the modal first
+  closeModal("demo-modal");
+
+  // Show a demo version of the validation page
+  showAlert("Starting interactive demo...", "info");
+
+  // Navigate to validation page with demo data
+  setTimeout(() => {
+    showPage("validate");
+    loadDemoData();
+  }, 1000);
+}
+
+function loadDemoData() {
+  // Auto-fill the validation form with demo data
+  setTimeout(() => {
+    const form = document.getElementById("validation-form");
+    if (form) {
+      const startupTitle = form.querySelector('[name="startupTitle"]');
+      const problemStatement = form.querySelector('[name="problemStatement"]');
+      const solutionDescription = form.querySelector('[name="solutionDescription"]');
+      const targetMarket = form.querySelector('[name="targetMarket"]');
+      const marketSize = form.querySelector('[name="marketSize"]');
+      const revenueModel = form.querySelector('[name="revenueModel"]');
+      const currentStage = form.querySelector('[name="currentStage"]');
+
+      if (startupTitle) startupTitle.value = "EcoClean Solutions";
+      if (problemStatement) problemStatement.value = "Traditional cleaning products contain harmful chemicals that damage the environment and pose health risks to users. Many eco-friendly alternatives are either expensive or ineffective, leaving consumers with limited sustainable options.";
+      if (solutionDescription) solutionDescription.value = "EcoClean Solutions offers biodegradable, plant-based cleaning products that are both environmentally safe and highly effective. Our products use innovative natural formulations that clean as well as traditional chemicals without the environmental impact.";
+      if (targetMarket) targetMarket.value = "Environmentally conscious households and businesses";
+      if (marketSize) marketSize.value = "large";
+      if (revenueModel) revenueModel.value = "subscription";
+      if (currentStage) currentStage.value = "mvp";
+
+      showAlert("Demo data loaded! Feel free to modify the inputs and submit for validation.", "success");
+    }
+  }, 500);
+}
+
+// Close modal when clicking outside
+window.addEventListener("click", function(event) {
+  const modals = document.querySelectorAll(".modal");
+  modals.forEach(modal => {
+    if (event.target === modal) {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+  });
+});
