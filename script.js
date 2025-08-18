@@ -1515,7 +1515,7 @@ function loadAboutPage() {
                     </div>
 
                     <div class="about-section">
-                        <h2>��� Our Impact</h2>
+                        <h2>📈 Our Impact</h2>
                         <p>Since our launch, we've helped thousands of entrepreneurs validate their ideas and achieve remarkable success.</p>
                         <div class="impact-stats">
                             <div class="stat-highlight">
@@ -1773,6 +1773,25 @@ function loadDemoData() {
       showAlert("Demo data loaded! Feel free to modify the inputs and submit for validation.", "success");
     }
   }, 500);
+}
+
+// Initialize auth page
+function initializeAuthPage() {
+  // Reset any auth-related states
+  authMode = "signin";
+  currentUserType = "entrepreneur";
+
+  // Update user type selection UI if needed
+  const userTypeCards = document.querySelectorAll(".user-type-card");
+  userTypeCards.forEach(card => {
+    card.classList.remove("active");
+    if (card.onclick.toString().includes("entrepreneur")) {
+      card.classList.add("active");
+    }
+  });
+
+  // Ensure the signin tab is active
+  switchTab("signin");
 }
 
 // Close modal when clicking outside
