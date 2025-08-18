@@ -30,9 +30,13 @@ mlFiles.forEach((file) => {
 
 // Create a simple Node.js server entry point
 const serverCode = `
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -53,12 +57,12 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(\`Server running on port \${PORT}\`);
-    console.log(\`Visit http://localhost:\${PORT} to view the application\`);
+    console.log(\\\`Server running on port \\\${PORT}\\\`);
+    console.log(\\\`Visit http://localhost:\\\${PORT} to view the application\\\`);
 });
 `;
 
-fs.writeFileSync(path.join(serverDir, "node-build.js"), serverCode);
+fs.writeFileSync(path.join(serverDir, "node-build.mjs"), serverCode);
 console.log("Created node-build.js server file");
 
 console.log("Build completed successfully!");
