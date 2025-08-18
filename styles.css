@@ -892,6 +892,75 @@ textarea {
     width: 95%;
     margin: 1rem;
   }
+
+  /* New page responsive design */
+  .features-hero h1,
+  .pricing-hero h1,
+  .about-hero h1 {
+    font-size: 2.25rem;
+  }
+
+  .feature-showcase {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .feature-showcase:nth-child(even) .feature-showcase-icon,
+  .feature-showcase:nth-child(even) .feature-showcase-content {
+    order: unset;
+  }
+
+  .features-main-grid {
+    gap: 2rem;
+  }
+
+  .pricing-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-card.featured {
+    transform: none;
+  }
+
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footer-links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-bottom-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-features {
+    grid-template-columns: 1fr;
+  }
+
+  .comparison-grid,
+  .faq-grid,
+  .values-grid,
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .impact-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .step-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
